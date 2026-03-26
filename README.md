@@ -1,4 +1,8 @@
 <!--                   INFO        -->
+[![GitHub license](https://img.shields.io/github/license/lordsinstitute/it-department)](https://github.com/lordsinstitute/it-department/blob/main/LICENSE)
+[![GitHub contributors](https://img.shields.io/github/contributors/lordsinstitute/it-department.svg)](https://github.com/lordsinstitute/it-department/graphs/contributors)
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/lordsinstitute/it-department.svg)](https://github.com/lordsinstitute/it-department/pulls)
+
 
 
 # IT Department – Lords Institute of Engineering & Technology
