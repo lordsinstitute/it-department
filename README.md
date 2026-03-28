@@ -1,61 +1,16 @@
-<!--                   INFO        -->
-[![GitHub license](https://img.shields.io/github/license/lordsinstitute/it-department)](https://github.com/lordsinstitute/it-department/blob/main/LICENSE)
-[![GitHub contributors](https://img.shields.io/github/contributors/lordsinstitute/it-department.svg)](https://github.com/lordsinstitute/it-department/graphs/contributors)
-[![GitHub pull-requests](https://img.shields.io/github/issues-pr/lordsinstitute/it-department.svg)](https://github.com/lordsinstitute/it-department/pulls)
+# React + Vite
 
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+Currently, two official plugins are available:
 
-# IT Department – Lords Institute of Engineering & Technology
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-<p align="center">
-  <b>Department of Information Technology</b><br/>
-  Empowering innovation through technology & real-world solutions
-</p>
+## React Compiler
 
----
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## About
+## Expanding the ESLint configuration
 
-Welcome to the official GitHub repository of the **IT Department (Information Technology)** at **LIET**.
-
-This repository is designed to:
-- Showcase student projects
-- Encourage open-source contributions
-- Build real-world development experience
-- Strengthen the technical ecosystem
-
----
-
-## Vision
-
-To create a strong culture of:
-- Innovation 
-- Collaboration 
-- Real-world problem solving
-
----
-
-## Repository Purpose
-
-This repository serves as a central hub for:
-- Academic projects  
-- Student innovations  
-- Technical learning resources  
-- Collaborative development  
-
----
-
-## Contribution
-
-We welcome all students to contribute their projects.
-
-👉 Please follow the contribution guidelines:  
-➡️ [CONTRIBUTING.md](./CONTRIBUTING.md)
-
----
-
-## Thanks to all the contributors ❤️
-
-<a href="https://github.com/lordsinstitute/it-department/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=lordsinstitute/it-department"/>
-</a>
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
