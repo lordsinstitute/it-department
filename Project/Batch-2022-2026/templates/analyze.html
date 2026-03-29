@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Analyze PDF - PDF Malware Scanner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="bi bi-file-pdf"></i> Analyze PDF Document</h2>
+            <p class="text-muted">Upload a PDF file or paste text for malware analysis</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- File Upload Tab -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-cloud-upload"></i> File Upload</h5>
+                </div>
+                <div class="card-body">
+                    <form id="fileForm" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="type" value="file">
+                        <div class="mb-3">
+                            <label for="pdfFile" class="form-label">Select PDF File</label>
+                            <input type="file" class="form-control form-control-lg" id="pdfFile" name="file" accept=".pdf" required>
+                            <small class="form-text text-muted">Maximum file size: 50MB</small>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" onclick="analyzeFile()">
+                            <i class="bi bi-play-circle"></i> Analyze File
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Input Tab -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-type"></i> Text Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <form id="textForm" method="POST">
+                        <input type="hidden" name="type" value="text">
+                        <div class="mb-3">
+                            <label for="textInput" class="form-label">Paste Content</label>
+                            <textarea class="form-control" id="textInput" name="text" rows="6" placeholder="Paste suspicious content here..." required></textarea>
+                        </div>
+                        <button type="button" class="btn btn-success w-100" onclick="analyzeText()">
+                            <i class="bi bi-play-circle"></i> Analyze Text
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Results -->
+    <div id="resultsContainer" style="display:none;">
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Analysis Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="loadingSpinner" class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Analyzing file...</p>
+                        </div>
+                        <div id="resultSummary" style="display:none;">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Risk Level</h6>
+                                            <p id="riskLevel" class="h3 mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Threats</h6>
+                                            <p id="threatCount" class="h3 mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Hash Chain Verification</h6>
+                                            <p id="hashVerification" class="small mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="findingsTable" class="mb-3"></div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button id="viewDetailsBtn" class="btn btn-info me-2">
+                                        <i class="bi bi-eye"></i> View Full Details
+                                    </button>
+                                    <button id="downloadReportBtn" class="btn btn-success">
+                                        <i class="bi bi-download"></i> Download Report (PDF)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function analyzeFile() {
+    const fileInput = document.getElementById('pdfFile');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a file');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('type', 'file');
+    formData.append('file', file);
+
+    await performAnalysis(formData);
+}
+
+async function analyzeText() {
+    const textInput = document.getElementById('textInput');
+    const text = textInput.value;
+
+    if (!text.trim()) {
+        alert('Please enter some text');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('type', 'text');
+    formData.append('text', text);
+
+    await performAnalysis(formData);
+}
+
+async function performAnalysis(formData) {
+    try {
+        document.getElementById('resultsContainer').style.display = 'block';
+        document.getElementById('resultSummary').style.display = 'none';
+        document.getElementById('loadingSpinner').style.display = 'block';
+
+        const response = await fetch('{{ url_for("api_analyze") }}', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Analysis failed');
+        }
+
+        // Display results
+        const riskColors = {
+            'Low': '#28a745',
+            'Medium': '#ffc107',
+            'High': '#fd7e14',
+            'Critical': '#dc3545'
+        };
+
+        document.getElementById('riskLevel').innerHTML = `<span style="color: ${riskColors[data.risk_level]}">${data.risk_level}</span>`;
+        document.getElementById('threatCount').textContent = data.threat_count;
+        document.getElementById('hashVerification').textContent = `Hash: ${data.hash.substring(0, 16)}...`;
+
+        // Display findings
+        let findingsHTML = '<h6>Initial Findings:</h6><ul class="list-group">';
+        data.findings.forEach(finding => {
+            findingsHTML += `<li class="list-group-item">
+                <strong>${finding.type}</strong> - ${finding.description}
+                <br><small class="text-muted">Severity: <span class="badge bg-warning">${finding.severity}</span></small>
+            </li>`;
+        });
+        findingsHTML += '</ul>';
+        document.getElementById('findingsTable').innerHTML = findingsHTML;
+
+        document.getElementById('loadingSpinner').style.display = 'none';
+        document.getElementById('resultSummary').style.display = 'block';
+
+        // Setup buttons
+        document.getElementById('viewDetailsBtn').onclick = () => {
+            window.location.href = `{{ url_for('results', scan_id=0) }}`.replace('/0', `/${data.scan_id}`);
+        };
+
+        document.getElementById('downloadReportBtn').onclick = () => {
+            window.location.href = `{{ url_for('download_report', scan_id=0) }}`.replace('/0', `/${data.scan_id}`);
+        };
+
+    } catch (error) {
+        alert('Error: ' + error.message);
+        document.getElementById('loadingSpinner').style.display = 'none';
+        document.getElementById('resultsContainer').style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

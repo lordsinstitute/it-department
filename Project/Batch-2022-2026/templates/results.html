@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Scan Results #{{ scan.id }} - PDF Malware Scanner{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="bi bi-file-pdf"></i> Scan Results #{{ scan.id }}</h2>
+            <p class="text-muted">{{ scan.filename }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('download_report', scan_id=scan.id) }}" class="btn btn-success">
+                <i class="bi bi-download"></i> Download PDF Report
+            </a>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Risk Level</h6>
+                    <p class="h3 mb-0">
+                        <span class="badge bg-{{ 'success' if scan.risk_level == 'Low' else 'warning' if scan.risk_level == 'Medium' else 'danger' }}">
+                            {{ scan.risk_level }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Threats Found</h6>
+                    <p class="h3 mb-0">{{ scan.threat_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Scan Date</h6>
+                    <p class="small mb-0">{{ scan.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Chain Verified</h6>
+                    <p class="h5 mb-0">
+                        {% if analysis_result %}
+                            <i class="bi bi-check-circle text-success"></i>
+                        {% else %}
+                            <i class="bi bi-x-circle text-danger"></i>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threats Table -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Detected Threats ({{ analysis_data.threats|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if analysis_data.threats %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Threat Type</th>
+                                    <th>Description</th>
+                                    <th>Severity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for threat in analysis_data.threats %}
+                                <tr>
+                                    <td><strong>{{ threat.type }}</strong></td>
+                                    <td>{{ threat.description }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'danger' if threat.severity == 'Critical' else 'warning' if threat.severity == 'High' else 'info' if threat.severity == 'Medium' else 'secondary' }}">
+                                            {{ threat.severity }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-success"><i class="bi bi-check-circle"></i> No threats detected</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metadata -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">File Metadata</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>File Size:</strong> {{ (analysis_data.filesize / 1024)|round(2) }} KB</p>
+                            <p><strong>File Hash (SHA256):</strong></p>
+                            <code class="small">{{ analysis_data.file_hash }}</code>
+                        </div>
+                        <div class="col-md-6">
+                            {% if analysis_data.metadata %}
+                                {% for key, value in analysis_data.metadata.items() %}
+                                <p><strong>{{ key.replace('_', ' ').title() }}:</strong> {{ value }}</p>
+                                {% endfor %}
+                            {% else %}
+                            <p class="text-muted">No metadata extracted</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blockchain Hash Chain -->
+    {% if analysis_result %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-shield-check"></i> Evidence Integrity (Blockchain-Inspired)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Current Hash (SHA256):</strong></p>
+                            <code class="small text-break">{{ analysis_result.hash_value }}</code>
+                        </div>
+                        <div class="col-md-6">
+                            {% set hash_chain = analysis_result.hash_chain|from_json %}
+                            <p><strong>Chain Index:</strong> {{ hash_chain.chain_index }}</p>
+                            <p><strong>Chain Verified:</strong> 
+                                <span class="badge bg-{{ 'success' if hash_chain.verified else 'danger' }}">
+                                    {{ 'Yes' if hash_chain.verified else 'No' }}
+                                </span>
+                            </p>
+                            <p><strong>Timestamp:</strong> {{ hash_chain.timestamp }}</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 p-3 bg-light rounded">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle"></i> This hash serves as cryptographic proof that this scan result has not been modified. 
+                            The blockchain-inspired integrity chain ensures evidence authenticity for compliance and auditing purposes.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
