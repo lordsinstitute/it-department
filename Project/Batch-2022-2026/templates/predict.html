@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Mental Health Prediction</h4>
+            <small>Enter patient details to predict mood condition</small>
+        </div>
+
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('predict') }}">
+
+                <div class="row g-3">
+
+                    {% set yes_no = ["Yes", "No"] %}
+
+                    <!-- Gender -->
+                    <div class="col-md-4">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select" name="Gender" required>
+                            <option value="">Select</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Country -->
+                    <div class="col-md-4">
+                        <label class="form-label">Country</label>
+                        <select class="form-select" name="Country" required>
+                            <option value="">Select</option>
+                            <option>India</option>
+                            <option>United States</option>
+                            <option>United Kingdom</option>
+                            <option>Canada</option>
+                            <option>Germany</option>
+                        </select>
+                    </div>
+
+                    <!-- Occupation -->
+                    <div class="col-md-4">
+                        <label class="form-label">Occupation</label>
+                        <select class="form-select" name="Occupation" required>
+                            <option value="">Select</option>
+                            <option>Student</option>
+                            <option>Corporate</option>
+                            <option>Self-employed</option>
+                            <option>Government</option>
+                            <option>Others</option>
+                        </select>
+                    </div>
+
+                    <!-- Self Employed -->
+                    <div class="col-md-4">
+                        <label class="form-label">Self Employed</label>
+                        <select class="form-select" name="self_employed" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Family History -->
+                    <div class="col-md-4">
+                        <label class="form-label">Family History</label>
+                        <select class="form-select" name="family_history" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Treatment -->
+                    <div class="col-md-4">
+                        <label class="form-label">Previously Treated</label>
+                        <select class="form-select" name="treatment" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Days Indoors -->
+                    <div class="col-md-4">
+                        <label class="form-label">Days Indoors</label>
+                        <select class="form-select" name="Days_Indoors" required>
+                            <option value="">Select</option>
+                            <option>1-14 days</option>
+                            <option>15-30 days</option>
+                            <option>31-60 days</option>
+                            <option>More than 60 days</option>
+                        </select>
+                    </div>
+
+                    <!-- Growing Stress -->
+                    <div class="col-md-4">
+                        <label class="form-label">Growing Stress</label>
+                        <select class="form-select" name="Growing_Stress" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Changes Habits -->
+                    <div class="col-md-4">
+                        <label class="form-label">Changes in Habits</label>
+                        <select class="form-select" name="Changes_Habits" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Mental Health History -->
+                    <div class="col-md-4">
+                        <label class="form-label">Mental Health History</label>
+                        <select class="form-select" name="Mental_Health_History" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Coping Struggles -->
+                    <div class="col-md-4">
+                        <label class="form-label">Coping Struggles</label>
+                        <select class="form-select" name="Coping_Struggles" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Work Interest -->
+                    <div class="col-md-4">
+                        <label class="form-label">Work Interest</label>
+                        <select class="form-select" name="Work_Interest" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Social Weakness -->
+                    <div class="col-md-4">
+                        <label class="form-label">Social Weakness</label>
+                        <select class="form-select" name="Social_Weakness" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Mental Health Interview -->
+                    <div class="col-md-4">
+                        <label class="form-label">Mental Health Interview</label>
+                        <select class="form-select" name="mental_health_interview" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Care Options -->
+                    <div class="col-md-4">
+                        <label class="form-label">Care Options</label>
+                        <select class="form-select" name="care_options" required>
+                            <option value="">Select</option>
+                            {% for v in yes_no %}<option>{{ v }}</option>{% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-success px-5" type="submit">
+                        Predict Mental Health
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

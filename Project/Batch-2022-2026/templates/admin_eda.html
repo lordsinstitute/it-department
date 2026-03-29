@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+
+
+    <div class="navbar-alt">
+       <a href="/admin/eda">EDA</a></li>
+       <a href="/admin/compare">Compare Models</a></li>
+       <a href="/admin/final">Final Model</a></li>
+       <a href="/admin/logout">Logout</a></li>
+    </div>
+    <br>
+<h3 class="mb-4">📊 Exploratory Data Analysis</h3>
+
+<div class="row">
+    {% for img in eda_images %}
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 text-center">
+            <img src="{{ url_for('static', filename='eda/' + img) }}"
+                 class="img-fluid rounded mb-3"
+                 style="height:180px; object-fit:cover;">
+
+            <button class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edaModal{{ loop.index }}">
+                View Graph
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal fade" id="edaModal{{ loop.index }}" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ img.replace('_',' ').replace('.png','').title() }}</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <img src="{{ url_for('static', filename='eda/' + img) }}"
+                         class="img-fluid rounded shadow">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
