@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4 class="mb-4">Best Model Details</h4>
+
+<div class="card card-custom p-4 mb-4">
+    <h5>Selected Model: Inception V3</h5>
+    <p>
+        Based on evaluation metrics including Accuracy, AUC, F1-score and
+        ROC analysis, Inception V3 outperformed the custom CNN model.
+    </p>
+
+    <ul>
+        <li><strong>Highest Accuracy</strong></li>
+        <li><strong>Lowest Validation Loss</strong></li>
+        <li><strong>Best ROC Curve Performance</strong></li>
+    </ul>
+</div>
+
+<div class="row">
+    {% for file in files %}
+        <div class="col-md-4 mb-3">
+            <div class="card card-custom p-3 text-center">
+                <h6>{{ file }}</h6>
+                <a href="{{ url_for('static', filename='inc/' + file) }}"
+                   class="btn btn-primary btn-sm mt-2">
+                    View / Download
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

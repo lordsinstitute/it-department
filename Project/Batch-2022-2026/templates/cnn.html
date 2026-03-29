@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4 class="mb-4">CNN Model Performance</h4>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card card-custom p-3 text-center">
+            <h6>Accuracy</h6>
+            <h4 class="text-primary">98%</h4>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-custom p-3 text-center">
+            <h6>AUC Score</h6>
+            <h4 class="text-success">0.987</h4>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-custom p-3 text-center">
+            <h6>Precision</h6>
+            <h4 class="text-info">0.98</h4>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-custom p-3 text-center">
+            <h6>Recall</h6>
+            <h4 class="text-warning">0.97</h4>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<!-- ===== Charts Section ===== -->
+
+<!-- Row 1: Accuracy & Loss Curve (100%) -->
+<div class="row mb-4">
+    {% for file in files %}
+        {% if "accuracy" in file.lower() or "loss" in file.lower() %}
+        <div class="col-12">
+            <div class="card card-custom p-3">
+                <h5 class="text-center text-muted">
+                    Accuracy & Loss Curve
+                </h5>
+                <img src="{{ url_for('static', filename='cnn/' + file) }}"
+                     class="img-fluid rounded w-100">
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<!-- Row 2: ROC (50%) + Confusion Matrix (50%) -->
+<div class="row">
+
+    {% for file in files %}
+        {% if "roc" in file.lower() %}
+        <div class="col-md-6 mb-4">
+            <div class="card card-custom p-3">
+                <h5 class="text-center text-muted">ROC Curve</h5>
+                <img src="{{ url_for('static', filename='cnn/' + file) }}"
+                     class="img-fluid rounded w-100">
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    {% for file in files %}
+        {% if "confusion" in file.lower() %}
+        <div class="col-md-6 mb-4">
+            <div class="card card-custom p-3">
+                <h5 class="text-center text-muted">Confusion Matrix</h5>
+                <img src="{{ url_for('static', filename='cnn/' + file) }}"
+                     class="img-fluid rounded w-100">
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+</div>
+
+<!-- Reports Section -->
+<div class="card card-custom p-4 mt-3">
+    <h5>Reports & Files</h5>
+    <div class="row">
+        {% for file in files %}
+            {% if file.endswith('.txt') or file.endswith('.csv') %}
+                <div class="col-md-4 mb-2">
+                    <a href="{{ url_for('static', filename='cnn/' + file) }}"
+                       class="btn btn-outline-primary w-100">
+                        Download {{ file }}
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
