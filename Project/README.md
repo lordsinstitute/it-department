@@ -1,4 +1,4 @@
-# IDS Using Machine Learning (IDS Shield)
+#  Intrusion Detection System Using Machine Learning (IDS Shield)
 ### IDS SHIELD: AI-Powered Intrusion Detection System with Multi-Model Analysis
 
 ---
