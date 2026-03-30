@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Report{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+  <h2 class="text-center text-primary mb-4">Attendance Report - {{ today }}</h2>
+
+  {% if records %}
+  <table class="table table-bordered table-hover shadow-sm">
+    <thead class="table-dark">
+      <tr>
+        <th>Student Name</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for name, time in records %}
+      <tr>
+        <td>{{ name }}</td>
+        <td>{{ time }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-warning text-center">
+    No attendance records found for today.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

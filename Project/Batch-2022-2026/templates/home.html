@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Welcome - Face Attendance System{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4 rounded-4">
+                <h1 class="mb-4 text-primary fw-bold">Welcome to Smart Attendance System</h1>
+                <p class="lead">
+                    This system uses advanced <strong>facial recognition technology</strong> 
+                    to simplify and secure attendance tracking.
+                </p>
+                <hr class="my-4">
+                <p>
+                    Use the navigation bar above to explore the Admin and User modules.
+                </p>
+                <div class="d-flex justify-content-center mt-3 gap-3">
+                    <a href="{{ url_for('admin.admin_login') }}" class="btn btn-outline-primary btn-lg">
+                        Admin Module
+                    </a>
+                    <a href="{{ url_for('user.attendance') }}" class="btn btn-outline-success btn-lg">
+                        User Module
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
