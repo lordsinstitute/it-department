@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>Admin Login</h4>
+
+<form method="POST" class="w-25 mx-auto">
+    <input class="form-control mb-2" name="username" placeholder="Username" required>
+    <input type="password" class="form-control mb-2" name="password" placeholder="Password" required>
+    <button class="btn btn-dark w-100">Login</button>
+</form>
+{% endblock %}
