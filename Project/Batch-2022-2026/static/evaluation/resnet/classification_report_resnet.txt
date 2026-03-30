@@ -1,0 +1,13 @@
+ECG Heart Disease Classification Report
+=====================================
+
+                                                                  precision    recall  f1-score   support
+
+      ECG Images of Myocardial Infarction Patients (240x12=2880)       0.75      0.03      0.05       112
+     ECG Images of Patient that have History of MI (172x12=2064)       0.00      0.00      0.00       112
+ECG Images of Patient that have abnormal heartbeat (233x12=2796)       0.37      0.91      0.52       112
+                          Normal Person ECG Images (284x12=3408)       0.32      0.46      0.38       112
+
+                                                        accuracy                           0.35       448
+                                                       macro avg       0.36      0.35      0.24       448
+                                                    weighted avg       0.36      0.35      0.24       448
