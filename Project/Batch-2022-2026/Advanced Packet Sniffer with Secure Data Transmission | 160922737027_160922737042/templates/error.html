@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card p-4">
+      <h3 class="mb-1">Error {{ code }}</h3>
+      <p class="small-muted mb-0">{{ message }}</p>
+      <div class="mt-3">
+        <a class="btn btn-dark" href="{{ url_for('dashboard') if current_user.is_authenticated else url_for('login') }}">
+          Go back
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

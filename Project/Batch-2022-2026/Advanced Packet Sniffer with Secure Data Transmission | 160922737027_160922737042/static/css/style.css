@@ -1,0 +1,37 @@
+:root {
+  --brand: #1f2937;
+}
+
+body {
+  background: #f6f8fb;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+}
+
+.badge-risk {
+  font-size: 0.85rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 999px;
+}
+
+pre.codebox {
+  background: #0b1220;
+  color: #e5e7eb;
+  padding: 12px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.small-muted {
+  font-size: 0.9rem;
+  color: #6b7280;
+}

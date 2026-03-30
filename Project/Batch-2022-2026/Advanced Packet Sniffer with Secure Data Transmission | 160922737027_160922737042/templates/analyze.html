@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h4 class="mb-1">Analyze</h4>
+          <div class="small-muted">Paste packet-like logs or upload a text log file. Risk scoring + evidence hash-chain included.</div>
+        </div>
+      </div>
+
+      <hr>
+
+      <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label class="form-label">Input Type</label>
+          <select class="form-select" name="input_mode" id="input_mode">
+            <option value="text" selected>Text Input</option>
+            <option value="file">File Upload</option>
+          </select>
+        </div>
+
+        <div id="text_block" class="mb-3">
+          <label class="form-label">Paste Log / Output</label>
+          <textarea class="form-control" name="payload" rows="10" placeholder="Example: tcpdump/firewall/proxy logs..."></textarea>
+        </div>
+
+        <div id="file_block" class="mb-3" style="display:none;">
+          <label class="form-label">Upload Text Log</label>
+          <input class="form-control" type="file" name="upload" accept=".txt,.log,.csv">
+          <div class="form-text">Max 2MB. Files are stored in /uploads for demo traceability.</div>
+        </div>
+
+        <button class="btn btn-dark">Run Analysis</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card p-4">
+      <h5 class="mb-2">What this detects</h5>
+      <ul class="small-muted mb-0">
+        <li>Suspicious keywords (recon/tools/encoded commands)</li>
+        <li>Port scan heuristics (many unique ports)</li>
+        <li>High-risk ports (RDP/SMB/reverse-shell patterns)</li>
+        <li>DNS tunneling hints (long encoded tokens)</li>
+        <li>Possible credential exposure patterns</li>
+      </ul>
+      <hr>
+      <div class="small-muted">
+        <b>Alert Simulation:</b> High/Critical triggers terminal + on-screen toast alerts.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const inputMode = document.getElementById("input_mode");
+  const textBlock = document.getElementById("text_block");
+  const fileBlock = document.getElementById("file_block");
+
+  function syncBlocks() {
+    const mode = inputMode.value;
+    if (mode === "file") {
+      textBlock.style.display = "none";
+      fileBlock.style.display = "block";
+    } else {
+      textBlock.style.display = "block";
+      fileBlock.style.display = "none";
+    }
+  }
+
+  inputMode.addEventListener("change", syncBlocks);
+  syncBlocks();
+</script>
+{% endblock %}
