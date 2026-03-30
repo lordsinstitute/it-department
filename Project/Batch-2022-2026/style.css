@@ -1,0 +1,35 @@
+body {
+  background-color: #f4f7fb;
+  font-family: "Poppins", sans-serif;
+}
+
+.header {
+  background-color: #4b6584;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.navbar {
+  background-color: #2f3640 !important;
+}
+
+.footer {
+  background-color: #f1f2f6;
+  font-size: 14px;
+}
+
+.card {
+  border-radius: 12px;
+  background-color: #fff;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.upload-section {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
