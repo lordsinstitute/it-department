@@ -1,0 +1,3 @@
+pip install torch torchvision transformers huggingface_hub pillow requests accelerate flask
+
+pip install torch torchvision transformers datasets timm scikit-learn matplotlib seaborn
