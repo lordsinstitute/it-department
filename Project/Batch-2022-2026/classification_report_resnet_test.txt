@@ -1,0 +1,8 @@
+              precision    recall  f1-score   support
+
+      Normal       0.91      0.89      0.90        72
+Malnutrition       0.89      0.92      0.90        72
+
+    accuracy                           0.90       144
+   macro avg       0.90      0.90      0.90       144
+weighted avg       0.90      0.90      0.90       144
