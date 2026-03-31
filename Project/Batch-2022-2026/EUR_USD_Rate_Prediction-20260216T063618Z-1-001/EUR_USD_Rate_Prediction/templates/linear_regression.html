@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Linear Regression Model Performance</h3>
+
+<!-- ============================= -->
+<!-- Metrics Table -->
+<!-- ============================= -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        Linear Regression Performance Metrics
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        {% for key in metrics[0].keys() %}
+                        <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in metrics %}
+                    <tr>
+                        {% for value in row.values() %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= -->
+<!-- Result Images -->
+<!-- ============================= -->
+<div class="row">
+    {% for img in images %}
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <img
+                src="{{ url_for('static', filename='outputs_lr/' + img) }}"
+                class="img-fluid rounded"
+                style="cursor:pointer"
+                data-bs-toggle="modal"
+                data-bs-target="#imgModal"
+                data-img="{{ url_for('static', filename='outputs_lr/' + img) }}"
+                data-title="{{ img }}"
+            >
+            <div class="card-body text-center">
+                <small class="text-muted">{{ img }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- ============================= -->
+<!-- Modal -->
+<!-- ============================= -->
+<div class="modal fade" id="imgModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <img id="modalImage" class="img-fluid rounded">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ============================= -->
+<!-- Modal Script -->
+<!-- ============================= -->
+<script>
+    const imgModal = document.getElementById('imgModal');
+
+    imgModal.addEventListener('show.bs.modal', function (event) {
+        const img = event.relatedTarget;
+        document.getElementById('modalImage').src = img.getAttribute('data-img');
+        document.getElementById('modalTitle').textContent = img.getAttribute('data-title');
+    });
+</script>
+
+{% endblock %}
