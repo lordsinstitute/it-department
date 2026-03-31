@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4 shadow-sm">
+  <h4>Processing complete</h4>
+  <p>Frames processed: <strong>{{ summary.frames_processed }}</strong><br>
+     FPS used: <strong>{{ summary.fps_used }}</strong></p>
+
+  <p>
+    <a class="btn btn-outline-primary me-2" href="{{ url_for('uploaded_file', filename=input_file) }}">Download Original</a>
+    <a class="btn btn-primary" href="{{ url_for('output_file', filename=output_file) }}">Download Annotated Video</a>
+  </p>
+
+  <hr>
+  <p class="text-muted small">If the video doesn't play in your browser, download and open in VLC.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4 shadow-sm">
+  <h4>Welcome</h4>
+  <p>This demo app lets you upload a vehicle video and runs vehicle tracking + crude speed estimation. Use the <strong>Upload Video</strong> page to get started.</p>
+  <ul>
+    <li>Recommended video: stationary camera with side-on view of road</li>
+    <li>Tweak <code>speed_detector.estimateSpeed</code> ppm value for better accuracy</li>
+  </ul>
+  <a class="btn btn-primary" href="{{ url_for('upload') }}">Upload Video</a>
+</div>
+{% endblock %}
