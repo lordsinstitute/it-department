@@ -1,0 +1,263 @@
+from flask import *
+import data.DataAnalysis
+import data.CompAlg
+import data.FinalClassifier
+
+
+
+admin_bp = Blueprint('admin_bp', __name__)
+
+@admin_bp.route('/admin')
+def admin():
+    return render_template("admin.html")
+
+
+@admin_bp.route('/admin_home',  methods=['POST', 'GET'])
+def admin_home():
+    msg = ''
+    if request.method == 'POST':
+        if request.form['user'] == 'admin' and request.form['pwd'] == 'admin':
+            return render_template("upload_dataset.html")
+        else:
+            msg = 'Incorrect username / password !'
+            return render_template('admin.html', msg=msg)
+    else:
+        return render_template('admin.html', msg=msg)
+
+
+@admin_bp.route('/admin_upload',  methods=['POST', 'GET'])
+def admin_upload():
+    msg = ''
+    if request.method == 'POST':
+        f = request.files['file']
+f.save(f.filename)
+        msg = 'File uploaded successfully'
+        return render_template("upload_dataset.html", name=f.filename, msg=msg)
+    else:
+        return render_template("upload_dataset.html")
+
+@admin_bp.route('/data_analysis')
+def data_analysis():
+data.DataAnalysis.dataAnalysis()
+    return render_template("DataAnalysis.html")
+
+
+@admin_bp.route('/eval_alg')
+def eval_alg():
+    acc = data.CompAlg.compAlg()
+    return render_template("CompAlg.html", acc=acc)
+
+
+@admin_bp.route('/cr_model')
+def cr_model():
+    msg, acc=data.FinalClassifier.create_model()
+     return render_template("create_model.html", msg=msg, acc=acc)
+
+
+@admin_bp.route('/logout')
+def logout():
+    return render_template("home.html")
+
+CompAlg.py
+import numpy as np
+import pandas as pd
+import re
+import string
+from nltk.corpus import stopwords
+from bs4 import BeautifulSoup
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import SnowballStemmer
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import LogisticRegression
+import seaborn as sns
+import matplotlib.pyplot as plt
+import joblib
+plt.style.use('seaborn-darkgrid')
+
+
+def compAlg():
+df = pd.read_csv('../deceptive-opinion.csv')
+df = df.drop(["hotel", "polarity", "source"], axis=1)
+    # label_encoder object knows how to understand word labels.
+label_encoder = preprocessing.LabelEncoder()
+
+    # Encode labels in column 'deceptive'.
+df['deceptive'] = label_encoder.fit_transform(df['deceptive'])
+
+df['text'] = df['text'].map(lambda a: clean_numbers(a))
+df['text'] = df['text'].map(lambda a: clean_char(a))
+df['text'] = df['text'].map(lambda a: clean_text(a))
+
+    x = df['text']
+    y = df['deceptive']
+X_train, X_test, y_train, y_test = train_test_split(df['text'], df['deceptive'], random_state=5)
+
+count_vector = CountVectorizer()
+
+training_data = count_vector.fit_transform(X_train)
+testing_data = count_vector.transform(X_test)
+
+    acc={}
+
+naive_bayes = MultinomialNB()
+naive_bayes.fit(training_data, y_train)
+    # joblib.dump(naive_bayes, 'FR_ML_model.pkl')
+    predictions = naive_bayes.predict(testing_data)
+mnbaccuracy = accuracy_score(y_test, predictions)
+    acc['MNB']=mnbaccuracy*100
+    print('MNB Accuracy score: ', acc['MNB'])
+
+    svc = SVC()
+svc.fit(training_data, y_train)
+svc_predictions = svc.predict(testing_data)
+svcaccuracy = accuracy_score(y_test, svc_predictions)
+    acc['SVM'] = svcaccuracy * 100
+    print('SVM Accuracy score: ', acc['SVM'])
+
+knn = KNeighborsClassifier(n_neighbors=7)
+knn.fit(training_data, y_train)
+knn_predictions = knn.predict(testing_data)
+knnaccuracy = accuracy_score(knn_predictions, y_test)
+    acc['KNN'] = knnaccuracy * 100
+    print('KNN Accuracy score: ', acc['KNN'])
+
+gnb = GaussianNB()
+    training_data1 = training_data.toarray()
+gnb.fit(training_data1, y_train)
+    testing_data1 = testing_data.toarray()
+gnb_predictions = gnb.predict(testing_data1)
+gnb_accuracy = accuracy_score(gnb_predictions, y_test)
+    acc['GNB'] = gnb_accuracy * 100
+    print('GNB Accuracy score: ', acc['GNB'])
+
+dtree_model = DecisionTreeClassifier(max_depth=2)
+dtree_model.fit(training_data1, y_train)
+dtree_predictions = dtree_model.predict(testing_data)
+dtree_accuracy = accuracy_score(dtree_predictions, y_test)
+    acc['DT'] = dtree_accuracy * 100
+    print('DT Accuracy score: ', acc['DT'])
+
+sgd_clf = SGDClassifier()
+sgd_clf.fit(training_data, y_train)
+sgdpredicted = sgd_clf.predict(testing_data)
+sgd_accuracy = accuracy_score(sgdpredicted, y_test)
+    acc['SGD'] = sgd_accuracy * 100
+    print('SGD Accuracy score: ', acc['SGD'])
+
+lr = LogisticRegression()
+lr.fit(training_data, y_train)
+lrpredicted = lr.predict(testing_data)
+lr_accuracy = accuracy_score(lrpredicted, y_test)
+    acc['LR'] = lr_accuracy * 100
+    print('LR Accuracy score: ', acc['LR'])
+
+    # Compare algorithms
+
+    #colors = ["purple", "green", "orange", "magenta", "#CFC60E", "#0FBBAE"]
+
+sns.set_style("whitegrid")
+plt.figure(figsize=(16, 5))
+plt.yticks(np.arange(0, 100, 10))
+plt.ylabel("Accuracy %")
+plt.xlabel("Algorithms")
+sns.barplot(x=list(acc.keys()), y=list(acc.values()), palette='flare')
+    # for index, row in groupedvalues.iterrows():
+plt.savefig('../static/vis/AlgComp.jpg')
+
+    # plt.show()
+
+    return acc
+
+
+def clean_text(text):
+    ## Remove puncuation
+    text = text.translate(string.punctuation)
+
+    ## Convert words to lower case and split them
+    text = text.lower().split()
+
+    ## Remove stop words
+    stops = set(stopwords.words("english"))
+    text = [w for w in text if not w in stops and len(w) >= 3]
+
+    text = " ".join(text)
+
+    # Clean the text
+    text = re.sub(r"[^A-Za-z0-9^,!.\/'+-=]", " ", text)
+    text = re.sub(r"what's", "what is ", text)
+    text = re.sub(r"\'s", " ", text)
+    text = re.sub(r"\'ve", " have ", text)
+    text = re.sub(r"n't", " not ", text)
+    text = re.sub(r"i'm", "i am ", text)
+    text = re.sub(r"\'re", " are ", text)
+    text = re.sub(r"\'d", " would ", text)
+    text = re.sub(r"\'ll", " will ", text)
+    text = re.sub(r",", " ", text)
+    text = re.sub(r"\.", " ", text)
+    text = re.sub(r"!", " ! ", text)
+    text = re.sub(r"\/", " ", text)
+    text = re.sub(r"\^", " ^ ", text)
+    text = re.sub(r"\+", " + ", text)
+    text = re.sub(r"\-", " - ", text)
+    text = re.sub(r"\=", " = ", text)
+    text = re.sub(r"'", " ", text)
+    text = re.sub(r"(\d+)(k)", r"\g<1>000", text)
+    text = re.sub(r":", " : ", text)
+    text = re.sub(r" e g ", " eg ", text)
+    text = re.sub(r" b g ", " bg ", text)
+    text = re.sub(r" u s ", " american ", text)
+    text = re.sub(r"\0s", "0", text)
+    text = re.sub(r" 9 11 ", "911", text)
+    text = re.sub(r"e - mail", "email", text)
+    text = re.sub(r"j k", "jk", text)
+    text = re.sub(r"\s{2,}", " ", text)
+
+    text = text.split()
+    stemmer = SnowballStemmer('english')
+stemmed_words = [stemmer.stem(word) for word in text]
+    text = " ".join(stemmed_words)
+
+    return text
+
+# Some preprocesssing that will be common to all the text classification methods
+
+
+
+def clean_char(x):
+puncts = [',', '.', '"', ':', ')', '(', '-', '!', '?', '|', ';', "'", '$', '&', '/', '[', ']', '>', '%', '=', '#',
+              '*', '+', '\\', '•', '~', '@', '£',
+              '·', '_', '{', '}', '©', '^', '®', '`', '<', '→', '°', '€', '™', '›', '♥', '←', '×', '§', '″', '′', 'Â',
+              '█', '½', 'à', '…',
+              '“', '★', '”', '–', '●', 'â', '►', '−', '¢', '²', '¬', '░', '¶', '↑', '±', '¿', '▾', '═', '¦', '║', '―',
+              '¥', '▓', '—', '‹', '─',
+              '▒', '：', '¼', '⊕', '▼', '▪', '†', '■', '’', '▀', '¨', '▄', '♫', '☆', 'é', '¯', '♦', '¤', '▲', 'è', '¸',
+              '¾', 'Ã', '⋅', '‘', '∞',
+              '∙', '）', '↓', '、', '│', '（', '»', '，', '♪', '╩', '╚', '³', '・', '╦', '╣', '╔', '╗', '▬', '❤', 'ï', 'Ø',
+              '¹', '≤', '‡', '√', ]
+    x = str(x)
+    for punct in puncts:
+        if punct in x:
+            x = x.replace(punct, f' {punct} ')
+    return x
+
+
+def clean_numbers(x):
+    if bool(re.search(r'\d', x)):
+        x = re.sub('[0-9]{5,}', '#####', x)
+        x = re.sub('[0-9]{4}', '####', x)
+        x = re.sub('[0-9]{3}', '###', x)
+        x = re.sub('[0-9]{2}', '##', x)
+    return x
