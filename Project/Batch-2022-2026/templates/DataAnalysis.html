@@ -1,0 +1,127 @@
+{% include "header_admin.html" %}
+<div class="container">
+    <table> <tr><td style="vertical-align: top">
+   <div id="menu">
+  <ul>
+    <li onclick="hide_sa()">Severity Analysis</li>
+    <li onclick="hide_aa()">Age Analysis</li>
+    <li onclick="hide_da()">Day Analysis</li>
+    <li onclick="hide_ea()">Experience Analysis</li>
+    <li onclick="hide_ga()">Gender Analysis</li>
+    <li onclick="hide_ya()">Service Year Analysis</li>
+
+  </ul>
+</div></td>
+        <td>
+
+<div class="loader" id="loader" style="display: none; margin: 150px"><div></div><div></div></div>
+<div id="AccDisplay"></div>
+     </td>
+</tr>
+</table>
+<div id="sa" style="display: none">
+     <img src="../static/pimg/fcas.jpg"  width="700px" height="350px">
+</div>
+
+<div id="aa" style="display: none">
+     <img src="../static/pimg/fda.jpg"  width="700px" height="350px">
+</div>
+
+<div id="da" style="display: none">
+     <img src="../static/pimg/fdd.jpg"  width="700px" height="350px">
+</div>
+
+<div id="ea" style="display: none">
+     <img src="../static/pimg/fdde.jpg"  width="700px" height="350px">
+</div>
+
+<div id="ga" style="display: none">
+     <img src="../static/pimg/fdg.jpg"  width="700px" height="350px">
+</div>
+<div id="ya" style="display: none">
+     <img src="../static/pimg/fdsy.jpg"  width="700px" height="350px">
+</div>
+
+
+
+</div>
+
+<script>
+var myVar;
+
+function hide_sa() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_sa, 1500);
+}
+
+function show_sa() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('sa').innerHTML;
+}
+
+function hide_aa() {
+    document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_aa, 1500);
+}
+
+function show_aa() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('aa').innerHTML;
+}
+
+function hide_da() {
+    document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_da, 1500);
+}
+
+function show_da() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('da').innerHTML;
+}
+
+function hide_ea() {
+    document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_ea, 1500);
+}
+
+function show_ea() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('ea').innerHTML;
+}
+
+function hide_ga() {
+    document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_ga, 1500);
+}
+
+function show_ga() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('ga').innerHTML;
+}
+
+function hide_ya() {
+    document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_ya, 1500);
+}
+
+function show_ya() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('ya').innerHTML;
+}
+
+</script>
+</body>
+
+</html>
