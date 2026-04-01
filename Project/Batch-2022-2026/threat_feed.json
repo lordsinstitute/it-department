@@ -1,0 +1,18 @@
+{
+  "source": "Local Demo Threat Intel Feed",
+  "last_updated": "2026-01-01",
+  "iocs": [
+    "evil-example.com",
+    "badc2.example",
+    "185.100.87.202",
+    "7b2c0f2f9d4b1a8c2e7a0f9c0d2f1a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f"
+  ],
+  "ttp_keywords": [
+    "living off the land",
+    "credential dumping",
+    "lateral movement",
+    "persistence",
+    "command and control",
+    "exfiltration"
+  ]
+}

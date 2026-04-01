@@ -1,0 +1,23 @@
+{
+  "keywords": {
+    "exploit": 10,
+    "payload": 9,
+    "dropper": 12,
+    "obfuscation": 10,
+    "base64": 8,
+    "powershell": 9,
+    "mimikatz": 18,
+    "cobalt strike": 18,
+    "beacon": 14,
+    "reverse shell": 16,
+    "encrypt files": 16,
+    "ransom": 16,
+    "exfiltrate": 15,
+    "steal credentials": 15,
+    "sql injection": 9,
+    "xss": 7,
+    "csrf": 6,
+    "0day": 12,
+    "zero day": 12
+  }
+}
