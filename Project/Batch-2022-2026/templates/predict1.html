@@ -1,0 +1,55 @@
+{% include "header_user.html" %}
+
+<div class="content">
+    <br>
+<form action="{{ url_for('user_bp.predict')}}" method="POST">
+   <div class="row">
+        <div class="input-field col s4">
+            <label for="first_name" style="font-size: 14px"><b>Age</b></label>
+            <br>
+            <input placeholder="Age" name="age" id="age" type="text" class="validate">
+        </div>
+        <br>
+        <div class="input-field col s4">
+            <label for="_name" style="font-size: 14px"><b>Gender</b></label>
+            <br>
+            <input id="_name" name="Gender" placeholder="0 - Male/1 - Female" type="text" class="validate">
+        </div>
+        <br>
+        <div class="input-field col s4">
+            <label for="last_name" style="font-size: 14px"><b>BMI</b></label>
+              <br>
+            <input id="bmi" name="bmi" placeholder="BMI"  type="text" class="validate">
+          </div>
+        <br>
+        <div class="input-field col s4">
+
+            <label for="last_name" style="font-size: 14px"><b>Childrens</b></label>
+              <br>
+            <input id="children" name="children" placeholder="0 for None"  type="text" class="validate">
+  
+          </div>
+        <br>
+        <div class="input-field col s4">
+            <label for="smoker" style="font-size: 14px"><b>Do you Smoke?</b></label>
+            <br>
+            <input id="smoker" name="smoker" placeholder="1 - Yes/0 - No" type="text" class="validate">
+        </div>
+        <br>
+        <div class="input-field col s4">
+            <label for="region" style="font-size: 14px"><b>Which Region?</b></label>
+            <br>
+            <input id="region" name="region" placeholder="0-NW/1-NE/2-SE/3-SW" type="text" class="validate">
+        </div>
+      </div>
+      <br>
+      <div class="row center">
+
+          <button type="submit" class="btn-large waves-effect waves-light lamber lighten-1">Predict Premium Amount</button>
+      </div>
+
+
+
+<div class="clr"></div>
+    </form>
+</div>
