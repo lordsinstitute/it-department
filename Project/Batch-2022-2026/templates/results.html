@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AQI Analysis Results</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+
+<body style="background-color:#f4f7f9;">
+
+  <!-- Header -->
+  <header class="text-white text-center py-4 shadow"
+          style="background: linear-gradient(to right, #00796B, #26A69A);">
+      <h2 class="fw-bold">🌍 AQI Health Recommendation Agent</h2>
+      <p class="mb-0">Personalized Environmental Health Insights</p>
+  </header>
+
+  <div class="container my-5">
+
+      <!-- AQI Summary Card -->
+      <div class="card shadow-lg border-0 rounded-4 p-4 mb-4">
+
+          <div class="row align-items-center">
+
+              <!-- AQI Value -->
+              <div class="col-md-4 text-center">
+                  <h5 class="text-muted">Current AQI</h5>
+                  <div class="display-3 fw-bold text-dark">
+                      {{ aqi }}
+                  </div>
+                  <span class="badge bg-dark fs-6 px-3 py-2 mt-2">
+                      {{ status }}
+                  </span>
+              </div>
+
+              <!-- Divider -->
+              <div class="col-md-1 d-none d-md-block">
+                  <div style="border-left:2px solid #dee2e6; height:120px;"></div>
+              </div>
+
+              <!-- Environmental Metrics -->
+              <div class="col-md-7">
+                  <h5 class="mb-3 text-success">Environmental Details</h5>
+                  <div class="row">
+                      <div class="col-6">🌡 Temperature: <strong>{{ aqi_data.temperature }} °C</strong></div>
+                      <div class="col-6">💧 Humidity: <strong>{{ aqi_data.humidity }}%</strong></div>
+                      <div class="col-6 mt-2">🌬 Wind Speed: <strong>{{ aqi_data.wind_speed }} km/h</strong></div>
+                      <div class="col-6 mt-2">🟢 PM2.5: <strong>{{ aqi_data.pm25 }}</strong></div>
+                      <div class="col-6 mt-2">🟡 PM10: <strong>{{ aqi_data.pm10 }}</strong></div>
+                      <div class="col-6 mt-2">🔴 CO: <strong>{{ aqi_data.co }}</strong></div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+
+      <!-- Health Recommendations -->
+      <div class="mt-4">
+
+          <h3 class="text-center mb-4 fw-bold text-primary">
+              🩺 Personalized Health Recommendations
+          </h3>
+
+          <!-- Impact -->
+          <div class="card shadow-sm mb-4 border-0 rounded-4">
+              <div class="card-header bg-danger text-white fw-semibold">
+                  1️⃣ Impact on Health
+              </div>
+              <div class="card-body">
+                  {{ recommendation_sections.impact }}
+              </div>
+          </div>
+
+          <!-- Precautions -->
+          <div class="card shadow-sm mb-4 border-0 rounded-4">
+              <div class="card-header bg-warning text-dark fw-semibold">
+                  2️⃣ Safety Precautions
+              </div>
+              <div class="card-body">
+                  {{ recommendation_sections.precautions }}
+              </div>
+          </div>
+
+          <!-- Advisability -->
+          <div class="card shadow-sm mb-4 border-0 rounded-4">
+              <div class="card-header bg-info text-white fw-semibold">
+                  3️⃣ Activity Advisability
+              </div>
+              <div class="card-body">
+                  {{ recommendation_sections.advisable }}
+              </div>
+          </div>
+
+          <!-- Timing -->
+          <div class="card shadow-sm mb-4 border-0 rounded-4">
+              <div class="card-header bg-success text-white fw-semibold">
+                  4️⃣ Suggested Timing
+              </div>
+              <div class="card-body">
+                  {{ recommendation_sections.timing }}
+              </div>
+          </div>
+
+      </div>
+
+      <div class="text-center mt-4">
+          <a href="/" class="btn btn-lg btn-outline-success rounded-pill px-5">
+              ← Back
+          </a>
+      </div>
+
+  </div>
+
+</body>
+</html>

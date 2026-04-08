@@ -1,0 +1,105 @@
+/* ---------- Global Styling ---------- */
+body {
+    background: linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---------- Header ---------- */
+.header {
+    background: linear-gradient(90deg, #00416A, #00B4DB);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+/* ---------- Buttons ---------- */
+.btn-gradient {
+    background: linear-gradient(90deg, #00B4DB, #0083B0);
+    color: #fff;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(90deg, #0083B0, #00B4DB);
+    transform: scale(1.03);
+}
+
+/* ---------- Cards ---------- */
+.card {
+    border-radius: 16px;
+}
+
+/* ---------- AQI Table ---------- */
+.table th {
+    background-color: #b3e5c0 !important;
+    color: #004d40;
+}
+
+.table td {
+    font-weight: 500;
+    color: #004d40;
+}
+
+/* ---------- Recommendation Section ---------- */
+.recommendation-box {
+    background-color: #f4f9ff;
+    border-left: 6px solid #007bff;
+    padding: 15px;
+    border-radius: 10px;
+    white-space: pre-wrap;
+}
+
+.recommendation-text {
+    font-size: 1rem;
+    color: #003366;
+    line-height: 1.6;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+/* ---------- AQI Badge Colors ---------- */
+.badge {
+    font-size: 0.95rem;
+    padding: 0.6em 1em;
+    border-radius: 20px;
+    color: #fff;
+}
+
+.aqi-good {
+    background-color: #4CAF50; /* green */
+}
+
+.aqi-moderate {
+    background-color: #FFC107; /* yellow */
+    color: #000;
+}
+
+.aqi-unhealthy-sg {
+    background-color: #FF9800; /* orange */
+}
+
+.aqi-unhealthy {
+    background-color: #F44336; /* red */
+}
+
+.aqi-very-unhealthy {
+    background-color: #8E24AA; /* purple */
+}
+
+.aqi-hazardous {
+    background-color: #6D4C41; /* brown */
+}
+
+/* Slight glow for effect */
+.badge:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    transform: scale(1.03);
+    transition: all 0.3s ease;
+}
