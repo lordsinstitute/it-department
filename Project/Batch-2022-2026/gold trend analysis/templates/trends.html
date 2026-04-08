@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Price Trends - Gold Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/static/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        }
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1e3c72;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .back-btn:hover { transform: translateY(-3px); }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .chart-box {
+            background: rgba(20, 20, 40, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 2px solid #FFD700;
+        }
+        .chart-box h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        canvas {
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+        
+        <h1>📊 Recent Price Movement Analysis</h1>
+        
+        <div class="charts-grid">
+            <div class="chart-box">
+                <h2>📅 Last 1 Week Trend</h2>
+                <canvas id="weekChart"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-box" style="background: #10b981;"></div> Historical</div>
+                    <div class="legend-item"><div class="legend-box" style="background: #FFD700;"></div> Predicted</div>
+                </div>
+            </div>
+            <div class="chart-box">
+                <h2>📆 Last 1 Month Trend</h2>
+                <canvas id="monthChart"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-box" style="background: #10b981;"></div> Historical</div>
+                    <div class="legend-item"><div class="legend-box" style="background: #FFD700;"></div> Predicted</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let weekChart = null;
+        let monthChart = null;
+        
+        async function loadTrends() {
+            try {
+                // Get current price from URL parameter if available
+                const urlParams = new URLSearchParams(window.location.search);
+                const currentPrice = urlParams.get('price');
+                
+                const url = currentPrice ? 
+                    `http://localhost:5000/api/recent_trends?price=${currentPrice}` : 
+                    'http://localhost:5000/api/recent_trends';
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                createTrendChart('weekChart', data.week, data.week_future, 'Last 1 Week');
+                createTrendChart('monthChart', data.month, data.month_future, 'Last 1 Month');
+            } catch (error) {
+                console.error('Error loading trends:', error);
+                alert('Error loading trend data. Please try again.');
+            }
+        }
+        
+        function createTrendChart(canvasId, historicalData, futureData, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Combine dates and prices
+            const allDates = [...historicalData.dates, ...futureData.map(f => f.date)];
+            const historicalPrices = [...historicalData.prices, ...Array(futureData.length).fill(null)];
+            const futurePrices = [...Array(historicalData.dates.length).fill(null), ...futureData.map(f => f.price)];
+            
+            // Create gradients
+            const histGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            histGradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
+            histGradient.addColorStop(1, 'rgba(16, 185, 129, 0.05)');
+            
+            const futGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            futGradient.addColorStop(0, 'rgba(255, 215, 0, 0.3)');
+            futGradient.addColorStop(1, 'rgba(255, 215, 0, 0.05)');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: allDates,
+                    datasets: [
+                        {
+                            label: 'Historical Price',
+                            data: historicalPrices,
+                            borderColor: '#10b981',
+                            backgroundColor: histGradient,
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            spanGaps: false
+                        },
+                        {
+                            label: 'Predicted Price',
+                            data: futurePrices,
+                            borderColor: '#FFD700',
+                            backgroundColor: futGradient,
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#FFD700',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            spanGaps: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(20, 20, 40, 0.95)',
+                            titleColor: '#FFD700',
+                            bodyColor: '#fff',
+                            borderColor: '#FFD700',
+                            borderWidth: 2,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.parsed.y !== null) {
+                                        return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 12 },
+                                callback: function(value) {
+                                    return '$' + value.toFixed(0);
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { 
+                                color: '#ffffff',
+                                font: { size: 10 },
+                                maxRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        window.onload = loadTrends;
+    </script>
+</body>
+</html>

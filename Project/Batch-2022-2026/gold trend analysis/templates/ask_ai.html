@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask AI About Model - Gold Price Prediction</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/static/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1e3c72;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .back-btn:hover { transform: translateY(-3px); }
+        .status-box {
+            background: linear-gradient(135deg, #7e22ce 0%, #5b21b6 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .question-btn {
+            background: linear-gradient(135deg, #7e22ce 0%, #5b21b6 100%);
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .question-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(126, 34, 206, 0.4);
+        }
+        .answer-box {
+            background: #f8f9fa;
+            border: 2px solid #7e22ce;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            display: none;
+        }
+        .answer-box h3 {
+            color: #7e22ce;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .answer-content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #7e22ce;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+        
+        <h1>🤖 Ask AI About Our Model</h1>
+        <p class="subtitle">Get AI-powered explanations about our LSTM gold price prediction model</p>
+        
+        <div class="status-box" id="statusBox">
+            <div id="ollamaStatus">⚫ Checking Ollama...</div>
+        </div>
+        
+        <h2 style="color: #7e22ce; margin-bottom: 20px;">💡 Select a Question:</h2>
+        
+        <div class="questions-grid">
+            <button class="question-btn" onclick="askAI('What algorithm does this model use?')">
+                🧠 What algorithm does this model use?
+            </button>
+            <button class="question-btn" onclick="askAI('What features does the model analyze?')">
+                📊 What features does the model analyze?
+            </button>
+            <button class="question-btn" onclick="askAI('How accurate is this prediction model?')">
+                🎯 How accurate is this prediction model?
+            </button>
+            <button class="question-btn" onclick="askAI('What is LSTM and why is it used?')">
+                🔬 What is LSTM and why is it used?
+            </button>
+            <button class="question-btn" onclick="askAI('What technical indicators are used?')">
+                📈 What technical indicators are used?
+            </button>
+            <button class="question-btn" onclick="askAI('How much historical data is used?')">
+                📅 How much historical data is used?
+            </button>
+            <button class="question-btn" onclick="askAI('What is the model architecture?')">
+                🏗️ What is the model architecture?
+            </button>
+            <button class="question-btn" onclick="askAI('How does the model make predictions?')">
+                ⚙️ How does the model make predictions?
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 20px; color: #666;">AI is thinking...</p>
+        </div>
+        
+        <div class="answer-box" id="answerBox">
+            <h3 id="questionTitle">Question:</h3>
+            <div class="answer-content" id="answerContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        async function checkOllamaStatus() {
+            try {
+                const response = await fetch('http://localhost:5000/api/ollama/status');
+                const data = await response.json();
+                
+                const statusEl = document.getElementById('ollamaStatus');
+                if (data.connected) {
+                    statusEl.innerHTML = '✅ Ollama Connected - Ready to answer questions!';
+                } else {
+                    statusEl.innerHTML = '❌ Ollama Disconnected - Please start Ollama to use AI features';
+                }
+            } catch (error) {
+                document.getElementById('ollamaStatus').innerHTML = '❌ Ollama Disconnected';
+            }
+        }
+        
+        function typeWriter(element, text, speed = 15) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+        
+        async function askAI(question) {
+            const loading = document.getElementById('loading');
+            const answerBox = document.getElementById('answerBox');
+            const questionTitle = document.getElementById('questionTitle');
+            const answerContent = document.getElementById('answerContent');
+            
+            // Show loading
+            loading.style.display = 'block';
+            answerBox.style.display = 'none';
+            
+            // Model information context
+            const modelContext = {
+                algorithm: 'LSTM (Long Short-Term Memory) Neural Network',
+                features: '6 technical indicators: Open, High, Low, Close, Volume, Moving Averages (MA10, MA30), RSI, MACD',
+                accuracy: '88% validation accuracy with average error of only $100',
+                data_size: '2 years (730 days) of historical gold price data',
+                sequence_length: '60 days of historical data for each prediction',
+                architecture: '2 LSTM layers (50 units each), 2 Dropout layers (20%), 2 Dense layers',
+                training: 'Trained on normalized data with MinMaxScaler, Adam optimizer',
+                prediction_method: 'Analyzes 60-day sequences with technical indicators to predict next day price'
+            };
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/ollama/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        question: `${question}\n\nModel Details:\n${JSON.stringify(modelContext, null, 2)}\n\nProvide a clear answer with bullet points.`,
+                        context_data: modelContext
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Show answer with typing effect
+                loading.style.display = 'none';
+                answerBox.style.display = 'block';
+                questionTitle.textContent = '❓ ' + question;
+                
+                typeWriter(answerContent, data.answer || 'Unable to get answer. Make sure Ollama is running.', 15);
+                
+                // Scroll to answer
+                answerBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                answerBox.style.display = 'block';
+                questionTitle.textContent = '❓ ' + question;
+                answerContent.innerHTML = '⚠️ Error: Make sure Ollama is running on localhost:11434';
+            }
+        }
+        
+        // Check status on load
+        window.onload = function() {
+            checkOllamaStatus();
+            setInterval(checkOllamaStatus, 30000);
+        };
+    </script>
+</body>
+</html>

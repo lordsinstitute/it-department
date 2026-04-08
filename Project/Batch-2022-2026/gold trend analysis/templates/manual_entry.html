@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Entry Prediction - Gold Price</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/static/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1e3c72;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .back-btn:hover { transform: translateY(-3px); }
+        .info-box {
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .info-box h3 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        .info-box p {
+            color: #334155;
+            line-height: 1.6;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #7e22ce;
+            box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.1);
+        }
+        .helper-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+        button {
+            background: linear-gradient(135deg, #7e22ce 0%, #5b21b6 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(126, 34, 206, 0.4);
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(126, 34, 206, 0.6);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .result.up {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        .result.down {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        .result h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .currency-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .currency-box {
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .currency-box.usd {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+        .currency-box.inr {
+            background: linear-gradient(135deg, #7e22ce 0%, #5b21b6 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(126, 34, 206, 0.4);
+        }
+        .currency-box h3 {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        .currency-box .price {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .currency-box .label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .result-item {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .result-item label {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9em;
+        }
+        .result-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+        
+        <h1>📝 Manual Entry Prediction</h1>
+        <p class="subtitle">Enter technical indicators manually for custom prediction</p>
+        
+        <div class="info-box">
+            <h3>⚠️ Important Note:</h3>
+            <p>
+                Our LSTM model is trained on <strong>60-day sequences</strong> of historical data. 
+                For accurate predictions, you need to provide current technical indicators that represent 
+                the market state. The model will use the latest 60 days from our database combined with 
+                your indicators to make a prediction.
+            </p>
+        </div>
+        
+        <form id="manualForm">
+            <h3 style="color: #7e22ce; margin-bottom: 20px;">📊 Enter Technical Indicators:</h3>
+            
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="close">Close Price (USD) *</label>
+                    <input type="number" id="close" step="0.01" required>
+                    <span class="helper-text">Current closing price</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="open">Open Price (USD) *</label>
+                    <input type="number" id="open" step="0.01" required>
+                    <span class="helper-text">Today's opening price</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="high">High Price (USD) *</label>
+                    <input type="number" id="high" step="0.01" required>
+                    <span class="helper-text">Today's highest price</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="low">Low Price (USD) *</label>
+                    <input type="number" id="low" step="0.01" required>
+                    <span class="helper-text">Today's lowest price</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="volume">Volume *</label>
+                    <input type="number" id="volume" step="1" required>
+                    <span class="helper-text">Trading volume</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="ma10">MA 10 (USD)</label>
+                    <input type="number" id="ma10" step="0.01">
+                    <span class="helper-text">10-day moving average</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="ma30">MA 30 (USD)</label>
+                    <input type="number" id="ma30" step="0.01">
+                    <span class="helper-text">30-day moving average</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="rsi">RSI (0-100)</label>
+                    <input type="number" id="rsi" min="0" max="100" step="0.01">
+                    <span class="helper-text">Relative Strength Index</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="macd">MACD</label>
+                    <input type="number" id="macd" step="0.01">
+                    <span class="helper-text">MACD indicator value</span>
+                </div>
+            </div>
+            
+            <button type="submit" id="predictBtn">🔮 Predict Tomorrow's Price</button>
+        </form>
+        
+        <div id="result" class="result">
+            <h2 id="direction"></h2>
+            
+            <h3 style="margin: 20px 0 15px 0; color: white; font-size: 1.3em;">📊 Current Price</h3>
+            <div class="currency-boxes">
+                <div class="currency-box usd">
+                    <h3>💵 USD (per ounce)</h3>
+                    <div class="price" id="currentPriceUSD">-</div>
+                    <div class="label">Current Market Price</div>
+                </div>
+                <div class="currency-box inr">
+                    <h3>🇮🇳 INR (per 10 grams)</h3>
+                    <div class="price" id="currentPriceINR">-</div>
+                    <div class="label" id="exchangeRateCurrent">Exchange Rate: ₹91.00 = $1</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 30px 0 15px 0; color: white; font-size: 1.3em;">🔮 Predicted Price</h3>
+            <div class="currency-boxes">
+                <div class="currency-box usd">
+                    <h3>💵 USD (per ounce)</h3>
+                    <div class="price" id="predictedPriceUSD">-</div>
+                    <div class="label">Tomorrow's Prediction</div>
+                </div>
+                <div class="currency-box inr">
+                    <h3>🇮🇳 INR (per 10 grams)</h3>
+                    <div class="price" id="predictedPriceINR">-</div>
+                    <div class="label" id="exchangeRatePredicted">Exchange Rate: ₹91.00 = $1</div>
+                </div>
+            </div>
+            
+            <div class="result-grid" style="margin-top: 30px;">
+                <div class="result-item">
+                    <label>Expected Change</label>
+                    <div class="value" id="changePercent">-</div>
+                </div>
+                <div class="result-item">
+                    <label>Confidence</label>
+                    <div class="value" id="confidence">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let exchangeRate = 91.0; // Default
+        
+        // Fetch live exchange rate on page load
+        async function fetchExchangeRate() {
+            try {
+                const response = await fetch('http://localhost:5000/api/exchange_rate');
+                const data = await response.json();
+                exchangeRate = data.rate;
+                updateExchangeRateDisplay();
+            } catch (error) {
+                console.log('Using default exchange rate');
+            }
+        }
+        
+        // Call on page load
+        fetchExchangeRate();
+        
+        // Update exchange rate display in multiple places
+        function updateExchangeRateDisplay() {
+            const rateText = `Exchange Rate: ₹${exchangeRate.toFixed(2)} = $1`;
+            const elements = ['exchangeRateCurrent', 'exchangeRatePredicted'];
+            elements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = rateText;
+            });
+        }
+        
+        document.getElementById('manualForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('predictBtn');
+            const result = document.getElementById('result');
+            
+            btn.disabled = true;
+            btn.textContent = '🔄 Analyzing...';
+            result.style.display = 'none';
+            
+            // Get form values
+            const formData = {
+                close: parseFloat(document.getElementById('close').value),
+                open: parseFloat(document.getElementById('open').value),
+                high: parseFloat(document.getElementById('high').value),
+                low: parseFloat(document.getElementById('low').value),
+                volume: parseFloat(document.getElementById('volume').value),
+                ma_10: document.getElementById('ma10').value ? parseFloat(document.getElementById('ma10').value) : null,
+                ma_30: document.getElementById('ma30').value ? parseFloat(document.getElementById('ma30').value) : null,
+                rsi: document.getElementById('rsi').value ? parseFloat(document.getElementById('rsi').value) : null,
+                macd: document.getElementById('macd').value ? parseFloat(document.getElementById('macd').value) : null
+            };
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/predict_manual', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                
+                // Display results
+                result.style.display = 'block';
+                result.className = 'result ' + data.direction.toLowerCase();
+                
+                document.getElementById('direction').textContent = 
+                    data.direction === 'UP' ? '📈 PREDICTION: PRICE WILL GO UP!' : '📉 PREDICTION: PRICE WILL GO DOWN!';
+                
+                // Current Price
+                const currentPricePerOunce = formData.close;
+                const currentPricePerGram = currentPricePerOunce / 31.1035;
+                const currentPricePer10g = currentPricePerGram * 10;
+                const currentInrPer10g = currentPricePer10g * exchangeRate;
+                
+                document.getElementById('currentPriceUSD').textContent = '$' + currentPricePerOunce.toFixed(2);
+                document.getElementById('currentPriceINR').textContent = '₹' + currentInrPer10g.toFixed(2);
+                
+                // Predicted Price
+                const pricePerOunce = data.predicted_price;
+                const pricePerGram = pricePerOunce / 31.1035;
+                const pricePer10g = pricePerGram * 10;
+                const inrPer10g = pricePer10g * exchangeRate;
+                
+                document.getElementById('predictedPriceUSD').textContent = '$' + pricePerOunce.toFixed(2);
+                document.getElementById('predictedPriceINR').textContent = '₹' + inrPer10g.toFixed(2);
+                
+                updateExchangeRateDisplay();
+                
+                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🔮 Predict Tomorrow\'s Price';
+            }
+        });
+    </script>
+</body>
+</html>

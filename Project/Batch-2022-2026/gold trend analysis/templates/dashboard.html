@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Price Prediction Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/static/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .manual-entry-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.5);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .manual-entry-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(6, 182, 212, 0.7);
+        }
+        
+        .manual-entry-btn .tooltip {
+            position: absolute;
+            left: 100px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            white-space: nowrap;
+            font-size: 0.4em;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .manual-entry-btn:hover .tooltip {
+            opacity: 1;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 30px;
+            font-size: 3em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: rgba(20, 20, 40, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 2px solid #FFD700;
+        }
+        
+        .info-box h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            line-height: 2;
+            color: #fff;
+        }
+        
+        .info-box ul li strong {
+            color: #FFD700;
+        }
+        
+        .prediction-section {
+            background: rgba(20, 20, 40, 0.95);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            border: 2px solid #FFD700;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #FFD700;
+            font-size: 1.1em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: all 0.3;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1e3c72;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .result.up {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: 3px solid #34d399;
+        }
+        
+        .result.down {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: 3px solid #f87171;
+        }
+        
+        .result h2 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .result-item {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .result-item label {
+            color: rgba(255,255,255,0.95);
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+        
+        .result-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 8px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .chart-container {
+            background: rgba(20, 20, 40, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+        }
+        
+        .chart-container h3 {
+            margin-bottom: 10px;
+            color: #FFD700;
+            font-size: 1.6em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .chart-description {
+            color: #e0e0e0;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(59, 130, 246, 0.15);
+            border-left: 4px solid #3b82f6;
+            border-radius: 10px;
+        }
+        
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(40, 40, 60, 0.8);
+            border-radius: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #e0e0e0;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .ai-assistant {
+            background: rgba(30, 20, 50, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(126, 34, 206, 0.4);
+            margin-top: 30px;
+            border: 2px solid #7e22ce;
+        }
+        
+        .ai-assistant h3 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .ollama-status {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .ollama-status.connected {
+            background: #10b981;
+            color: white;
+        }
+        
+        .ollama-status.disconnected {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .chat-box {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .chat-message.user {
+            background: #7e22ce;
+            color: white;
+            margin-left: 20%;
+        }
+        
+        .chat-message.ai {
+            background: white;
+            border: 2px solid #7e22ce;
+            margin-right: 20%;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-row input {
+            flex: 1;
+        }
+        
+        .input-row button {
+            width: auto;
+            padding: 15px 30px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <a href="manual_entry.html" class="manual-entry-btn" title="Manual Entry">
+        📝
+        <span class="tooltip">Manual Entry Prediction</span>
+    </a>
+    
+    <div class="container">
+        <h1>🏆 GOLD PRICE PREDICTION DASHBOARD 🏆</h1>
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="dataset_info.html" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; margin: 0 10px; transition: transform 0.3s; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                📊 View Dataset Information
+            </a>
+            <a href="model_info.html" style="display: inline-block; background: linear-gradient(135deg, #7e22ce 0%, #5b21b6 100%); color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; margin: 0 10px; transition: transform 0.3s; box-shadow: 0 5px 15px rgba(126, 34, 206, 0.4);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                🧠 View Model Architecture & Math
+            </a>
+            <a href="validation.html" style="display: inline-block; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; margin: 0 10px; transition: transform 0.3s; box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                🎯 Model Validation & Accuracy
+            </a>
+            <a href="ask_ai.html" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; margin: 0 10px; transition: transform 0.3s; box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                🤖 Ask AI About Model
+            </a>
+        </div>
+        
+        <div class="info-box">
+            <h3>📊 Required Values for Prediction:</h3>
+            <ul>
+                <li><strong>Today's Gold Price</strong> - Current market price (USD per ounce)</li>
+                <li><strong>Historical Data</strong> - Last 60 days of prices (automatically fetched)</li>
+                <li><strong>Technical Indicators</strong> - MA (10, 30 days), RSI, MACD (auto-calculated)</li>
+                <li><strong>Trading Volume</strong> - Market volume data (auto-fetched)</li>
+            </ul>
+            <p style="margin-top: 15px; color: #666;">
+                <strong>Note:</strong> The model uses LSTM neural network trained on 1 years of historical data with technical indicators to predict tomorrow's price direction.
+            </p>
+        </div>
+        
+        <div class="prediction-section">
+            <h2 style="margin-bottom: 25px; color: #1e3c72; font-size: 1.8em;">💰 Enter Today's Gold Price</h2>
+            
+            <div class="input-group">
+                <label for="currentPrice">Current Gold Price (USD per ounce):</label>
+                <input type="number" id="currentPrice" placeholder="e.g., 5200.50" step="0.01">
+                <small style="color: #666; display: block; margin-top: 8px; font-size: 0.95em;">💡 Leave empty to use latest market price from your dataset</small>
+            </div>
+            
+            <button onclick="predictPrice()" id="predictBtn">Predict Tomorrow's Price</button>
+            
+            <div id="result" class="result">
+                <h2 id="direction"></h2>
+                <div class="result-details">
+                    <div class="result-item">
+                        <label>Today's Date</label>
+                        <div class="value" id="todayDate">-</div>
+                    </div>
+                    <div class="result-item">
+                        <label>Today's Price</label>
+                        <div class="value" id="todayPrice">-</div>
+                        <div style="font-size: 0.85em; margin-top: 8px; color: rgba(255,255,255,0.8); font-weight: 500;" id="todayPriceINR">-</div>
+                    </div>
+                    <div class="result-item">
+                        <label>Tomorrow's Date</label>
+                        <div class="value" id="tomorrowDate">-</div>
+                    </div>
+                    <div class="result-item">
+                        <label>Predicted Price</label>
+                        <div class="value" id="predictedPrice">-</div>
+                        <div style="font-size: 0.85em; margin-top: 8px; color: rgba(255,255,255,0.8); font-weight: 500;" id="predictedPriceINR">-</div>
+                    </div>
+                    <div class="result-item">
+                        <label>Expected Change</label>
+                        <div class="value" id="changePercent">-</div>
+                    </div>
+                    <div class="result-item">
+                        <label>Confidence Level</label>
+                        <div class="value" id="confidence">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ai-assistant">
+            <h3>🤖 AI Assistant (Powered by Ollama)</h3>
+            <div id="ollamaStatus" class="ollama-status disconnected">⚫ Checking Ollama...</div>
+            
+            <div class="chat-box" id="chatBox">
+                <div class="chat-message ai">
+                    👋 Hi! I'm your AI assistant. Ask me anything about gold price predictions, market trends, or investment advice!
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <div style="color: #FFD700; font-weight: bold; margin-bottom: 10px;">💡 Quick Questions:</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <button onclick="askQuickQuestion('Should I buy gold now?')" style="width: auto; padding: 8px 15px; font-size: 14px; background: rgba(126, 34, 206, 0.3); border: 1px solid #7e22ce; color: white;">Should I buy gold now?</button>
+                    <button onclick="askQuickQuestion('What factors affect gold prices?')" style="width: auto; padding: 8px 15px; font-size: 14px; background: rgba(126, 34, 206, 0.3); border: 1px solid #7e22ce; color: white;">What factors affect gold prices?</button>
+                    <button onclick="askQuickQuestion('Is gold a safe investment?')" style="width: auto; padding: 8px 15px; font-size: 14px; background: rgba(126, 34, 206, 0.3); border: 1px solid #7e22ce; color: white;">Is gold a safe investment?</button>
+                    <button onclick="askQuickQuestion('How accurate is this prediction?')" style="width: auto; padding: 8px 15px; font-size: 14px; background: rgba(126, 34, 206, 0.3); border: 1px solid #7e22ce; color: white;">How accurate is this prediction?</button>
+                </div>
+            </div>
+            
+            <div class="input-row">
+                <input type="text" id="questionInput" placeholder="Ask a question... (e.g., Should I invest now?)" onkeypress="if(event.key==='Enter') askQuestion()">
+                <button onclick="askQuestion()" id="askBtn">Ask AI</button>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <button onclick="getAIAnalysis()" id="analyzeBtn" style="background: linear-gradient(135deg, #7e22ce 0%, #5b21b6 100%);">
+                    🧠 Get AI Analysis of Current Prediction
+                </button>
+            </div>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>📈 Gold Price Trend (Last 6 Months)</h3>
+                <p class="chart-description">
+                    <strong>What it shows:</strong> Historical gold prices with extreme highs and lows marked. 
+                    <strong>How to read:</strong> 
+                    <span style="color: #10b981; font-weight: bold;">●</span> Green dots = Extreme HIGHS (top 2%) | 
+                    <span style="color: #ef4444; font-weight: bold;">●</span> Red dots = Extreme LOWS (bottom 2%). 
+                    Dark blue line shows the overall trend.
+                </p>
+                <canvas id="priceChart" height="80"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #1e3c72;"></div>
+                        <span><strong>Gold Price:</strong> Daily closing price (Dark blue line)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #10b981; border-radius: 50%;"></div>
+                        <span><strong>Extreme Highs:</strong> Top 2% price peaks (Green dots)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444; border-radius: 50%;"></div>
+                        <span><strong>Extreme Lows:</strong> Bottom 2% price drops (Red dots)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>📊 Moving Averages Analysis (Professional)</h3>
+                <p class="chart-description">
+                    <strong>What it shows:</strong> Three distinct lines showing price trends. 
+                    <strong>How to read:</strong> 
+                    <span style="color: #3b82f6; font-weight: bold;">━━━</span> Blue = Current Price | 
+                    <span style="color: #8b5cf6; font-weight: bold;">✨ - - -</span> Violet with Sparkles = MA10 (Fast) | 
+                    <span style="color: #ef4444; font-weight: bold; text-shadow: 0 0 10px rgba(239,68,68,0.7);">🌟 - - -</span> Shiny Red = MA30 (Slow). 
+                    <strong>Signal:</strong> Green above Red = BUY 📈 | Green below Red = SELL 📉
+                </p>
+                <canvas id="maChart" height="80"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3b82f6;"></div>
+                        <span><strong>Current Price:</strong> Actual gold price (Blue solid line)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #d0d673;"></div>
+                        <span><strong>MA 10:</strong> ✨ Violet with golden sparkles (short-term)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.7);"></div>
+                        <span><strong>MA 30:</strong> 🌟 Shiny red with glow (long-term)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>🎯 RSI - Relative Strength Index</h3>
+                <p class="chart-description">
+                    <strong>What it shows:</strong> Whether gold is overbought or oversold. 
+                    <strong>How to read:</strong> Above 70 = Overbought (may drop soon), Below 30 = Oversold (may rise soon), 30-70 = Normal range.
+                </p>
+                <canvas id="rsiChart" height="80"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #7e22ce;"></div>
+                        <span><strong>RSI Value:</strong> Momentum indicator (0-100)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span><strong>Overbought Zone:</strong> Above 70 (consider selling)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #10b981;"></div>
+                        <span><strong>Oversold Zone:</strong> Below 30 (consider buying)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>⚡ MACD - Trend Momentum</h3>
+                <p class="chart-description">
+                    <strong>What it shows:</strong> Strength and direction of price momentum. 
+                    <strong>How to read:</strong> Green bars = Positive momentum (bullish), Red bars = Negative momentum (bearish). Taller bars = Stronger momentum.
+                </p>
+                <canvas id="macdChart" height="80"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #10b981;"></div>
+                        <span><strong>Positive MACD:</strong> Bullish momentum (price likely to rise)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span><strong>Negative MACD:</strong> Bearish momentum (price likely to fall)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let charts = {};
+        let lastPrediction = null;
+        let historicalData = null;
+        let todayMarkerPlugin = null;
+        
+        // Check Ollama status on load
+        async function checkOllamaStatus() {
+            try {
+                const response = await fetch('http://localhost:5000/api/ollama/status');
+                const data = await response.json();
+                
+                const statusEl = document.getElementById('ollamaStatus');
+                if (data.connected) {
+                    statusEl.className = 'ollama-status connected';
+                    statusEl.textContent = '✅ Ollama Connected';
+                } else {
+                    statusEl.className = 'ollama-status disconnected';
+                    statusEl.textContent = '❌ Ollama Disconnected';
+                }
+            } catch (error) {
+                const statusEl = document.getElementById('ollamaStatus');
+                statusEl.className = 'ollama-status disconnected';
+                statusEl.textContent = '❌ Ollama Disconnected';
+            }
+        }
+        
+        async function askQuickQuestion(question) {
+            document.getElementById('questionInput').value = question;
+            await askQuestion();
+        }
+        
+        function typeWriter(element, text, speed = 30) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+        
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            const askBtn = document.getElementById('askBtn');
+            
+            // Add user message
+            chatBox.innerHTML += `<div class="chat-message user">👤 ${question}</div>`;
+            input.value = '';
+            askBtn.disabled = true;
+            askBtn.textContent = 'Thinking...';
+            
+            // Scroll to bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            try {
+                const context = {
+                    latest_price: lastPrediction?.today_price || 0,
+                    predicted_price: lastPrediction?.predicted_price || 0,
+                    direction: lastPrediction?.direction || 'N/A',
+                    change_percent: lastPrediction?.change_percent || 0,
+                    date_range: historicalData ? `${historicalData.dates[0]} to ${historicalData.dates[historicalData.dates.length-1]}` : 'N/A'
+                };
+                
+                const response = await fetch('http://localhost:5000/api/ollama/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question, context_data: context })
+                });
+                
+                const data = await response.json();
+                
+                // Format answer with bullet points
+                let answer = data.answer || 'Sorry, I could not process that.';
+                
+                // Create AI message element
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'chat-message ai';
+                aiMessage.innerHTML = '🤖 ';
+                chatBox.appendChild(aiMessage);
+                
+                // Type out the answer word by word
+                typeWriter(aiMessage, '🤖 ' + answer, 20);
+                
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                chatBox.innerHTML += `<div class="chat-message ai">⚠️ Error: Make sure Ollama is running on localhost:11434</div>`;
+            } finally {
+                askBtn.disabled = false;
+                askBtn.textContent = 'Ask AI';
+            }
+        }
+        
+        async function getAIAnalysis() {
+            if (!lastPrediction) {
+                alert('Please make a prediction first!');
+                return;
+            }
+            
+            const chatBox = document.getElementById('chatBox');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '🧠 Analyzing...';
+            
+            chatBox.innerHTML += `<div class="chat-message user">📊 Generate detailed analysis</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            try {
+                const historical_summary = historicalData ? 
+                    `Price range: $${Math.min(...historicalData.prices).toFixed(2)} - $${Math.max(...historicalData.prices).toFixed(2)}` : 
+                    'No historical data available';
+                
+                const response = await fetch('http://localhost:5000/api/ollama/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prediction_data: lastPrediction,
+                        historical_summary 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                chatBox.innerHTML += `<div class="chat-message ai">🧠 <strong>AI Analysis:</strong><br><br>${data.analysis || 'Analysis unavailable'}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                chatBox.innerHTML += `<div class="chat-message ai">⚠️ Error: Make sure Ollama is running</div>`;
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '🧠 Get AI Analysis of Current Prediction';
+            }
+        }
+        
+        async function predictPrice() {
+            const btn = document.getElementById('predictBtn');
+            const result = document.getElementById('result');
+            const currentPrice = document.getElementById('currentPrice').value;
+            
+            btn.disabled = true;
+            btn.textContent = 'Analyzing...';
+            result.style.display = 'none';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        current_price: currentPrice ? parseFloat(currentPrice) : null
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                
+                // Store prediction for AI
+                lastPrediction = data;
+                
+                // Add TODAY marker to all charts
+                addTodayMarker(data.today_date);
+                
+                // Display results
+                result.style.display = 'block';
+                result.className = 'result ' + data.direction.toLowerCase();
+                
+                document.getElementById('direction').textContent = 
+                    data.direction === 'UP' ? '📈 GOLD WILL GO UP!' : '📉 GOLD WILL GO DOWN!';
+                document.getElementById('todayDate').textContent = data.today_date || '-';
+                document.getElementById('todayPrice').textContent = '$' + data.today_price.toFixed(2);
+                document.getElementById('todayPriceINR').textContent = '(₹' + (data.today_price * 83.5).toFixed(2) + ')';
+                document.getElementById('tomorrowDate').textContent = data.tomorrow_date || '-';
+                document.getElementById('predictedPrice').textContent = '$' + data.predicted_price.toFixed(2);
+                document.getElementById('predictedPriceINR').textContent = '(₹' + (data.predicted_price * 83.5).toFixed(2) + ')';
+                document.getElementById('changePercent').textContent = 
+                    (data.change_percent > 0 ? '+' : '') + data.change_percent.toFixed(2) + '%';
+                document.getElementById('confidence').textContent = 
+                    Math.min(data.confidence * 10, 95).toFixed(1) + '%';
+                
+                // Scroll to result
+                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+            } catch (error) {
+                alert('Error connecting to server. Make sure the Flask server is running.');
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Predict Tomorrow\'s Price';
+            }
+        }
+        
+        async function loadHistoricalData() {
+            try {
+                const response = await fetch('http://localhost:5000/api/historical');
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('Error loading data:', data.error);
+                    return;
+                }
+                
+                createCharts(data);
+                historicalData = data;  // Store for AI context
+            } catch (error) {
+                console.error('Error loading historical data:', error);
+            }
+        }
+        
+        function addTodayMarker(todayDate) {
+            if (!historicalData) return;
+            
+            const todayIndex = historicalData.dates.indexOf(todayDate);
+            if (todayIndex === -1) return;
+            
+            // Create plugin to draw pin marker
+            todayMarkerPlugin = {
+                id: 'todayMarker',
+                afterDatasetsDraw: (chart) => {
+                    const ctx = chart.ctx;
+                    const xAxis = chart.scales.x;
+                    const yAxis = chart.scales.y;
+                    const x = xAxis.getPixelForValue(todayIndex);
+                    const pinTop = yAxis.top - 35;
+                    const pinBottom = yAxis.bottom;
+                    
+                    ctx.save();
+                    
+                    // Draw pin stick (thin gray line)
+                    ctx.strokeStyle = '#666';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(x, pinTop + 15);
+                    ctx.lineTo(x, pinBottom);
+                    ctx.stroke();
+                    
+                    // Draw shiny red ball
+                    const ballRadius = 10;
+                    const ballY = pinTop + 10;
+                    
+                    // Outer glow
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = 'rgba(239, 68, 68, 0.8)';
+                    
+                    // Red ball
+                    ctx.fillStyle = '#ef4444';
+                    ctx.beginPath();
+                    ctx.arc(x, ballY, ballRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Shine effect (white highlight)
+                    ctx.shadowBlur = 0;
+                    const gradient = ctx.createRadialGradient(x - 3, ballY - 3, 0, x, ballY, ballRadius);
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+                    gradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.3)');
+                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(x, ballY, ballRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                }
+            };
+            
+            // Update all charts
+            Object.values(charts).forEach(chart => {
+                chart.options.plugins.todayMarker = todayMarkerPlugin;
+                chart.update();
+            });
+        }
+        
+        function createCharts(data) {
+            // Find only the most significant highs and lows (top 2% and bottom 2%)
+            const prices = data.prices;
+            const sortedPrices = [...prices].sort((a, b) => a - b);
+            const lowThreshold = sortedPrices[Math.floor(prices.length * 0.02)];
+            const highThreshold = sortedPrices[Math.floor(prices.length * 0.98)];
+            
+            // Create point styles and colors for significant points
+            const pointRadii = prices.map(price => {
+                if (price <= lowThreshold || price >= highThreshold) return 5;
+                return 0;
+            });
+            
+            const pointColors = prices.map(price => {
+                if (price <= lowThreshold) return '#ef4444'; // Red for lows
+                if (price >= highThreshold) return '#10b981'; // Green for highs
+                return '#1e3c72';
+            });
+            
+            // Price Chart with dark color and markers
+            const priceCtx = document.getElementById('priceChart').getContext('2d');
+            const priceGradient = priceCtx.createLinearGradient(0, 0, 0, 400);
+            priceGradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+            priceGradient.addColorStop(1, 'rgba(16, 185, 129, 0.05)');
+            
+            charts.price = new Chart(priceCtx, {
+                type: 'line',
+                data: {
+                    labels: data.dates,
+                    datasets: [{
+                        label: 'Gold Price (USD)',
+                        data: data.prices,
+                        borderColor: '#10b981',
+                        backgroundColor: priceGradient,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: pointRadii,
+                        pointBackgroundColor: pointColors,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 8,
+                        pointHoverBackgroundColor: '#10b981',
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBorderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { 
+                            display: true,
+                            labels: {
+                                color: '#ffffff',
+                                font: { size: 14, weight: 'bold' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 60, 114, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#1e3c72',
+                            borderWidth: 2,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    const price = context.parsed.y;
+                                    let label = 'Price: $' + price.toFixed(2);
+                                    
+                                    if (price <= lowThreshold) {
+                                        label += ' 🔴 SIGNIFICANT LOW';
+                                    } else if (price >= highThreshold) {
+                                        label += ' 🟢 SIGNIFICANT HIGH';
+                                    }
+                                    
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: false,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { 
+                                color: '#ffffff', 
+                                font: { weight: 'bold' },
+                                callback: function(value) {
+                                    return '$' + value.toFixed(0);
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#ffffff', maxRotation: 45 }
+                        }
+                    }
+                }
+            });
+            
+            // Moving Averages Chart - Enhanced Professional Version
+            const maCtx = document.getElementById('maChart').getContext('2d');
+            
+            // Create sparkle points for MA10 (every 5th point gets a golden sparkle)
+            const ma10Radii = data.ma_10.map((val, idx) => idx % 5 === 0 ? 5 : 0);
+            const ma10Colors = data.ma_10.map((val, idx) => idx % 5 === 0 ? '#fbbf24' : '#8b5cf6');
+            
+            charts.ma = new Chart(maCtx, {
+                type: 'line',
+                data: {
+                    labels: data.dates,
+                    datasets: [
+                        {
+                            label: '📉 MA 30 (Long-Term Trend)',
+                            data: data.ma_30,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'transparent',
+                            borderWidth: 4,
+                            tension: 0.3,
+                            pointRadius: 0,
+                            pointHoverRadius: 8,
+                            pointHoverBackgroundColor: '#ef4444',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 3,
+                            borderDash: [12, 6],
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 0,
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(239, 68, 68, 0.7)',
+                            order: 3
+                        },
+                        {
+                            label: '📈 MA 10 (Short-Term Trend)',
+                            data: data.ma_10,
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3.5,
+                            tension: 0.3,
+                            pointRadius: ma10Radii,
+                            pointBackgroundColor: ma10Colors,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 8,
+                            pointHoverBackgroundColor: '#8b5cf6',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 3,
+                            borderDash: [6, 3],
+                            order: 2
+                        },
+                        {
+                            label: '💎 Current Gold Price',
+                            data: data.prices,
+                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 9,
+                            pointHoverBackgroundColor: '#3b82f6',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 3,
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { 
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#ffffff',
+                                font: { size: 14, weight: 'bold', family: 'Segoe UI' },
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'line'
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(30, 60, 114, 0.95)',
+                            titleColor: '#3b82f6',
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyColor: '#fff',
+                            bodyFont: { size: 13 },
+                            borderColor: '#3b82f6',
+                            borderWidth: 2,
+                            padding: 15,
+                            displayColors: true,
+                            boxWidth: 15,
+                            boxHeight: 15,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += '$' + context.parsed.y.toFixed(2);
+                                    return label;
+                                },
+                                afterBody: function(tooltipItems) {
+                                    // Find MA10 and MA30 values
+                                    let ma10 = null, ma30 = null;
+                                    tooltipItems.forEach(item => {
+                                        if (item.dataset.label.includes('MA 10')) ma10 = item.parsed.y;
+                                        if (item.dataset.label.includes('MA 30')) ma30 = item.parsed.y;
+                                    });
+                                    
+                                    let signal = [];
+                                    if (ma10 && ma30) {
+                                        if (ma10 > ma30) {
+                                            signal.push('', '📊 Signal: BULLISH ✅', 'Short-term > Long-term', 'Recommendation: Consider BUYING');
+                                        } else {
+                                            signal.push('', '📊 Signal: BEARISH ⚠️', 'Short-term < Long-term', 'Recommendation: Consider SELLING');
+                                        }
+                                    }
+                                    return signal;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: false,
+                            grid: { 
+                                color: 'rgba(255,255,255,0.1)',
+                                lineWidth: 1
+                            },
+                            ticks: { 
+                                color: '#ffffff', 
+                                font: { size: 12, weight: 'bold' },
+                                callback: function(value) {
+                                    return '$' + value.toFixed(0);
+                                },
+                                padding: 10
+                            },
+                            title: {
+                                display: true,
+                                text: 'Price (USD)',
+                                color: '#ffffff',
+                                font: { size: 13, weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            grid: { 
+                                color: 'rgba(255,255,255,0.1)',
+                                lineWidth: 1
+                            },
+                            ticks: { 
+                                color: '#ffffff',
+                                font: { size: 11 },
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkip: true,
+                                maxTicksLimit: 15
+                            },
+                            title: {
+                                display: true,
+                                text: 'Date',
+                                color: '#ffffff',
+                                font: { size: 13, weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // RSI Chart with zones
+            const rsiCtx = document.getElementById('rsiChart').getContext('2d');
+            charts.rsi = new Chart(rsiCtx, {
+                type: 'line',
+                data: {
+                    labels: data.dates,
+                    datasets: [
+                        {
+                            label: 'RSI',
+                            data: data.rsi,
+                            borderColor: '#7e22ce',
+                            backgroundColor: 'rgba(126, 34, 206, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Overbought (70)',
+                            data: Array(data.dates.length).fill(70),
+                            borderColor: '#ef4444',
+                            borderWidth: 2,
+                            borderDash: [10, 5],
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: 'Oversold (30)',
+                            data: Array(data.dates.length).fill(30),
+                            borderColor: '#10b981',
+                            borderWidth: 2,
+                            borderDash: [10, 5],
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { 
+                            display: true,
+                            labels: {
+                                color: '#ffffff',
+                                font: { size: 13, weight: 'bold' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 60, 114, 0.9)',
+                            titleColor: '#FFD700',
+                            bodyColor: '#fff',
+                            borderColor: '#FFD700',
+                            borderWidth: 2,
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            min: 0,
+                            max: 100,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { 
+                                color: '#ffffff',
+                                font: { weight: 'bold' },
+                                stepSize: 10
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#ffffff', maxRotation: 45 }
+                        }
+                    }
+                }
+            });
+            
+            // MACD Chart with bar style
+            const macdCtx = document.getElementById('macdChart').getContext('2d');
+            charts.macd = new Chart(macdCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.dates,
+                    datasets: [{
+                        label: 'MACD',
+                        data: data.macd,
+                        backgroundColor: data.macd.map(val => val >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'),
+                        borderColor: data.macd.map(val => val >= 0 ? '#10b981' : '#ef4444'),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { 
+                            display: true,
+                            labels: {
+                                color: '#ffffff',
+                                font: { size: 14, weight: 'bold' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 60, 114, 0.9)',
+                            titleColor: '#FFD700',
+                            bodyColor: '#fff',
+                            borderColor: '#FFD700',
+                            borderWidth: 2,
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#ffffff', font: { weight: 'bold' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#ffffff', maxRotation: 45 }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load data on page load
+        window.onload = function() {
+            loadHistoricalData();
+            checkOllamaStatus();
+            
+            // Check Ollama status every 30 seconds
+            setInterval(checkOllamaStatus, 30000);
+        };
+    </script>
+</body>
+</html>
