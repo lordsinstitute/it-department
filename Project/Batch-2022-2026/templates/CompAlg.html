@@ -1,0 +1,174 @@
+{% include "header_admin.html" %}
+<div class="container">
+    <form action="http://localhost:5000/eval_alg" method="post">
+    <table> <tr><td style="vertical-align: top">
+   <div id="menu">
+  <ul>
+    <li onclick="hide_lr()">Logistic Regression</li>
+    <li onclick="hide_nb()">Gaussian Naive Bayes </li>
+    <li onclick="hide_rf()">Random Forest </li>
+    <li onclick="hide_sv()">Support Vector Machine</li>
+    <li onclick="hide_dt()">Decision Trees</li>
+    <li onclick="hide_knn()">K-Nearest Neighbour</li>
+    <li onclick="hide_ab()">Adaboost Classifer</li>
+    <li onclick="hide_gb()">Gradient Boosting Classifier</li>
+    <li onclick="hide_ca()">Compare Algorithms</li>
+
+  </ul>
+</div></td>
+
+
+        <td>
+
+<div class="loader" id="gear" style="display: none; margin: 150px"><div></div><div></div></div>
+<div id="AccDisplay"></div>
+     </td>
+</tr>
+</table>
+<div id="LR" style="display: none">
+        <img src="../static/pimg/lr.png" width="600px" height="300px"><br>
+            <p style="color: maroon; font-size: large; background-color: gold"> Accuracy for Logistic Regression Algorithm : {{acc['LG']}}%</p>
+        </div>
+
+        <div id="NB" style="display: none">
+            <img src="../static/pimg/nb.png" width="600px" height="300px"><br>
+        <p style="color: maroon; font-size: large; background-color: gold">    Accuracy for Gaussian Naive Bayes Algorithm : {{acc['GNB']}}%</p>
+        </div>
+        <div id="RF" style="display: none" >
+            <img src="../static/pimg/RF.png" width="600px" height="300px"><br>
+         <p style="color: maroon; font-size: large; background-color: gold">   Accuracy for Random Forest Regression Algorithm : {{acc['RF']}}%</p>
+        </div>
+        <div id="SV" style="display: none" >
+            <img src="../static/pimg/svm.png" width="600px" height="300px"><br>
+        <p style="color: maroon; font-size: large; background-color: gold">    Accuracy for Support Vector Regression : {{acc['SVM']}}%</p>
+        </div>
+        <div id="DT" style="display: none">
+            <img src="../static/pimg/dt.png" width="600px" height="300px"><br>
+         <p style="color: maroon; font-size: large; background-color: gold">   Accuracy for Decision Trees Algorithm : {{acc['DT']}}%</p>
+        </div>
+        <div id="KNN" style="display: none">
+            <img src="../static/pimg/knn.png" width="600px" height="300px"><br>
+         <p style="color: maroon; font-size: large; background-color: gold">   Accuracy for K Nearest Neighbour Algorithm : {{acc['KNN']}}%</p>
+        </div>
+        <div id="AB" style="display: none">
+            <img src="../static/pimg/ab.png" width="600px" height="300px"><br>
+         <p style="color: maroon; font-size: large; background-color: gold">   Accuracy for Adaboost Algorithm : {{acc['AB']}}%</p>
+        </div>
+        <div id="GB" style="display: none">
+            <img src="../static/pimg/gb.png" width="600px" height="300px"><br>
+         <p style="color: maroon; font-size: large; background-color: gold">   Accuracy for Gradient Boosting Algorithm : {{acc['GB']}}%</p>
+        </div>
+
+        <div id="CA" style="display: none">
+            <img src="../static/pimg/AlgComp.jpg" width="750px" height="350px"><br>
+        </div>
+</form>
+</div>
+
+	</div>
+
+<script>
+var myVar;
+
+function hide_rf() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_rf, 1500);
+}
+function show_rf() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('RF').innerHTML;
+}
+
+function hide_nb() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_nb, 1500);
+}
+function show_nb() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('NB').innerHTML;
+}
+
+function hide_sv() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_sv, 1500);
+}
+function show_sv() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('SV').innerHTML;
+}
+
+function hide_lr() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_lr, 1500);
+}
+function show_lr() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('LR').innerHTML;
+}
+
+function hide_gb() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_gb, 1500);
+}
+function show_gb() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('GB').innerHTML;
+}
+
+function hide_dt() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_dt, 1500);
+}
+function show_dt() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('DT').innerHTML;
+}
+
+function hide_knn() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_knn, 1500);
+}
+function show_knn() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('KNN').innerHTML;
+}
+
+function hide_ab() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_ab, 1500);
+}
+function show_ab() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('AB').innerHTML;
+}
+
+function hide_ca() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_ca, 1500);
+}
+function show_ca() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('CA').innerHTML;
+}
+</script>
+</body>
+
+</html>
