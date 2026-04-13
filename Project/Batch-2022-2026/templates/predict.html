@@ -1,0 +1,51 @@
+{% include "header_user.html" %}
+<div class="content">
+
+        <form action="http://localhost:5000/predict" method="post">
+            <table>
+                <tr>
+                    <td><h5>Baseline Value (Medical Expert)</h5></td>
+                     <td><input id="lbe" name="lbe" required="required">  </td>
+                </tr>
+                 <tr>
+                    <td><h5>Baseline Value (SisPorto)</h5></td>
+                     <td><input id="lb" name="lb" required="required">  </td>
+                </tr>
+                <tr>
+                    <td><h5>Accelerations</h5></td>
+                     <td><input id="ac" name="ac" required="required">  </td>
+                </tr>
+                <tr>
+                    <td><h5>Fetal Movement (SisPorto)</h5></td>
+                     <td><input id="fm" name="fm" required="required">  </td>
+                </tr>
+                <tr>
+                    <td><h5>Uterine Contractions (SisPorto)</h5></td>
+                     <td><input id="uc" name="uc" required="required">  </td>
+                </tr>
+                <tr>
+                    <td><h5>Light Decelerations</h5></td>
+                     <td><input id="dl" name="dl" required="required">  </td>
+                </tr>
+                <tr>
+                    <td><h5>Severe Decelerations</h5></td>
+                     <td><input id="ds" name="ds" required="required">  </td>
+                </tr>
+                <tr>
+                    <td><h5>Prolonged Decelerations</h5></td>
+                     <td><input id="dp" name="dp" required="required">  </td>
+                </tr>
+                 <tr>
+                    <td><h5>Repetitive Decelerations</h5></td>
+                     <td><input id="dr" name="dr" required="required">  </td>
+                </tr>
+                <tr><td></td></tr>
+                <tr><td colspan="2">
+                    <button id="sub" type="submit ">Predict Fetal Health Risk</button>
+                </td></tr>
+            </table>
+            </form>
+    <br><br><h2>{{ prediction_text }}</h2>
+    </div>
+</body>
+</html>

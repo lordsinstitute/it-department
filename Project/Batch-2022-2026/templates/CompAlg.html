@@ -1,0 +1,151 @@
+{% include "header_admin.html" %}
+<div class="container">
+    <form action="http://localhost:5000/eval_alg" method="post">
+    <table> <tr><td style="vertical-align: top">
+   <div id="menu">
+  <ul>
+    <li onclick="hide_lr()">Logistic Regression</li>
+    <li onclick="hide_knn()">KNN</li>
+    <li onclick="hide_rf()">Random Forest</li>
+    <li onclick="hide_svm()">Support Vector Machine</li>
+    <li onclick="hide_gnb()">Gaussian Naive Bayes</li>
+    <li onclick="hide_sgd()">SGDClassifier</li>
+    <li onclick="hide_ca()">Compare Algorithms</li>
+
+  </ul>
+</div></td>
+        <td>
+
+<div class="lds-ripple" id="gear" style="display: none; margin: 150px"><div></div><div></div></div>
+<div id="AccDisplay"></div>
+     </td>
+</tr>
+</table>
+        <div id="LR" style="display: none">
+        <img src="../static/vis/cnf_Logistic%20Regression.jpg" style="width: 600px; height: 400px;"><br>
+            <p style="color: maroon; font-size: large; background-color: #E9E9E9"> Accuracy for Logistic Regression Algorithm : {{acc["Logistic Regression"]}}%</p>
+        </div>
+
+        <div id="KNN" style="display: none">
+            <img src="../static/vis/cnf_KNN.jpg" style="width: 600px; height: 400px;"><br>
+         <p style="color: maroon; font-size: large; background-color: #E9E9E9">   Accuracy for KNN Algorithm :{{acc["KNN"]}}%</p>
+        </div>
+        <div id="RF" style="display: none">
+            <img src="../static/vis/cnf_Random%20Forest.jpg" style="width: 600px; height: 400px;"><br>
+         <p style="color: maroon; font-size: large; background-color: #E9E9E9">Accuracy for Random Forest Algorithm : {{acc["Random Forest"]}}%</p>
+        </div>
+
+        <div id="SVM" style="display: none">
+        <img src="../static/vis/cnf_Support%20Vector%20Machine.jpg" style="width: 600px; height: 400px;"><br>
+            <p style="color: maroon; font-size: large; background-color: #E9E9E9"> Accuracy for Support Vector Machine Algorithm : {{acc["Support Vector Machine"]}}%</p>
+        </div>
+
+        <div id="GNB" style="display: none">
+            <img src="../static/vis/cnf_Gaussian%20Naive%20Bayes.jpg" style="width: 600px; height: 400px;"><br>
+         <p style="color: maroon; font-size: large; background-color: #E9E9E9">   Accuracy for Gaussian Naive Bayes Algorithm :{{acc["Gaussian Naive Bayes"]}}%</p>
+        </div>
+        <div id="SGD" style="display: none">
+            <img src="../static/vis/cnf_SGD.jpg" style="width: 600px; height: 400px;"><br>
+         <p style="color: maroon; font-size: large; background-color: #E9E9E9">Accuracy for SGD Algorithm : {{acc["SGD"]}}%</p>
+        </div>
+
+        <div id="CA" style="display: none">
+            <img src="../static/vis/Algcomp.jpg" width="800px" height="400px"><br>
+        </div>
+</form>
+</div>
+
+	</div>
+
+<script>
+var myVar;
+
+function hide_lr() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_lr, 1500);
+}
+function show_lr() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('LR').innerHTML;
+}
+
+
+function hide_knn() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_knn, 1500);
+}
+function show_knn() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('KNN').innerHTML;
+}
+
+
+function hide_rf() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_rf, 1500);
+}
+function show_rf() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('RF').innerHTML;
+}
+
+function hide_svm() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_svm, 1500);
+}
+function show_svm() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('SVM').innerHTML;
+}
+
+
+function hide_gnb() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_gnb, 1500);
+}
+function show_gnb() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('GNB').innerHTML;
+}
+
+
+function hide_sgd() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_sgd, 1500);
+}
+function show_sgd() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('SGD').innerHTML;
+}
+
+
+
+
+
+
+function hide_ca() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("gear").style.display = "block";
+  myVar = setTimeout(show_ca, 1500);
+}
+function show_ca() {
+document.getElementById("gear").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('CA').innerHTML;
+}
+</script>
+</body>
+
+</html>
