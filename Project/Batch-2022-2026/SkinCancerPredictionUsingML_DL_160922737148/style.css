@@ -1,0 +1,101 @@
+:root {
+      --primary-color: #424B54;
+      --menu-color: #D5ACA9;
+      --secondary-color: #f0f4f8;
+      --accent-color: #B38D97;
+      --text-color: #333;
+      --highlight-color:#EBCFB2;
+      --footer-color: #C5BAAF;/*0a3c66*/
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      font-family: "Trebuchet MS";
+      overflow: hidden;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav {
+      background-color: var(--menu-color);
+      color: var(--text-color);
+      font-weight: bold;
+    }
+
+    nav a {
+      color: #333 !important;
+      margin-right: 1rem;
+    }
+
+  .navbar-nav .nav-link:hover {
+    color: var(--secondary-color)!important; /* Optional: add hover effect */
+      background-color: var(--accent-color) ;
+
+  }
+
+  .sidebar {
+
+      height: 77%;
+      width: 220px;
+      diplay: block;
+      position: fixed;
+      top: 192px;
+      bottom: 40px;
+      left: 0;
+      padding: 25px 15px;
+      background-color: var(--accent-color);
+      color: #333;
+      padding-top: 60px;
+    }
+
+    .sidebar a {
+      color: #333;
+      display: block;
+      padding: 15px 20px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover a:active {
+      background-color: var(--highlight-color);
+    }
+
+
+    main.content {
+      flex: 1;
+      padding: 2rem 1rem;
+
+    }
+
+    .card {
+      background-color: white;
+      border-left: 5px solid var(--accent-color);
+      padding: 1rem;
+      margin-top: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      background-color: var(--footer-color);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+      .card {
+        padding: 1rem 0.5rem;
+      }
+    }
