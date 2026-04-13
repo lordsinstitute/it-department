@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="text-center text-primary mb-4">Model Performance Metrics</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <img src="/outputs/confusion_matrix.png" class="card-img-top">
+            <div class="card-body text-center">
+                <h6>Confusion Matrix</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <img src="/outputs/roc_curve.png" class="card-img-top">
+            <div class="card-body text-center">
+                <h6>ROC Curve</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <img src="/outputs/training_curves.png" class="card-img-top">
+            <div class="card-body text-center">
+                <h6>Training Curves</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
