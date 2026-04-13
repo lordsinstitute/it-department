@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="navbar-alt">
+       <a href="/admin/eda">EDA</a></li>
+       <a href="/admin/compare">Compare Models</a></li>
+       <a href="/admin/final">Final Model</a></li>
+       <a href="/admin/logout">Logout</a></li>
+    </div>
+    <br>
+<h3 class="mb-4">🏆 Final Model Performance (XGBoost)</h3>
+
+<!-- ================= METRIC CARDS ================= -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm p-3">
+            <h6>Accuracy</h6>
+            <h3 class="text-primary">{{ scores.Accuracy }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm p-3">
+            <h6>Precision</h6>
+            <h3 class="text-success">{{ scores.Precision }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm p-3">
+            <h6>Recall</h6>
+            <h3 class="text-warning">{{ scores.Recall }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm p-3">
+            <h6>F1 Score</h6>
+            <h3 class="text-danger">{{ scores["F1 Score"] }}</h3>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= CONFUSION MATRIX ================= -->
+<div class="card shadow-sm mb-4 p-4">
+    <h5 class="mb-3">Confusion Matrix</h5>
+    <div class="text-center">
+        <img src="{{ url_for('static', filename='final_model/confusion_matrix_XGB.jpg') }}"
+             class="img-fluid rounded shadow"
+             style="max-height:450px;">
+    </div>
+</div>
+
+<!-- ================= CLASSIFICATION REPORT ================= -->
+<div class="card shadow-sm p-4">
+    <h5 class="mb-3">Classification Report</h5>
+    <pre class="bg-light p-3 rounded" style="font-size: 0.9rem;">
+{{ report }}
+    </pre>
+</div>
+
+{% endblock %}

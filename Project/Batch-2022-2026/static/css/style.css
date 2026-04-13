@@ -1,0 +1,176 @@
+/* ========== Global Reset ========== */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7fb;
+    color: #2c3e50;
+}
+
+/* Wrapper for sticky footer */
+.page-wrapper {
+     background-image: url('bg1.png');
+            background-size: cover;    /* Scale image to cover entire area */
+            background-position: center;
+            background-repeat: no-repeat; /* Prevent tiling */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========== Header ========== */
+.header {
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 15px 40px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* ========== Navbar ========== */
+.navbar-custom {
+    background-color: #243b6b;
+    padding: 10px 40px;
+}
+
+.navbar-custom a {
+    color: #eaf0ff;
+    margin-left: 20px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+/* Hover effect */
+.navbar-custom a:hover {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Active link */
+.navbar-custom a.active {
+    background-color: #00b4d8;
+    color: white;
+}
+
+/* ========== Main Card (Home) ========== */
+.main-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    max-width: 720px;
+    margin: 60px auto;
+    text-align: center;
+}
+
+/* Buttons */
+.btn-primary-custom {
+    background: linear-gradient(90deg, #0072ff, #00c6ff);
+    border: none;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,114,255,0.4);
+}
+
+.btn-outline-custom {
+    border: 2px solid #0072ff;
+    color: #0072ff;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-custom:hover {
+    background: #0072ff;
+    color: white;
+}
+
+/* ========== Footer (Sticky) ========== */
+.footer {
+    background-color: #243b6b;
+    color: #dbe4ff;
+    text-align: center;
+    padding: 12px;
+    margin-top: auto;
+    font-size: 14px;
+}
+
+
+.modal-body img {
+    max-height: 80vh;
+}
+
+.card {
+    border-radius: 14px;
+}
+
+.card h6 {
+    font-weight: 600;
+    color: #555;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+.form-select {
+    border-radius: 8px;
+}
+
+.card {
+    border-radius: 14px;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+}
+.container {
+            width: 100%;
+            height: 100%;
+    opacity: 0.9;
+
+        }
+
+
+/* ========== Navbar (Alternative Theme) ========== */
+.navbar-alt {
+    background-color: #1b4332;   /* Deep green background */
+    padding: 12px 40px;
+}
+
+.navbar-alt a {
+    color: #fefae0;              /* Soft cream text */
+    margin-left: 18px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+/* Hover effect */
+.navbar-alt a:hover {
+    background: linear-gradient(90deg, #95d5b2, #52b788); /* Fresh green gradient */
+    color: #1b4332;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* Active link */
+.navbar-alt a.active {
+    background-color: #40916c;   /* Muted teal for active state */
+    color: #fff;
+}
+
