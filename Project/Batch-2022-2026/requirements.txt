@@ -1,0 +1,8 @@
+flask
+flask_sqlalchemy
+flask_login
+werkzeug
+reportlab
+scikit-learn
+joblib
+numpy
