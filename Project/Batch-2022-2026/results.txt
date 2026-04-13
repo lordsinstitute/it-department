@@ -1,0 +1,95 @@
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ conv2d (Conv2D)             (None, 222, 222, 100)     2800      
+                                                                 
+ max_pooling2d (MaxPooling2  (None, 111, 111, 100)     0         
+ D)                                                              
+                                                                 
+ conv2d_1 (Conv2D)           (None, 109, 109, 80)      72080     
+                                                                 
+ max_pooling2d_1 (MaxPoolin  (None, 54, 54, 80)        0         
+ g2D)                                                            
+                                                                 
+ conv2d_2 (Conv2D)           (None, 52, 52, 64)        46144     
+                                                                 
+ max_pooling2d_2 (MaxPoolin  (None, 26, 26, 64)        0         
+ g2D)                                                            
+                                                                 
+ flatten (Flatten)           (None, 43264)             0         
+                                                                 
+ dense (Dense)               (None, 500)               21632500  
+                                                                 
+ dropout (Dropout)           (None, 500)               0         
+                                                                 
+ dense_1 (Dense)             (None, 500)               250500    
+                                                                 
+ dropout_1 (Dropout)         (None, 500)               0         
+                                                                 
+ dense_2 (Dense)             (None, 1)                 501       
+                                                                 
+=================================================================
+Total params: 22004525 (83.94 MB)
+Trainable params: 22004525 (83.94 MB)
+Non-trainable params: 0 (0.00 Byte)
+_________________________________________________________________
+
+
+Epoch 1/10
+71/71 [==============================] - 117s 2s/step - loss: 0.6296 - accuracy: 0.6413 - val_loss: 0.4729 - val_accuracy: 0.7610
+Epoch 2/10
+71/71 [==============================] - 120s 2s/step - loss: 0.2883 - accuracy: 0.8702 - val_loss: 0.1926 - val_accuracy: 0.9203
+Epoch 3/10
+71/71 [==============================] - 120s 2s/step - loss: 0.0989 - accuracy: 0.9587 - val_loss: 0.1337 - val_accuracy: 0.9562
+Epoch 4/10
+71/71 [==============================] - 139s 2s/step - loss: 0.0509 - accuracy: 0.9782 - val_loss: 0.1038 - val_accuracy: 0.9641
+Epoch 5/10
+71/71 [==============================] - 120s 2s/step - loss: 0.0298 - accuracy: 0.9889 - val_loss: 0.2060 - val_accuracy: 0.9602
+Epoch 6/10
+71/71 [==============================] - 121s 2s/step - loss: 0.0161 - accuracy: 0.9942 - val_loss: 0.1052 - val_accuracy: 0.9801
+Epoch 7/10
+71/71 [==============================] - 631s 9s/step - loss: 0.0567 - accuracy: 0.9831 - val_loss: 0.1301 - val_accuracy: 0.9602
+Epoch 8/10
+71/71 [==============================] - 120s 2s/step - loss: 0.0119 - accuracy: 0.9960 - val_loss: 0.1117 - val_accuracy: 0.9761
+Epoch 9/10
+71/71 [==============================] - 701s 10s/step - loss: 0.0211 - accuracy: 0.9933 - val_loss: 0.0651 - val_accuracy: 0.9801
+Epoch 10/10
+71/71 [==============================] - 111s 2s/step - loss: 0.0166 - accuracy: 0.9964 - val_loss: 0.1190 - val_accuracy: 0.9761
+8/8 [==============================] - 3s 384ms/step - loss: 0.1190 - accuracy: 0.9761
+
+Loss on Test Data: 0.11902724206447601
+Accuracy on Test Data: 0.9760956168174744
+71/71 [==============================] - 26s 372ms/step - loss: 0.0229 - accuracy: 0.9916
+
+Loss on Train Data: 0.022905802354216576
+Accuracy on Train Data: 0.9915555715560913
+8/8 [==============================] - 3s 366ms/step
+
+-----Metrics Evaluation On Test Data -----
+
+Confusion Matrix:
+ [[161   3]
+ [  3  84]]
+
+
+Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.98      0.98      0.98       164
+           1       0.97      0.97      0.97        87
+
+    accuracy                           0.98       251
+   macro avg       0.97      0.97      0.97       251
+weighted avg       0.98      0.98      0.98       251
+
+
+8/8 [==============================] - 3s 368ms/step
+
+ROC - Area :0.9950238295486404
+
+
+8/8 [==============================] - 3s 368ms/step
+
+PR - Area :0.9920505128968194
+
