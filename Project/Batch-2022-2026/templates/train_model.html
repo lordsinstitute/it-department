@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Train Face Recognition Model</h3>
+  <form method="POST">
+    <button class="btn btn-primary">Start Training</button>
+  </form>
+  {% if metrics %}
+  <hr>
+  <h5>Training Results:</h5>
+  <ul>
+    <li>Samples: {{ metrics.samples }}</li>
+    <li>Classes: {{ metrics.classes }}</li>
+    <li>Training Time: {{ metrics.time }} sec</li>
+  </ul>
+  {% endif %}
+</div>
+{% endblock %}

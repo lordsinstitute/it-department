@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Student Attendance{% endblock %}
+{% block content %}
+
+<div class="container mt-4 text-center">
+  <h2 class="mb-3 text-primary">Live Attendance</h2>
+  <p>Ensure good lighting and face camera directly.</p>
+
+  <div class="video-container mt-4">
+    <img src="{{ url_for('user.video_feed') }}" width="640" height="480" class="rounded shadow-lg border border-info">
+  </div>
+
+  <div class="mt-4">
+    <a href="{{ url_for('user.stop_camera') }}" class="btn btn-danger">Stop Camera</a>
+    <a href="{{ url_for('user.report') }}" class="btn btn-success ms-2">View Today’s Report</a>
+  </div>
+</div>
+
+{% endblock %}

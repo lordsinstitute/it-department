@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Model Metrics</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr><th>Student ID</th><th>Name</th><th>Samples</th></tr>
+    </thead>
+    <tbody>
+      {% for sid, lbl in labels.items() %}
+      <tr>
+        <td>{{ lbl.student_id }}</td>
+        <td>{{ lbl.name }}</td>
+        <td>{{ samples.get(sid, 0) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
