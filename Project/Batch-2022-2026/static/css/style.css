@@ -1,0 +1,120 @@
+/* GLOBAL */
+
+body{
+    font-family: 'Poppins', sans-serif;
+    /* background: linear-gradient(135deg,#eef2ff,#f8fbff);*/
+    background-image: url("bg.png");
+    background-repeat: repeat;
+    background-position: center;
+    background-size: cover;
+    min-height:100vh;
+}
+
+
+/* HEADER */
+
+.main-header{
+    background: linear-gradient(120deg,#3f51b5,#00bcd4);
+    padding:50px 0;
+    color:white;
+}
+
+.header-title{
+    font-size:40px;
+    font-weight:600;
+}
+
+.header-subtitle{
+    font-size:18px;
+    opacity:0.9;
+}
+
+
+/* NAVBAR */
+
+.navbar-custom{
+    background:#1a237e;
+}
+
+.nav-btn{
+    color:white !important;
+    font-weight:500;
+    margin:0 10px;
+    transition:0.3s;
+}
+
+.nav-btn:hover{
+    color:#00e5ff !important;
+    transform:translateY(-2px);
+}
+
+.highlight-btn{
+    background:#00bcd4;
+    padding:6px 15px !important;
+    border-radius:20px;
+}
+
+.highlight-btn:hover{
+    background:#00e5ff;
+}
+
+
+/* CONTENT */
+
+.content-container{
+    margin-top:40px;
+    margin-bottom:60px;
+}
+
+
+/* CARDS */
+
+.card{
+    border:none;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+
+/* BUTTONS */
+
+.btn-primary{
+    background:#3f51b5;
+    border:none;
+}
+
+.btn-primary:hover{
+    background:#5c6bc0;
+}
+
+.btn-success{
+    background:#00bcd4;
+    border:none;
+}
+
+.btn-success:hover{
+    background:#00acc1;
+}
+
+
+/* FOOTER */
+
+.footer{
+    background:#1a237e;
+    color:white;
+    padding:15px;
+    width:100%;
+}
+
+
+/* IMAGE */
+
+img{
+    border-radius:10px;
+}

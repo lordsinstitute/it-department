@@ -1,0 +1,10 @@
+                                                                  precision    recall  f1-score   support
+
+      ECG Images of Myocardial Infarction Patients (240x12=2880)       1.00      1.00      1.00       112
+     ECG Images of Patient that have History of MI (172x12=2064)       0.99      0.96      0.97       112
+ECG Images of Patient that have abnormal heartbeat (233x12=2796)       0.97      0.97      0.97       112
+                          Normal Person ECG Images (284x12=3408)       0.97      1.00      0.98       112
+
+                                                        accuracy                           0.98       448
+                                                       macro avg       0.98      0.98      0.98       448
+                                                    weighted avg       0.98      0.98      0.98       448
