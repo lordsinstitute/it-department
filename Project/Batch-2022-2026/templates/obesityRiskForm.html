@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Obesity Risk Predictor</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        background-image: url('../static/img/bg1.jpg');
+        margin: 0;
+        padding: 0;
+        background-color: rgb(0, 66, 121);
+      }
+      .container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: rgb(96, 115, 131);
+
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-left: 5%;
+      }
+      h1 {
+        text-align: center;
+        color: #ffffff;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #ffffff;
+
+      }
+      input[type="text"],
+      input[type="number"],
+      select {
+        width: 75%;
+        padding: 10px;
+        border: 1px solid #1a3974;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+      input[type="submit"] {
+        background-color: rgb(0, 66, 121);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 50%;
+      }
+      input[type="submit"]:hover {
+        background-color: rgb(4, 113, 202);
+      }
+      .prediction{
+        display: none;
+      }
+      .container.hide-grid .grid-container {
+  display: none;
+}
+    </style>
+  </head>
+  <body>
+    <!-- Use if statement {% if display_main == 'none' %}hide-grid{% endif %}-->
+
+    <div class="container">
+      <h1>Obesity Risk Predictor</h1>
+      <form action="/predict" method="post">
+        <div class="grid-container" id="main_content">
+          <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="1" required />
+          </div>
+          <div class="form-group">
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" name="height" min="1" required />
+          </div>
+          <div class="form-group">
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" name="weight" min="1" required />
+          </div>
+          <div class="form-group">
+            <label for="family_history">Family History with Overweight:</label>
+            <select id="fam" name="fam">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="favc">Frequent consumption of high caloric food:</label>
+            <select id="favc" name="favc">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="fcvc">Frequency of consumption of vegetables:</label>
+            <select id="fcvc" name="fcvc">
+                <option value="1">Rarely</option>
+                <option value="2">Sometimes</option>
+                <option value="3">Frequently</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="ncp">Number of main meals:</label>
+            <select id="ncp" name="ncp">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="caec">Consumption of food between main meals:</label>
+            <select id="caec" name="caec">
+                <option value="no">No</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Frequently">Frequently</option>
+                <option value="Always">Always</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="smoke">Do you smoke:</label>
+            <select id="smoke" name="smoke">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="ch2o">Consumption of water daily (in L):</label>
+            <select id="ch2o" name="ch2o">
+                <option value="1">1</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2</option>
+                <option value="2.5">2.5</option>
+                <option value="3">3</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="scc">Calories consumption monitoring:</label>
+            <select id="scc" name="scc">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="faf">Physical activity frequency in a week:</label>
+            <select id="faf" name="faf">
+                <option value="0">0</option>
+                <option value="1">1-2</option>
+                <option value="2">2-3</option>
+                <option value="2.75">3-4</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="tue">Time using technology devices:</label>
+            <select id="tue" name="tue">
+                <option value="0">Never</option>
+                <option value="0.5">Rarely</option>
+                <option value="1">Sometimes</option>
+                <option value="1.5">Frequently</option>
+                <option value="2">Always</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="calc">Consumption of alcohol:</label>
+            <select id="calc" name="calc">
+                <option value="no">No</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Frequently">Frequently</option>
+                <option value="Always">Always</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="mtrans">Transportation used:</label>
+            <select id="mtrans" name="mtrans">
+                <option value="Public_Transportation">Public Transportation</option>
+                <option value="Automobile">Car</option>
+                <option value="Motorbike">Motorbike</option>
+                <option value="Bike">Bike</option>
+                <option value="Walking">Walking</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Submit" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
