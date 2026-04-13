@@ -1,0 +1,9 @@
+numpy
+matplotlib
+pandas
+nltk
+seaborn
+joblib
+scikit-learn
+flask
+youtube-comment-downloader
