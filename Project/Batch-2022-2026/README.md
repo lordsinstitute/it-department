@@ -1,18 +1,17 @@
 # Project Reposrt of 2026 Batch
-# Clone the repository
-git clone https://github.com/your-username/ai-resume-screening.git
+**Project Title:** AI-Powered Resume Screening System  
 
-# Navigate to project directory
-cd ai-resume-screening
+**Team Members:**
+- Mohammed Omar Abdullah (Roll No: 160922737113)
+- Farhan Aqib Khan (Roll No: 160922737073)
+- Hasnain Abdul Kareem (Roll No: 160922737079)
 
-# Create virtual environment
-python -m venv venv
+The AI-Powered Resume Screening System is designed to automate and enhance the recruitment process using Natural Language Processing (NLP) and Machine Learning techniques.
 
-# Activate environment
-# Windows
-venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
+Recruiters often spend significant time manually reviewing resumes, which can be inefficient and prone to bias. This system addresses that challenge by intelligently analyzing resumes and comparing them with job descriptions to identify the most suitable candidates.
 
-# Install dependencies
-pip install -r requirements.txt
+The system extracts key information such as skills, experience, and qualifications from resumes, processes the data, and computes a relevance score based on how well each resume matches the job requirements.
+
+By leveraging algorithms like TF-IDF and cosine similarity (or advanced models like BERT), the system ranks candidates and provides a shortlist, helping recruiters make faster and more data-driven hiring decisions.
+
+This project can be used as a standalone tool or integrated into recruitment platforms to streamline candidate screening and improve overall hiring efficiency.
