@@ -1,0 +1,13 @@
+{% extends "base_layout.html" %}
+{% block content %}
+
+<div class="card card-custom p-4 text-center">
+    <h3>CNN Model Performance</h3>
+    <hr>
+    <img src="{{ url_for('static', filename='performance/acc_loss_cnn.jpg') }}"
+         class="uploaded-image mb-4">
+    <img src="{{ url_for('static', filename='performance/cnf_cnn.jpg') }}"
+         class="uploaded-image">
+</div>
+
+{% endblock %}
