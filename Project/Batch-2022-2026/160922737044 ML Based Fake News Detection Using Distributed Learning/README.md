@@ -10,7 +10,7 @@ Modern online platforms generate massive volumes of textual data every second. D
 |Shaik Aasim          |160922737044|
 |Mohammed Abdul Moyeed|160922737014|
 |Shaik Addeeb Ahmed   |160922737015|
-#Objectives
+# Objectives
 To detect fake news using data-driven models
 To classify news articles as real or fake
 To reduce the spread of misinformation
