@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="metrics-container">
+  <h2 class="text-center text-primary mb-4">📊 Model Performance Metrics</h2>
+
+  <div class="card shadow p-4 mb-4 bg-light">
+    <h4 class="mb-3 text-success">Summary</h4>
+    <p><strong>Accuracy:</strong> {{ metrics.accuracy | round(4) }}</p>
+    <p><strong>ROC AUC:</strong> {{ metrics.roc_auc | round(4) }}</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 text-center">
+      <div class="card shadow p-3 bg-white">
+        <h5 class="mb-3">Confusion Matrix</h5>
+        <img src="{{ url_for('static', filename='confusion_matrix.png') }}"
+             alt="Confusion Matrix" class="img-fluid rounded shadow">
+      </div>
+    </div>
+    <div class="col-md-6 text-center">
+      <div class="card shadow p-3 bg-white">
+        <h5 class="mb-3">ROC Curve</h5>
+        <img src="{{ url_for('static', filename='roc_curve.png') }}"
+             alt="ROC Curve" class="img-fluid rounded shadow">
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow p-4 mt-4 bg-light">
+    <h4 class="text-info">Detailed Classification Report</h4>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Metric</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1-Score</th>
+            <th>Support</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for label, data in metrics.classification_report.items() %}
+            {% if data is mapping %}
+              <tr>
+                <td>{{ label }}</td>
+                <td>{{ data['precision'] | round(3) }}</td>
+                <td>{{ data['recall'] | round(3) }}</td>
+                <td>{{ data['f1-score'] | round(3) }}</td>
+                <td>{{ data['support'] }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

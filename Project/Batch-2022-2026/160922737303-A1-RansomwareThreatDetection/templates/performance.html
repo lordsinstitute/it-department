@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">📈 Machine Learning Model Performance</h2>
+
+{% for model_name, data in models.items() %}
+
+<div class="card mb-5 p-4">
+    <h3 class="text-primary mb-3">🔹 {{ model_name }}</h3>
+
+    <div class="row">
+
+        <!-- Confusion Matrix -->
+        {% if data.confusion_matrix %}
+        <div class="col-md-6">
+            <h5>Confusion Matrix</h5>
+            <img src="{{ url_for('static', filename='performance/' + data.confusion_matrix) }}"
+                 class="img-fluid rounded shadow"
+                 data-bs-toggle="modal"
+                 data-bs-target="#modal{{ loop.index }}">
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal{{ loop.index }}">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-body">
+                <img src="{{ url_for('static', filename='performance/' + data.confusion_matrix) }}"
+                     class="img-fluid">
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Classification Report -->
+        {% if data.classification_report %}
+        <div class="col-md-6">
+            <h5>Classification Report</h5>
+            <div class="report-box">
+                <pre>{{ data.classification_report }}</pre>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

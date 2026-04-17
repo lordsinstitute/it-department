@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Title -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">🧠 Final Model Details</h2>
+        <p class="text-muted">Selected Best Performing Model Based on Evaluation Metrics</p>
+    </div>
+
+    <!-- BEST MODEL SECTION -->
+    <div class="card shadow-lg border-0 mb-5 best-model-card">
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="text-success fw-bold">
+                    🌲 Random Forest Classifier
+                </h3>
+                <span class="badge bg-success fs-6 px-3 py-2">
+                    🏆 Best Model
+                </span>
+            </div>
+
+            <hr>
+
+            <div class="row">
+
+                <!-- Model Description -->
+                <div class="col-md-6">
+                    <h5 class="text-primary">📌 Why Random Forest?</h5>
+                    <ul class="model-points">
+                        <li>Highest accuracy among compared algorithms</li>
+                        <li>Better generalization performance</li>
+                        <li>Handles feature interactions effectively</li>
+                        <li>Reduced overfitting compared to single trees</li>
+                        <li>Strong performance on ransomware detection dataset</li>
+                    </ul>
+
+                    <div class="accuracy-box mt-4">
+                        <h4 class="mb-0">Model Accuracy</h4>
+                        <h2 class="fw-bold text-success">✔  Best Overall</h2>
+                    </div>
+                </div>
+
+                <!-- Confusion Matrix -->
+                <div class="col-md-6 text-center">
+                    <h5 class="text-primary mb-3">Confusion Matrix</h5>
+
+                    <img src="{{ url_for('static', filename='final_model/confusion_matrix.png') }}"
+                         class="img-fluid rounded shadow"
+                         data-bs-toggle="modal"
+                         data-bs-target="#cmModal">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal for Enlarged Image -->
+    <div class="modal fade" id="cmModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img src="{{ url_for('static', filename='final_model/confusion_matrix.png') }}"
+                         class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Model Files -->
+    <div class="card shadow-sm border-0 p-4">
+        <h4 class="text-secondary mb-3">📂 Additional Model Artifacts</h4>
+
+        {% for file in files %}
+        <p>
+            <a href="{{ url_for('static', filename='final_model/' + file) }}"
+               class="text-decoration-none">
+                📄 {{ file }}
+            </a>
+        </p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

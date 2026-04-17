@@ -1,0 +1,121 @@
+body {
+    background-color: #f4f7fc;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* HEADER */
+.main-header {
+    height: 200px;
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364),
+                url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b");
+    background-size: cover;
+    background-blend-mode: overlay;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.main-header h1 {
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.main-header p {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* SIDEBAR */
+.sidebar {
+    background: #1b263b;
+    min-height: 100vh;
+    padding-top: 30px;
+}
+
+.sidebar-title {
+    color: #adb5bd;
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.sidebar a {
+    color: #ffffff;
+    padding: 12px 20px;
+    display: block;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: #415a77;
+    border-left: 5px solid #00b4d8;
+}
+
+/* CONTENT */
+.content-area {
+    padding: 30px;
+}
+
+/* CARD */
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.report-box {
+    background-color: #0d1b2a;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    max-height: 350px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.best-model-card {
+    background: linear-gradient(135deg, #e6f9f0, #ffffff);
+    border-left: 8px solid #28a745;
+    border-radius: 15px;
+}
+
+.model-points li {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.accuracy-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px dashed #28a745;
+}
+
+.best-model-card {
+    background: linear-gradient(135deg, #e6f9f0, #ffffff);
+    border-left: 8px solid #28a745;
+    border-radius: 15px;
+}
+
+.artifact-card {
+    background: #ffffff;
+    border-radius: 12px;
+    transition: 0.3s ease;
+}
+
+.artifact-card:hover {
+    transform: translateY(-5px);
+}
+
+.report-box {
+    background-color: #0d1b2a;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    max-height: 350px;
+    overflow-y: auto;
+    font-size: 14px;
+}
