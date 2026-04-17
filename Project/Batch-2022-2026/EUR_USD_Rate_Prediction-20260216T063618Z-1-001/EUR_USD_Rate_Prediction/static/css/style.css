@@ -1,0 +1,75 @@
+body {
+    background-color: #f4f6f9;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 260px;
+    background: linear-gradient(180deg, #0d1b2a, #1b263b);
+    color: #fff;
+    padding-top: 20px;
+}
+
+.sidebar h4 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.sidebar a {
+    color: #cfd8dc;
+    padding: 12px 20px;
+    display: block;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #415a77;
+    color: #ffffff;
+}
+
+/* Main content */
+.content {
+    margin-left: 270px;
+    padding: 30px;
+}
+
+/* Cards */
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+header h4 {
+    letter-spacing: 0.3px;
+}
+
+/* Footer */
+footer {
+    margin-top: 50px;
+    text-align: center;
+    color: #777;
+}
+
+.app-header {
+    background: linear-gradient(135deg, #1e293b, #334155); /* professional dark blue */
+    color: #ffffff;
+    padding: 25px 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.4;
+}

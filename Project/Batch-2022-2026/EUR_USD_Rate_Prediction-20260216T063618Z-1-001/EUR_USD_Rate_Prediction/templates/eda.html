@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">{{ title }}</h3>
+
+<div class="row">
+    {% for img in images %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <img
+                src="{{ url_for('static', filename='eda/' + img) }}"
+                class="img-fluid rounded"
+                style="cursor:pointer"
+                data-bs-toggle="modal"
+                data-bs-target="#imgModal"
+                data-img="{{ url_for('static', filename='eda/' + img) }}"
+                data-title="{{ img }}"
+            >
+            <div class="card-body text-center">
+                <small class="text-muted">{{ img }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <img id="modalImage" class="img-fluid rounded">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Script -->
+<script>
+    const imgModal = document.getElementById('imgModal');
+
+    imgModal.addEventListener('show.bs.modal', function (event) {
+        const img = event.relatedTarget;
+        const imgSrc = img.getAttribute('data-img');
+        const title = img.getAttribute('data-title');
+
+        document.getElementById('modalImage').src = imgSrc;
+        document.getElementById('modalTitle').textContent = title;
+    });
+</script>
+
+{% endblock %}
