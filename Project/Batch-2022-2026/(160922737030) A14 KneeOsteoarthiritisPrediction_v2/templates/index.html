@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OA Severity Predictor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      overflow-x: hidden;
+    }
+
+    header {
+      animation: fadeInDown 1s ease-in-out;
+    }
+
+    .content-box {
+      animation: fadeInUp 1.5s ease-in-out;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .wave-bg {
+      position: absolute;
+      top: 20vh;
+      left: 0;
+      width: 100%;
+      height: auto;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="d-flex justify-content-center align-items-center text-white" style="height: 20vh; background-color: indigo;">
+    <h1 class="display-5"><b>Knee Osteoarthritis Severity Predictor</b></h1>
+  </header>
+
+  <!-- SVG Wave Background -->
+  <svg class="wave-bg" viewBox="0 0 1440 320">
+    <path fill="#00CFC1" fill-opacity="1" d="M0,160L80,138.7C160,117,320,75,480,74.7C640,75,800,117,960,133.3C1120,149,1280,139,1360,133.3L1440,128L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+  </svg>
+
+  <!-- Menu Bar -->
+  <nav class="navbar navbar-expand-sm navbar-dark" style="height: 5vh; background-color: #00CFC1;">
+    <div class="container-fluid justify-content-center">
+      <ul class="navbar-nav">
+          <li class="nav-item px-3">
+          <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+        </li>
+
+        <li class="nav-item px-3">
+          <a class="nav-link" href="{{ url_for('admin_bp.admin') }}">Admin Login</a>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link" href="{{ url_for('user_bp.user') }}">User Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Content Pane -->
+  <main class="container-fluid d-flex justify-content-center align-items-center text-center" style="height: 75vh;">
+    <div class="p-5 bg-white shadow-lg rounded-4 content-box" style="max-width: 800px;">
+	<p>The KneeArthroScan dataset provides high-resolution medical imaging and expert annotations for the detection and classification of knee arthritis. The dataset includes images categorized into five stages: normal, doubtful, mild, moderate, and severe arthritis. This comprehensive dataset supports advanced AI research and development in orthopedic health and arthritis diagnosis.</p>
+    </div>
+  </main>
+</body>
+</html>
