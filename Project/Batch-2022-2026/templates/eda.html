@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h3 class="mb-4 text-primary">Exploratory Data Analysis (EDA)</h3>
+
+
+  <!-- Dataset Distribution -->
+  <div class="card mb-4 p-3">
+    <h5 class="mb-3">Class Distribution</h5>
+    <img 
+      src="{{ url_for('static', filename='eda/class_distribution.jpg') }}" 
+      class="img-fluid rounded"
+      alt="Class Distribution">
+  </div>
+
+  <!-- Correlation Heatmap -->
+  <div class="card mb-4 p-3">
+    <h5 class="mb-3">Feature Correlation Heatmap</h5>
+    <img 
+      src="{{ url_for('static', filename='eda/correlation_heatmap.jpg') }}" 
+      class="img-fluid rounded"
+      alt="Correlation Heatmap">
+  </div>
+
+  <!-- Feature Distributions -->
+  <div class="card mb-4 p-3">
+    <h5 class="mb-3">Feature Distributions</h5>
+    <div class="row">
+      {% set features = [
+        'MDVP_Fo(Hz)_distribution.jpg',
+        'MDVP_Fhi(Hz)_distribution.jpg',
+        'MDVP_Flo(Hz)_distribution.jpg',
+        'MDVP_Jitter(%)_distribution.jpg',
+        'MDVP_Shimmer_distribution.jpg'
+      ] %}
+
+      {% for img in features %}
+      <div class="col-md-4 mb-3">
+        <img 
+          src="{{ url_for('static', filename='eda/' + img) }}" 
+          class="img-fluid rounded border">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

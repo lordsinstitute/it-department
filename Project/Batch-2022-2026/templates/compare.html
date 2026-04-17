@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+  <h3 class="mb-4 text-primary">Algorithm Performance Comparison</h3>
+
+  <!-- Training Metrics -->
+  <div class="card mb-4 p-3">
+    <h5 class="mb-3">Training Performance</h5>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <img src="{{ url_for('static', filename='vis/train_Training_Accuracy.jpg') }}" class="img-fluid rounded">
+      </div>
+      <div class="col-md-6 mb-3">
+        <img src="{{ url_for('static', filename='vis/train_F1-Score.jpg') }}" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+
+  <!-- Testing Metrics -->
+  <div class="card mb-4 p-3">
+    <h5 class="mb-3">Testing Performance</h5>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <img src="{{ url_for('static', filename='vis/test_Testing_Accuracy.jpg') }}" class="img-fluid rounded">
+      </div>
+      <div class="col-md-6 mb-3">
+        <img src="{{ url_for('static', filename='vis/test_F1-Score.jpg') }}" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+
+  <!-- Confusion Matrices -->
+  <div class="card mb-4 p-3">
+    <h5 class="mb-3">Confusion Matrices (Top Models)</h5>
+    <div class="row">
+      <div class="col-md-4">
+        <img src="{{ url_for('static', filename='vis/cnf_Random Forest.jpg') }}" class="img-fluid rounded">
+      </div>
+      <div class="col-md-4">
+        <img src="{{ url_for('static', filename='vis/cnf_XGBoost.jpg') }}" class="img-fluid rounded">
+      </div>
+      <div class="col-md-4">
+        <img src="{{ url_for('static', filename='vis/cnf_K Neighbors.jpg') }}" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

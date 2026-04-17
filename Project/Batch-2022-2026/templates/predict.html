@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+  <h3 class="mb-4 text-primary">Parkinson’s Disease Prediction</h3>
+  <p class="text-muted">
+    Enter the biomedical voice parameters to predict Parkinson’s disease using the trained ML model.
+  </p>
+
+  <form method="post" class="row g-3">
+
+    <!-- Fundamental Frequency -->
+    <div class="col-md-4">
+      <label class="form-label">MDVP:Fo(Hz)</label>
+      <input class="form-control" name="MDVP:Fo(Hz)" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">MDVP:Fhi(Hz)</label>
+      <input class="form-control" name="MDVP:Fhi(Hz)" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">MDVP:Flo(Hz)</label>
+      <input class="form-control" name="MDVP:Flo(Hz)" required>
+    </div>
+
+    <!-- Jitter -->
+    <div class="col-md-3">
+      <label class="form-label">MDVP:Jitter(%)</label>
+      <input class="form-control" name="MDVP:Jitter(%)" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">MDVP:Jitter(Abs)</label>
+      <input class="form-control" name="MDVP:Jitter(Abs)" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">MDVP:RAP</label>
+      <input class="form-control" name="MDVP:RAP" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">MDVP:PPQ</label>
+      <input class="form-control" name="MDVP:PPQ" required>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Jitter:DDP</label>
+      <input class="form-control" name="Jitter:DDP" required>
+    </div>
+
+    <!-- Shimmer -->
+    <div class="col-md-4">
+      <label class="form-label">MDVP:Shimmer</label>
+      <input class="form-control" name="MDVP:Shimmer" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">MDVP:Shimmer(dB)</label>
+      <input class="form-control" name="MDVP:Shimmer(dB)" required>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Shimmer:APQ3</label>
+      <input class="form-control" name="Shimmer:APQ3" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Shimmer:APQ5</label>
+      <input class="form-control" name="Shimmer:APQ5" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">MDVP:APQ</label>
+      <input class="form-control" name="MDVP:APQ" required>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Shimmer:DDA</label>
+      <input class="form-control" name="Shimmer:DDA" required>
+    </div>
+
+    <!-- Noise & Nonlinear Measures -->
+    <div class="col-md-3">
+      <label class="form-label">NHR</label>
+      <input class="form-control" name="NHR" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">HNR</label>
+      <input class="form-control" name="HNR" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">RPDE</label>
+      <input class="form-control" name="RPDE" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">DFA</label>
+      <input class="form-control" name="DFA" required>
+    </div>
+
+    <!-- Nonlinear Dynamics -->
+    <div class="col-md-3">
+      <label class="form-label">spread1</label>
+      <input class="form-control" name="spread1" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">spread2</label>
+      <input class="form-control" name="spread2" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">D2</label>
+      <input class="form-control" name="D2" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">PPE</label>
+      <input class="form-control" name="PPE" required>
+    </div>
+
+    <!-- Submit -->
+    <div class="col-12 mt-4">
+      <button class="btn btn-success btn-lg w-100">
+        Predict Parkinson’s Disease
+      </button>
+    </div>
+
+  </form>
+
+</div>
+{% endblock %}

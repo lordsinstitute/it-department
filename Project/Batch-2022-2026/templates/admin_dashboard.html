@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 class="mb-4">Admin Dashboard</h3>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card p-3 text-center">
+      <h5>Exploratory Data Analysis</h5>
+      <a href="/admin/eda" class="btn btn-primary mt-2">View EDA</a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 text-center">
+      <h5>Algorithm Comparison</h5>
+      <a href="/admin/compare" class="btn btn-primary mt-2">Compare Models</a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 text-center">
+      <h5>Final Model</h5>
+      <a href="/admin/final" class="btn btn-success mt-2">Create Best Model</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+  <h3 class="mb-4 text-success">Final Parkinson’s Prediction Model</h3>
+
+  <!-- Model Description -->
+  <div class="card mb-4 p-4">
+    <h5>Selected Algorithm</h5>
+    <p>
+      Based on extensive evaluation using accuracy, precision, recall,
+      F1-score, and cross-validation, the <strong>K-Nearest Neighbors (KNN)</strong>
+      classifier demonstrated the most stable and reliable performance.
+    </p>
+  </div>
+
+  <!-- Accuracy Graph -->
+  <div class="card mb-4 p-3">
+    <h5 class="mb-3">Model Accuracy vs Number of Neighbors</h5>
+    <img 
+      src="{{ url_for('static', filename='vis/KNN_acc.jpg') }}" 
+      class="img-fluid rounded"
+      alt="KNN Accuracy">
+  </div>
+
+  <!-- Model Creation Status -->
+  <div class="alert alert-success">
+    ✅ The trained model has been successfully saved and is now ready for
+    real-time Parkinson’s disease prediction.
+  </div>
+
+</div>
+{% endblock %}

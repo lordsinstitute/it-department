@@ -1,0 +1,52 @@
+/* General */
+body {
+    background-color: #f8fafc;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ================= HEADER ================= */
+.app-header {
+    background: linear-gradient(90deg, #1e3a8a, #0ea5e9);
+    color: white;
+    padding: 35px 0;   /* 🔥 Increased height */
+}
+
+.app-header h1 {
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+.app-header p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* ================= NAVBAR ================= */
+.app-navbar {
+    background-color: #ffffff;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.app-navbar .nav-link {
+    color: #1e3a8a;
+    font-weight: 500;
+    margin-left: 15px;
+}
+
+.app-navbar .nav-link:hover {
+    color: #0ea5e9;
+}
+
+/* ================= CARDS ================= */
+.card {
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* ================= FOOTER ================= */
+.footer {
+    background-color: #1e293b;
+    color: white;
+    padding: 15px 0;
+}
