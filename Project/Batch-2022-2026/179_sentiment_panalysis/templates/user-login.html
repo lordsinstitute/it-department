@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+    .topbar {
+      background: linear-gradient(90deg, #1a1a2e, #0f3460);
+      padding: 18px 30px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 2px solid #e63946;
+    }
+    .topbar h1 { font-size: 20px; font-weight: 700; color: #fff; }
+    .topbar span { color: #e63946; }
+    .navbar-custom {
+      background: #1a1a2e;
+      padding: 10px 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .navbar-custom a {
+      color: #a0a0c0; text-decoration: none; font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; padding: 6px 16px; border-radius: 20px;
+      border: 1px solid #2a2a4a; transition: all 0.2s;
+    }
+    .navbar-custom a:hover { background: #e63946; color: white; border-color: #e63946; }
+    .login-wrap {
+      display: flex; justify-content: center; align-items: center;
+      min-height: calc(100vh - 120px); padding: 40px 20px;
+    }
+    .login-box {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-top: 3px solid #e63946;
+      border-radius: 16px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .login-box .icon-wrap {
+      text-align: center; margin-bottom: 20px;
+    }
+    .login-box .icon-wrap svg { width: 48px; height: 48px; }
+    .login-box h2 { text-align: center; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .login-box p { text-align: center; font-size: 13px; color: #6666aa; margin-bottom: 28px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: #8888aa; letter-spacing: 1px; margin-bottom: 8px; }
+    .form-group input {
+      width: 100%; background: #0f0f1a; border: 1px solid #2a2a4a;
+      border-radius: 8px; padding: 12px 16px; color: #e0e0e0; font-size: 14px;
+      outline: none; transition: border 0.2s;
+    }
+    .form-group input:focus { border-color: #e63946; }
+    .btn-login {
+      width: 100%; background: #e63946; color: white; border: none;
+      border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 700;
+      cursor: pointer; letter-spacing: 1px; transition: background 0.2s;
+    }
+    .btn-login:hover { background: #c62828; }
+    .alert-danger {
+      background: #3a1a1a; border: 1px solid #e63946; border-radius: 8px;
+      padding: 10px 14px; color: #e63946; font-size: 13px; margin-bottom: 16px;
+    }
+    .hint { text-align: center; margin-top: 16px; font-size: 12px; color: #444466; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <svg viewBox="0 0 36 36" fill="none" style="width:32px;height:32px">
+      <rect width="36" height="36" rx="8" fill="#e63946"/>
+      <polygon points="14,11 27,18 14,25" fill="white"/>
+    </svg>
+    <h1>YouTube <span>Sentiment</span> Analysis &nbsp;|&nbsp; ML Dashboard</h1>
+  </div>
+  <div class="navbar-custom">
+    <a href="{{ url_for('admin_bp.admin') }}">ADMIN</a>
+    <a href="{{ url_for('user_bp.user') }}">USER</a>
+  </div>
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="18" r="8" fill="#e63946" opacity="0.9"/>
+          <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="#e63946" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <h2>User Login</h2>
+      <p>Analyze YouTube comment sentiment</p>
+      {% if msg %}<div class="alert-danger">{{ msg }}</div>{% endif %}
+      <form action="/user_home" method="post">
+        <div class="form-group">
+          <label>USERNAME</label>
+          <input type="text" name="adminUser" placeholder="Enter username" required />
+        </div>
+        <div class="form-group">
+          <label>PASSWORD</label>
+          <input type="password" name="adminPass" placeholder="Enter password" required />
+        </div>
+        <button type="submit" class="btn-login">LOGIN</button>
+      </form>
+      <p class="hint">Default: user / user</p>
+    </div>
+  </div>
+</body>
+</html>

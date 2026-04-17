@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Sentiment Analysis</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; }
+    .topbar {
+      background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 18px 30px; display: flex; align-items: center; gap: 14px;
+      border-bottom: 2px solid #e63946;
+    }
+    .topbar h1 { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+    .topbar span { color: #e63946; }
+    .navbar-custom {
+      background: #1a1a2e; padding: 10px 30px;
+      display: flex; justify-content: flex-end; gap: 20px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .navbar-custom a {
+      color: #a0a0c0; text-decoration: none; font-size: 13px; font-weight: 600;
+      letter-spacing: 1px; padding: 6px 16px; border-radius: 20px;
+      border: 1px solid #2a2a4a; transition: all 0.2s;
+    }
+    .navbar-custom a:hover { background: #e63946; color: white; border-color: #e63946; }
+
+    /* Fun fact ticker */
+    .funfact-bar {
+      background: #e63946; padding: 10px 30px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .ff-label {
+      background: #c62828; color: #fff; font-size: 10px; font-weight: 800;
+      letter-spacing: 2px; padding: 4px 10px; border-radius: 4px; white-space: nowrap;
+    }
+    .ff-text { font-size: 12px; color: #fff; font-weight: 500; flex: 1; }
+    .ff-dots { display: flex; gap: 6px; }
+    .ff-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: background 0.2s; }
+    .ff-dot.active { background: #fff; }
+
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      padding: 50px 30px 40px; text-align: center; border-bottom: 1px solid #2a2a4a;
+    }
+    .hero h2 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .hero h2 span { color: #e63946; }
+    .hero p { color: #8888aa; font-size: 15px; max-width: 600px; margin: 0 auto; }
+
+    .stats-row { display: flex; justify-content: center; gap: 20px; padding: 30px; flex-wrap: wrap; }
+    .stat-card {
+      background: #1a1a2e; border: 1px solid #2a2a4a;
+      border-radius: 12px; padding: 20px 28px; text-align: center; min-width: 150px;
+    }
+    .stat-card .num { font-size: 28px; font-weight: 800; color: #e63946; }
+    .stat-card .lbl { font-size: 12px; color: #8888aa; margin-top: 4px; letter-spacing: 0.5px; }
+
+    .categories { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 0 30px 30px; }
+    .cat-pill { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; }
+    .pill-pos { background: #1a3a1a; color: #4caf50; border: 1px solid #4caf50; }
+    .pill-neg { background: #3a1a1a; color: #e63946; border: 1px solid #e63946; }
+    .pill-neu { background: #1a2a3a; color: #64b5f6; border: 1px solid #64b5f6; }
+    .pill-int { background: #2a2a1a; color: #ffeb3b; border: 1px solid #ffeb3b; }
+    .pill-cor { background: #2a1a3a; color: #ce93d8; border: 1px solid #ce93d8; }
+    .pill-imp { background: #1a3a3a; color: #80cbc4; border: 1px solid #80cbc4; }
+    .pill-spa { background: #3a2a1a; color: #ffb74d; border: 1px solid #ffb74d; }
+
+    .abstract-card {
+      background: #1a1a2e; border: 1px solid #2a2a4a; border-left: 4px solid #e63946;
+      border-radius: 12px; margin: 0 30px 30px; padding: 28px 32px;
+    }
+    .abstract-card h5 { color: #e63946; font-size: 13px; font-weight: 700; letter-spacing: 2px; margin-bottom: 14px; }
+    .abstract-card p { color: #a0a0c0; font-size: 14px; line-height: 1.8; margin-bottom: 12px; }
+
+    /* ML Insights */
+    .section-title { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 2px; text-align: center; padding: 30px 30px 18px; text-transform: uppercase; }
+    .section-title span { color: #e63946; }
+    .insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 0 30px 30px; }
+    .insight-card {
+      background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px;
+      padding: 22px 20px; border-top: 3px solid #e63946; transition: transform 0.2s;
+    }
+    .insight-card:hover { transform: translateY(-3px); }
+    .insight-card .ic-icon { font-size: 28px; margin-bottom: 10px; }
+    .insight-card h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .insight-card p { font-size: 12px; color: #8888aa; line-height: 1.7; }
+    .insight-card .tag {
+      display: inline-block; margin-top: 10px; background: #12122a; border: 1px solid #2a2a4a;
+      border-radius: 20px; padding: 3px 10px; font-size: 10px; color: #e63946; font-weight: 700; letter-spacing: 0.5px;
+    }
+
+    /* Why 7 categories */
+    .why-section { background: #12122a; border-top: 1px solid #2a2a4a; border-bottom: 1px solid #2a2a4a; padding: 30px; margin-bottom: 30px; }
+    .why-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
+    .why-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px; padding: 14px 10px; text-align: center; }
+    .why-card .wc-dot { width: 12px; height: 12px; border-radius: 50%; margin: 0 auto 8px; }
+    .why-card h5 { font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .why-card p { font-size: 10px; color: #6666aa; line-height: 1.5; }
+
+    /* Dataset info */
+    .dataset-section {
+      margin: 0 30px 30px; background: #1a1a2e; border: 1px solid #2a2a4a;
+      border-left: 4px solid #64b5f6; border-radius: 12px; padding: 24px 28px;
+    }
+    .dataset-section h5 { color: #64b5f6; font-size: 13px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
+    .ds-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .ds-item { background: #12122a; border: 1px solid #2a2a4a; border-radius: 8px; padding: 12px 16px; flex: 1; min-width: 140px; }
+    .ds-item .ds-val { font-size: 20px; font-weight: 800; color: #64b5f6; }
+    .ds-item .ds-lbl { font-size: 11px; color: #6666aa; margin-top: 2px; }
+
+    /* Flow */
+    .flow-section { background: #12122a; border-top: 1px solid #2a2a4a; padding: 30px; }
+    .flow-section h5 { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-align: center; margin-bottom: 20px; }
+    .flow-steps { display: flex; justify-content: center; align-items: center; gap: 0; flex-wrap: wrap; }
+    .flow-step { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px; padding: 14px 18px; text-align: center; min-width: 110px; }
+    .flow-step .icon { font-size: 22px; margin-bottom: 6px; }
+    .flow-step .name { font-size: 11px; color: #a0a0c0; font-weight: 600; }
+    .flow-arrow { color: #e63946; font-size: 18px; margin: 0 6px; }
+
+    .footer-bar { background: #1a1a2e; border-top: 1px solid #2a2a4a; padding: 14px 30px; text-align: center; font-size: 12px; color: #555570; }
+
+    @media (max-width: 900px) { .insights-grid { grid-template-columns: 1fr 1fr; } .why-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 600px) { .insights-grid { grid-template-columns: 1fr; } .why-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <svg viewBox="0 0 36 36" fill="none" style="width:32px;height:32px">
+      <rect width="36" height="36" rx="8" fill="#e63946"/>
+      <polygon points="14,11 27,18 14,25" fill="white"/>
+    </svg>
+    <h1>YouTube <span>Sentiment</span> Analysis &nbsp;|&nbsp; ML Dashboard</h1>
+  </div>
+  <div class="navbar-custom">
+    <a href="{{ url_for('admin_bp.admin') }}">ADMIN</a>
+    <a href="{{ url_for('user_bp.user') }}">USER</a>
+  </div>
+
+  <!-- FUN FACT TICKER -->
+  <div class="funfact-bar">
+    <span class="ff-label">DID YOU KNOW</span>
+    <span class="ff-text" id="ffText">Random Forest uses 80 decision trees — each trained on a different random subset of data, making it highly resistant to overfitting.</span>
+    <div class="ff-dots">
+      <div class="ff-dot active" onclick="showFact(0)"></div>
+      <div class="ff-dot" onclick="showFact(1)"></div>
+      <div class="ff-dot" onclick="showFact(2)"></div>
+      <div class="ff-dot" onclick="showFact(3)"></div>
+      <div class="ff-dot" onclick="showFact(4)"></div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h2>Decode Your Audience with <span>AI</span></h2>
+    <p>Powered by Random Forest &amp; TF-IDF — classifying YouTube comments into 7 sentiment categories in real time</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">50K</div><div class="lbl">TRAINING SAMPLES</div></div>
+    <div class="stat-card"><div class="num">7</div><div class="lbl">SENTIMENT CLASSES</div></div>
+    <div class="stat-card"><div class="num">80</div><div class="lbl">DECISION TREES</div></div>
+    <div class="stat-card"><div class="num">1500</div><div class="lbl">TF-IDF FEATURES</div></div>
+  </div>
+
+  <div class="categories">
+    <span class="cat-pill pill-pos">POSITIVE</span>
+    <span class="cat-pill pill-neg">NEGATIVE</span>
+    <span class="cat-pill pill-neu">NEUTRAL</span>
+    <span class="cat-pill pill-int">INTERROGATIVE</span>
+    <span class="cat-pill pill-cor">CORRECTIVE</span>
+    <span class="cat-pill pill-imp">IMPERATIVE</span>
+    <span class="cat-pill pill-spa">SPAM</span>
+  </div>
+
+  <div class="abstract-card">
+    <h5>ABSTRACT</h5>
+    <p>The extensive user engagement on YouTube leads to a flood of comments, creating challenges for content creators who aim to understand audience sentiment. Previous studies have mainly concentrated on distinguishing between positive, negative, and neutral sentiments in comments. This study involves creating a dataset of YouTube comments and classifying them into positive, negative, interrogative, corrective, imperative, and neutral categories, which will help content creators visualize other sentiments alongside positive, negative, and neutral sentiments.</p>
+    <p>In this project, we present a web application developed using the Flask framework, designed to classify YouTube comments for a specific video URL into multiple categories using machine learning. The application aims to provide content creators, marketers, and researchers with a powerful tool for analyzing viewer feedback, understanding audience sentiment, and identifying trends.</p>
+  </div>
+
+  <!-- ML INSIGHTS -->
+  <div class="section-title">ML <span>Technology</span> Insights</div>
+  <div class="insights-grid">
+    <div class="insight-card">
+      <div class="ic-icon">🌲</div>
+      <h4>RANDOM FOREST CLASSIFIER</h4>
+      <p>An ensemble of 80 independent decision trees. Each tree votes on the class — the majority vote wins. This reduces overfitting compared to a single decision tree and achieves higher accuracy on unseen data.</p>
+      <span class="tag">ALGORITHM USED</span>
+    </div>
+    <div class="insight-card">
+      <div class="ic-icon">📐</div>
+      <h4>TF-IDF VECTORIZATION</h4>
+      <p>Term Frequency–Inverse Document Frequency converts raw comment text into 1500 numerical features. Words common across all documents (like "the") get lower weight; unique discriminative words get higher weight.</p>
+      <span class="tag">FEATURE EXTRACTION</span>
+    </div>
+    <div class="insight-card">
+      <div class="ic-icon">🧹</div>
+      <h4>NLP PREPROCESSING PIPELINE</h4>
+      <p>Raw comments go through: (1) Remove special characters using regex, (2) Remove single-letter tokens, (3) Collapse whitespace, (4) Lowercase all text, (5) Remove NLTK English stopwords before vectorizing.</p>
+      <span class="tag">TEXT CLEANING</span>
+    </div>
+    <div class="insight-card">
+      <div class="ic-icon">🎲</div>
+      <h4>BOOTSTRAPPING (BAGGING)</h4>
+      <p>Each of the 80 trees is trained on a different random sample of the 50K dataset (with replacement). This technique — called Bootstrap Aggregating or Bagging — ensures diversity among trees and improves model robustness.</p>
+      <span class="tag">ENSEMBLE TECHNIQUE</span>
+    </div>
+    <div class="insight-card">
+      <div class="ic-icon">🔗</div>
+      <h4>SINGLETON PATTERN IN CODE</h4>
+      <p>The classifier uses a thread-safe Singleton design pattern so the model is loaded into memory only once at startup. Subsequent requests reuse the same in-memory object — saving 2–3 seconds per request.</p>
+      <span class="tag">SOFTWARE DESIGN</span>
+    </div>
+    <div class="insight-card">
+      <div class="ic-icon">📦</div>
+      <h4>JOBLIB MODEL SERIALIZATION</h4>
+      <p>The trained Random Forest model and TF-IDF vectorizer are saved as .sav files using joblib. This allows the app to skip retraining on every startup — the pre-trained model loads in under 1 second.</p>
+      <span class="tag">MODEL DEPLOYMENT</span>
+    </div>
+  </div>
+
+  <!-- WHY 7 CATEGORIES -->
+  <div class="why-section">
+    <div class="section-title" style="padding-top:0">Why <span>7 Categories</span>? — Beyond Positive / Negative / Neutral</div>
+    <div class="why-grid">
+      <div class="why-card"><div class="wc-dot" style="background:#4caf50"></div><h5>Positive</h5><p>Appreciation &amp; praise — "Great video!"</p></div>
+      <div class="why-card"><div class="wc-dot" style="background:#e63946"></div><h5>Negative</h5><p>Criticism — "Worst video ever."</p></div>
+      <div class="why-card"><div class="wc-dot" style="background:#64b5f6"></div><h5>Neutral</h5><p>No sentiment — "I watched this today."</p></div>
+      <div class="why-card"><div class="wc-dot" style="background:#ffeb3b"></div><h5>Interrogative</h5><p>Questions — "How did you do that?"</p></div>
+      <div class="why-card"><div class="wc-dot" style="background:#ce93d8"></div><h5>Corrective</h5><p>Corrections — "That formula is wrong."</p></div>
+      <div class="why-card"><div class="wc-dot" style="background:#80cbc4"></div><h5>Imperative</h5><p>Commands — "Please add subtitles!"</p></div>
+      <div class="why-card"><div class="wc-dot" style="background:#ffb74d"></div><h5>Spam</h5><p>Bots &amp; promos — "Click here!"</p></div>
+    </div>
+  </div>
+
+  <!-- DATASET INFO -->
+  <div class="dataset-section">
+    <h5>DATASET DETAILS</h5>
+    <div class="ds-row">
+      <div class="ds-item"><div class="ds-val">50,000</div><div class="ds-lbl">Total training samples</div></div>
+      <div class="ds-item"><div class="ds-val">7,143</div><div class="ds-lbl">Samples per category (balanced)</div></div>
+      <div class="ds-item"><div class="ds-val">80% / 20%</div><div class="ds-lbl">Train / Test split</div></div>
+      <div class="ds-item"><div class="ds-val">Synthetic</div><div class="ds-lbl">Generated via generate_dataset.py — avoids API quotas</div></div>
+      <div class="ds-item"><div class="ds-val">15 templates</div><div class="ds-lbl">Per category with word-level augmentation</div></div>
+    </div>
+  </div>
+
+  <!-- FLOW -->
+  <div class="flow-section">
+    <h5>HOW IT WORKS — END-TO-END PIPELINE</h5>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="icon">🔗</div><div class="name">YouTube URL</div></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><div class="icon">💬</div><div class="name">Fetch 1500 Comments</div></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><div class="icon">🧹</div><div class="name">Clean Text</div></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><div class="icon">📊</div><div class="name">TF-IDF (1500 features)</div></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><div class="icon">🌲</div><div class="name">Random Forest (80 trees)</div></div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step"><div class="icon">📈</div><div class="name">Bar Chart Results</div></div>
+    </div>
+  </div>
+
+  <div class="footer-bar">YouTube Comment Sentiment Analysis &nbsp;|&nbsp; Final Year Project — Lords Institute of Engineering &amp; Technology &nbsp;|&nbsp; Machine Learning &amp; NLP</div>
+
+  <script>
+    const facts = [
+      "Random Forest uses 80 decision trees — each trained on a different random subset of data, making it highly resistant to overfitting.",
+      "TF-IDF stands for Term Frequency–Inverse Document Frequency. It gives higher importance to words that are unique to a document but rare across the whole dataset.",
+      "This project classifies comments into 7 categories — going beyond the traditional 3-class positive/negative/neutral approach used by most existing systems.",
+      "The model is trained on 50,000 synthetic YouTube comments generated by generate_dataset.py — perfectly balanced at 7,143 samples per category.",
+      "The app fetches up to 1,500 comments per YouTube video using the youtube-comment-downloader library — no API key or quota limits required."
+    ];
+    let currentFact = 0;
+    function showFact(n) {
+      currentFact = n;
+      document.getElementById('ffText').textContent = facts[n];
+      document.querySelectorAll('.ff-dot').forEach((d, i) => d.classList.toggle('active', i === n));
+    }
+    setInterval(() => showFact((currentFact + 1) % facts.length), 5000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentiment Analysis</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; }
+    .topbar {
+      background: linear-gradient(90deg, #1a1a2e, #0f3460);
+      padding: 18px 30px; display: flex; align-items: center; gap: 14px;
+      border-bottom: 2px solid #e63946;
+    }
+    .topbar h1 { font-size: 20px; font-weight: 700; color: #fff; }
+    .topbar span { color: #e63946; }
+    .navbar-custom {
+      background: #1a1a2e; padding: 10px 30px;
+      display: flex; justify-content: flex-end; gap: 12px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .navbar-custom a {
+      color: #a0a0c0; text-decoration: none; font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; padding: 6px 16px; border-radius: 20px;
+      border: 1px solid #2a2a4a; transition: all 0.2s;
+    }
+    .navbar-custom a:hover { background: #e63946; color: white; border-color: #e63946; }
+    .main { padding: 30px; max-width: 1200px; margin: 0 auto; }
+
+    .search-card {
+      background: #1a1a2e; border: 1px solid #2a2a4a;
+      border-radius: 14px; padding: 24px 28px; margin-bottom: 28px;
+    }
+    .search-card h5 { font-size: 13px; font-weight: 700; color: #8888aa; letter-spacing: 2px; margin-bottom: 14px; }
+    .search-row { display: flex; gap: 12px; }
+    .search-row input {
+      flex: 1; background: #0f0f1a; border: 1px solid #2a2a4a;
+      border-radius: 8px; padding: 12px 16px; color: #e0e0e0;
+      font-size: 14px; outline: none; transition: border 0.2s;
+    }
+    .search-row input:focus { border-color: #e63946; }
+    .search-row input::placeholder { color: #444466; }
+    .btn-search {
+      background: #e63946; color: white; border: none;
+      border-radius: 8px; padding: 12px 28px; font-size: 14px;
+      font-weight: 700; cursor: pointer; transition: background 0.2s; white-space: nowrap;
+    }
+    .btn-search:hover { background: #c62828; }
+
+    .error-box {
+      margin-top: 14px; background: #3a1a1a; border: 1px solid #e63946;
+      border-radius: 8px; padding: 10px 16px; color: #e63946; font-size: 13px;
+    }
+
+    /* Pipeline guide */
+    .pipeline-card {
+      background: #1a1a2e; border: 1px solid #2a2a4a;
+      border-left: 4px solid #64b5f6; border-radius: 12px;
+      padding: 18px 22px; margin-bottom: 24px;
+    }
+    .pipeline-card h5 { color: #64b5f6; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 14px; }
+    .pipe-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+    .pipe-step {
+      background: #12122a; border: 1px solid #2a2a4a;
+      border-radius: 8px; padding: 8px 14px; font-size: 11px; color: #a0a0c0; font-weight: 600;
+    }
+    .pipe-arrow { color: #64b5f6; font-size: 14px; margin: 0 2px; }
+
+    /* Results */
+    .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+    .result-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 14px; overflow: hidden; }
+    .card-header {
+      padding: 14px 20px; background: #12122a; border-bottom: 1px solid #2a2a4a;
+      font-size: 12px; font-weight: 700; color: #8888aa; letter-spacing: 1.5px;
+    }
+    .card-body { padding: 20px; }
+    .thumb-wrap { position: relative; cursor: pointer; border-radius: 10px; overflow: hidden; }
+    .thumb-wrap img { width: 100%; display: block; border-radius: 10px; }
+    .play-overlay {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(230, 57, 70, 0.9); border-radius: 50%;
+      width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s;
+    }
+    .thumb-wrap:hover .play-overlay { transform: translate(-50%, -50%) scale(1.1); }
+    .play-overlay svg { width: 26px; height: 26px; fill: white; margin-left: 4px; }
+    .watch-link {
+      display: block; text-align: center; margin-top: 10px;
+      color: #e63946; font-size: 13px; font-weight: 600;
+      text-decoration: none; letter-spacing: 0.5px;
+    }
+    .watch-link:hover { color: #ff6b6b; }
+    .chart-img { width: 100%; border-radius: 10px; }
+    .legend-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #8888aa; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* Interpret results */
+    .interpret-card {
+      background: #1a1a2e; border: 1px solid #2a2a4a; border-left: 4px solid #e63946;
+      border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;
+    }
+    .interpret-card h5 { color: #e63946; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 14px; }
+    .interpret-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .ig-item { background: #12122a; border-radius: 8px; padding: 12px 14px; }
+    .ig-item .ig-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-bottom: 6px; }
+    .ig-item p { font-size: 11px; color: #8888aa; line-height: 1.6; }
+
+    /* Category quick ref */
+    .catref-section { background: #12122a; border: 1px solid #2a2a4a; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+    .catref-section h5 { font-size: 12px; font-weight: 700; color: #8888aa; letter-spacing: 2px; margin-bottom: 14px; }
+    .catref-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .cr-item { background: #1a1a2e; border-radius: 8px; padding: 10px 6px; text-align: center; }
+    .cr-dot { width: 10px; height: 10px; border-radius: 50%; margin: 0 auto 6px; }
+    .cr-name { font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+    .cr-example { font-size: 9px; color: #6666aa; font-style: italic; line-height: 1.4; }
+
+    @media (max-width: 700px) {
+      .results-grid { grid-template-columns: 1fr; }
+      .search-row { flex-direction: column; }
+      .interpret-grid { grid-template-columns: 1fr 1fr; }
+      .catref-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <svg viewBox="0 0 36 36" fill="none" style="width:32px;height:32px">
+      <rect width="36" height="36" rx="8" fill="#e63946"/>
+      <polygon points="14,11 27,18 14,25" fill="white"/>
+    </svg>
+    <h1>YouTube <span>Sentiment</span> Analysis &nbsp;|&nbsp; ML Dashboard</h1>
+  </div>
+  <div class="navbar-custom">
+    <a href="{{ url_for('user_bp.logout') }}">LOGOUT</a>
+  </div>
+
+  <div class="main">
+
+    <!-- SEARCH -->
+    <div class="search-card">
+      <h5>ANALYZE A YOUTUBE VIDEO</h5>
+      <form method="post" action="/predict">
+        <div class="search-row">
+          <input type="text" name="videoQuery" placeholder="Paste a YouTube URL — e.g. https://www.youtube.com/watch?v=..." />
+          <button type="submit" class="btn-search">ANALYZE</button>
+        </div>
+      </form>
+      {% if error is defined and error %}
+      <div class="error-box">{{ error }}</div>
+      {% endif %}
+    </div>
+
+    <!-- PIPELINE MINI GUIDE — always visible -->
+    <div class="pipeline-card">
+      <h5>WHAT HAPPENS WHEN YOU CLICK ANALYZE</h5>
+      <div class="pipe-steps">
+        <div class="pipe-step">🔗 URL parsed</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">💬 Up to 1,500 comments fetched</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">🧹 Regex cleaning + lowercase</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">📊 TF-IDF vectorized (1500 features)</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">🌲 Random Forest predicts per comment</div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">📈 Bar chart % distribution</div>
+      </div>
+    </div>
+
+    <!-- RESULTS — only shown after analysis -->
+    {% if link is defined and link %}
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="card-header">VIDEO</div>
+        <div class="card-body">
+          <a href="https://www.youtube.com/watch?v={{ link }}" target="_blank">
+            <div class="thumb-wrap">
+              <img src="https://img.youtube.com/vi/{{ link }}/hqdefault.jpg"
+                   alt="Thumbnail"
+                   onerror="this.src='https://img.youtube.com/vi/{{ link }}/0.jpg'" />
+              <div class="play-overlay">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </a>
+          <a class="watch-link" href="https://www.youtube.com/watch?v={{ link }}" target="_blank">
+            Watch on YouTube ↗
+          </a>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="card-header">SENTIMENT DISTRIBUTION — % OF COMMENTS PER CATEGORY</div>
+        <div class="card-body">
+          <img class="chart-img" src="/static/vis/plot.png" alt="Sentiment Chart" />
+          <div class="legend-row">
+            <div class="leg-item"><div class="leg-dot" style="background:green"></div>Positive</div>
+            <div class="leg-item"><div class="leg-dot" style="background:red"></div>Negative</div>
+            <div class="leg-item"><div class="leg-dot" style="background:yellow"></div>Neutral</div>
+            <div class="leg-item"><div class="leg-dot" style="background:gray"></div>Spam</div>
+            <div class="leg-item"><div class="leg-dot" style="background:blue"></div>Interrogative</div>
+            <div class="leg-item"><div class="leg-dot" style="background:orange"></div>Corrective</div>
+            <div class="leg-item"><div class="leg-dot" style="background:purple"></div>Imperative</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERPRET RESULTS — only shown after analysis -->
+    <div class="interpret-card">
+      <h5>HOW TO INTERPRET YOUR RESULTS</h5>
+      <div class="interpret-grid">
+        <div class="ig-item">
+          <div class="ig-tag" style="background:#1a3a1a; color:#4caf50; border:1px solid #4caf50">POSITIVE ↑</div>
+          <p>A high positive % means viewers love the content. Great engagement indicator for content creators.</p>
+        </div>
+        <div class="ig-item">
+          <div class="ig-tag" style="background:#3a1a1a; color:#e63946; border:1px solid #e63946">NEGATIVE ↑</div>
+          <p>High negative % signals dissatisfaction. Check the actual comments to understand what went wrong.</p>
+        </div>
+        <div class="ig-item">
+          <div class="ig-tag" style="background:#2a2a1a; color:#ffeb3b; border:1px solid #ffeb3b">INTERROGATIVE ↑</div>
+          <p>Lots of questions means viewers need more explanation. Consider a follow-up video on the topic.</p>
+        </div>
+        <div class="ig-item">
+          <div class="ig-tag" style="background:#3a2a1a; color:#ffb74d; border:1px solid #ffb74d">SPAM ↑</div>
+          <p>High spam % means the video attracted bots or promo accounts. Enable YouTube's spam filters.</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- CATEGORY QUICK REFERENCE — always visible -->
+    <div class="catref-section">
+      <h5>7 SENTIMENT CATEGORIES — QUICK REFERENCE</h5>
+      <div class="catref-grid">
+        <div class="cr-item"><div class="cr-dot" style="background:#4caf50"></div><div class="cr-name">Positive</div><div class="cr-example">"Great video!"</div></div>
+        <div class="cr-item"><div class="cr-dot" style="background:#e63946"></div><div class="cr-name">Negative</div><div class="cr-example">"Worst video ever."</div></div>
+        <div class="cr-item"><div class="cr-dot" style="background:#64b5f6"></div><div class="cr-name">Neutral</div><div class="cr-example">"I watched this today."</div></div>
+        <div class="cr-item"><div class="cr-dot" style="background:#ffb74d"></div><div class="cr-name">Spam</div><div class="cr-example">"Free iPhone, click here!"</div></div>
+        <div class="cr-item"><div class="cr-dot" style="background:#ffeb3b"></div><div class="cr-name">Interrogative</div><div class="cr-example">"How did you do that?"</div></div>
+        <div class="cr-item"><div class="cr-dot" style="background:#ce93d8"></div><div class="cr-name">Corrective</div><div class="cr-example">"That formula is wrong."</div></div>
+        <div class="cr-item"><div class="cr-dot" style="background:#80cbc4"></div><div class="cr-name">Imperative</div><div class="cr-example">"Please add subtitles!"</div></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
