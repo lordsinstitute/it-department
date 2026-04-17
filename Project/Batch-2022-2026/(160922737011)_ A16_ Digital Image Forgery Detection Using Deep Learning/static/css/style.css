@@ -1,0 +1,22 @@
+body {
+    background-color: #f4f7fa;
+    background-image: url('bg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+header {
+    background: linear-gradient(90deg, #1f3c88, #2a5298);
+}
+
+.navbar {
+    font-weight: 500;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.progress {
+    height: 25px;
+}
