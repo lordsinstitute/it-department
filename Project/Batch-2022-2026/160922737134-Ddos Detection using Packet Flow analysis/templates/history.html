@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% set title = "History - PacketFlow Guard" %}
+{% block content %}
+
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+  <div>
+    <h3 class="fw-bold mb-0">History</h3>
+    <div class="text-muted">All analysis runs saved locally (SQLite + JSON ledger)</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-dark" href="{{ url_for('analyze') }}">New Analysis</a>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>When</th>
+            <th>Source</th>
+            <th>Risk</th>
+            <th>Score</th>
+            <th class="text-muted">Evidence Hash</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in runs %}
+          <tr>
+            <td class="fw-semibold">#{{ r.id }}</td>
+            <td class="text-muted small">{{ r.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+            <td>{{ r.source }}</td>
+            <td>
+              <span class="badge
+                {% if r.risk_level == 'Critical' %}text-bg-danger
+                {% elif r.risk_level == 'High' %}text-bg-warning
+                {% elif r.risk_level == 'Medium' %}text-bg-info
+                {% else %}text-bg-success{% endif %}">
+                {{ r.risk_level }}
+              </span>
+            </td>
+            <td>{{ "%.2f"|format(r.risk_score) }}</td>
+            <td class="font-mono small text-break">{{ (r.evidence_hash or "N/A")[:18] }}{% if r.evidence_hash %}…{% endif %}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-dark" href="{{ url_for('result', run_id=r.id) }}">Open</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="text-center text-muted py-4">No analysis runs found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
