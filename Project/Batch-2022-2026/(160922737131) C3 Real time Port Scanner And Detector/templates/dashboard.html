@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h4 class="mb-1">Dashboard</h4>
+    <div class="text-muted small">Operational overview of scans, risks, and recent activity.</div>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('main.analyze') }}">New Scan</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted small">Total Scans</div>
+        <div class="display-6 fw-semibold">{{ total }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted small">High/Critical</div>
+        <div class="display-6 fw-semibold">{{ high_critical }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted small">Unique Targets</div>
+        <div class="display-6 fw-semibold">{{ unique_targets }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-3">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted small">Last Scan</div>
+        <div class="fw-semibold">
+          {% if last_scan %}
+            #{{ last_scan.id }} · {{ last_scan.created_at.strftime("%Y-%m-%d %H:%M:%S") }} UTC
+          {% else %}
+            —
+          {% endif %}
+        </div>
+        <div class="small text-muted">
+          {% if last_scan %}{{ last_scan.risk_level }} ({{ last_scan.risk_score }}){% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="mb-0">Risk Distribution</h6>
+          <span class="badge bg-secondary-subtle text-secondary">Chart.js</span>
+        </div>
+        <canvas id="riskChart" height="140"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="mb-0">Scans (Last 7 Days)</h6>
+          <span class="badge bg-secondary-subtle text-secondary">Chart.js</span>
+        </div>
+        <canvas id="trendChart" height="140"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const riskCounts = {{ risk_counts | tojson }};
+  const riskLabels = ["Low","Medium","High","Critical"];
+  const riskData = riskLabels.map(k => riskCounts[k] || 0);
+
+  new Chart(document.getElementById('riskChart'), {
+    type: 'doughnut',
+    data: {
+      labels: riskLabels,
+      datasets: [{ data: riskData }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+
+  const trendLabels = {{ scans_labels | safe }};
+  const trendValues = {{ scans_values | safe }};
+
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: trendLabels,
+      datasets: [{ label: 'Scans', data: trendValues, tension: 0.25, fill: false }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+</script>
+{% endblock %}
