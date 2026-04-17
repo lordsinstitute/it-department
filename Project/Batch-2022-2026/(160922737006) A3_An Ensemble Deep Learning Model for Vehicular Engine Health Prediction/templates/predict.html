@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Engine Health Prediction</h3>
+
+<form method="post" onsubmit="showLoader()">
+    <div class="row">
+        {% for f in features %}
+        <div class="col-md-4 mb-3">
+            <label class="fw-semibold">{{ f }}</label>
+            <input type="number" step="any" class="form-control" name="{{ f }}" required>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button class="btn btn-primary mt-3">
+        Predict Engine Health
+    </button>
+
+    <div id="loader" class="mt-3 d-none text-center">
+        <div class="spinner-border text-primary"></div>
+        <p>Analyzing engine data...</p>
+    </div>
+</form>
+
+<script>
+function showLoader(){
+    document.getElementById("loader").classList.remove("d-none");
+}
+</script>
+{% endblock %}

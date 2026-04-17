@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- ================= SIDEBAR ================= -->
+        <nav class="col-md-3 col-lg-2 d-md-block admin-sidebar p-3">
+            <h5 class="text-white mb-4">Admin Panel</h5>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/admin' %}active{% endif %}"
+                       href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/eda' in request.path %}active{% endif %}"
+                       href="/admin/eda">
+                        View EDA Graphs
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/performance' in request.path %}active{% endif %}"
+                       href="/admin/performance">
+                        Machine Learning Model Performance
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/dl_performance' in request.path %}active{% endif %}"
+                       href="/admin/dl_performance">
+                        Deep Learning Model Performance
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/stacked_performance' in request.path %}active{% endif %}"
+                       href="/admin/stacked_performance">
+                        Ensemble Model Performance
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/best_model' in request.path %}active{% endif %}"
+                       href="/admin/best_model">
+                        Best Model Summary
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+
+            <h3 class="mb-4 fw-semibold">Model Performance Comparison</h3>
+
+            {% for model, report in reports.items() %}
+            <div class="card mb-4 shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <h5 class="fw-semibold mb-3">{{ model }}</h5>
+
+                    <!-- Confusion Matrix Image -->
+                    <img
+                        src="{{ url_for('static', filename='performance/' ~ model ~ '_cm.png') }}"
+                        class="img-fluid rounded mb-3 performance-img"
+                        alt="{{ model }} Confusion Matrix"
+                        data-bs-toggle="modal"
+                        data-bs-target="#cmModal"
+                        data-img="{{ url_for('static', filename='performance/' ~ model ~ '_cm.png') }}"
+                    >
+
+                    <!-- Classification Report -->
+                    <div class="report-box">
+                        <pre class="mb-0">{{ report }}</pre>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </main>
+
+    </div>
+</div>
+
+
+<!-- ================= CONFUSION MATRIX MODAL ================= -->
+<div class="modal fade" id="cmModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Confusion Matrix Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        <img src="" id="modalCMImage" class="img-fluid rounded">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+    const cmModal = document.getElementById('cmModal');
+    cmModal.addEventListener('show.bs.modal', function (event) {
+        const img = event.relatedTarget;
+        const imgSrc = img.getAttribute('data-img');
+        document.getElementById('modalCMImage').src = imgSrc;
+    });
+</script>
+
+{% endblock %}

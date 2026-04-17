@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card text-center shadow">
+    <div class="card-body">
+        <h3 class="mb-3">Prediction Result</h3>
+
+        {% if result == "Healthy Engine" %}
+        <div class="alert alert-success">
+            🚗 <strong>{{ result }}</strong>
+        </div>
+        {% else %}
+        <div class="alert alert-danger">
+            ⚠️ <strong>{{ result }}</strong>
+        </div>
+        {% endif %}
+
+        <a href="/predict" class="btn btn-outline-primary mt-3">
+            Predict Another Vehicle
+        </a>
+    </div>
+</div>
+{% endblock %}

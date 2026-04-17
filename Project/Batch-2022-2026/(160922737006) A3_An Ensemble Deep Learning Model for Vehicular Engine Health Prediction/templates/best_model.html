@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- ================= SIDEBAR ================= -->
+        <nav class="col-md-3 col-lg-2 d-md-block admin-sidebar p-3">
+            <h5 class="text-white mb-4">Admin Panel</h5>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/admin' %}active{% endif %}"
+                       href="/admin/dashboard">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/eda' in request.path %}active{% endif %}"
+                       href="/admin/eda">
+                        View EDA Graphs
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/performance' in request.path %}active{% endif %}"
+                       href="/admin/performance">
+                        Machine Learning Model Performance
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/dl_performance' in request.path %}active{% endif %}"
+                       href="/admin/dl_performance">
+                        Deep Learning Model Performance
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/stacked_performance' in request.path %}active{% endif %}"
+                       href="/admin/stacked_performance">
+                        Ensemble Model Performance
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/admin/best_model' in request.path %}active{% endif %}"
+                       href="/admin/best_model">
+                        Best Model Summary
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+
+            <!-- ===== Model Info Card ===== -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+
+                    <h4 class="fw-semibold">Best Performing Model</h4>
+
+                    <p class="mt-3">
+                        <strong>Selected Algorithm:</strong> Random Forest Classifier
+                    </p>
+
+                    <p>
+                        The model was selected based on highest accuracy after
+                        balancing the dataset using SMOTE and standard scaling.
+                    </p>
+
+                    <span class="badge bg-success">
+                        Model Saved Successfully
+                    </span>
+
+                </div>
+            </div>
+
+            <!-- ===== Confusion Matrix ===== -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body text-center">
+
+                    <h5 class="mb-3">Confusion Matrix</h5>
+
+                    <img src="{{ url_for('static', filename='Performance/' ~ rf_confusion_matrix) }}"
+                         class="img-fluid rounded performance-img"
+                         data-bs-toggle="modal"
+                         data-bs-target="#imageModal"
+                         data-img="{{ url_for('static', filename='Performance/' ~ rf_confusion_matrix) }}">
+
+                </div>
+            </div>
+
+            <!-- ===== Classification Report ===== -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h5 class="mb-3">Classification Report</h5>
+
+                    <div class="report-box">
+                        <pre class="mb-0">{{ rf_report }}</pre>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+</div>
+
+
+<!-- ================= MODAL ================= -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Confusion Matrix Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        <img src="" id="modalImage" class="img-fluid rounded">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+    const imageModal = document.getElementById('imageModal');
+    imageModal.addEventListener('show.bs.modal', function (event) {
+        const img = event.relatedTarget;
+        const imgSrc = img.getAttribute('data-img');
+        document.getElementById('modalImage').src = imgSrc;
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="hero text-dark rounded shadow"
+     style="background-image:url('{{ url_for('static', filename='images/engine_bg.jpg') }}');">
+    <div class="hero-section py-5">
+    <div class="container">
+
+        <div class="hero-card p-5 shadow-sm rounded-4">
+
+            <h1 class="fw-bold mb-3">Predict Engine Health with AI</h1>
+
+            <p class="text-muted mb-4">
+                A Machine Learning based system for early fault detection
+                and predictive vehicle maintenance.
+            </p>
+
+            <div class="d-flex gap-3">
+                <a href="/admin" class="btn btn-dark px-4">Admin Module</a>
+                <a href="/user" class="btn btn-primary px-4">User Module</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock %}
