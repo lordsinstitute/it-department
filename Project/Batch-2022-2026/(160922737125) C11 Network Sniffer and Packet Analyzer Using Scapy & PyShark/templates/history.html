@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">History</h2>
+        <p class="text-muted mb-0">All analysis runs stored locally in SQLite.</p>
+    </div>
+    <a href="{{ url_for('analyze') }}" class="btn btn-primary">New Analysis</a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        {% if items %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Input</th>
+                        <th>Type</th>
+                        <th>Risk</th>
+                        <th>Score</th>
+                        <th>Packets</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.input_name }}</td>
+                        <td>{{ item.source_type }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if item.risk_level == 'Critical' %}bg-danger
+                                {% elif item.risk_level == 'High' %}bg-warning text-dark
+                                {% elif item.risk_level == 'Medium' %}bg-info text-dark
+                                {% else %}bg-success
+                                {% endif %}">
+                                {{ item.risk_level }}
+                            </span>
+                        </td>
+                        <td>{{ item.risk_score }}</td>
+                        <td>{{ item.packets_analyzed }}</td>
+                        <td>{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <a href="{{ url_for('result', history_id=item.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                            <a href="{{ url_for('download_report', history_id=item.id) }}" class="btn btn-sm btn-outline-success">PDF</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">No history available yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

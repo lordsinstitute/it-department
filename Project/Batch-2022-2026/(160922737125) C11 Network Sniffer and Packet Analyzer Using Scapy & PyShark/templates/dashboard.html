@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">Dashboard</h2>
+        <p class="text-muted mb-0">Welcome, {{ session.get('username') }}.</p>
+    </div>
+    <a href="{{ url_for('analyze') }}" class="btn btn-primary">New Analysis</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card metric-card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted">Total Runs</h6>
+                <h3 class="fw-bold">{{ total_runs }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted">Packets / Lines Analyzed</h6>
+                <h3 class="fw-bold">{{ total_packets }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted">Critical Runs</h6>
+                <h3 class="fw-bold text-danger">{{ critical_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted">High Runs</h6>
+                <h3 class="fw-bold text-warning">{{ high_count }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Risk Distribution</div>
+            <div class="card-body">
+                <canvas id="riskChart" height="160"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Source Distribution</div>
+            <div class="card-body">
+                <canvas id="sourceChart" height="160"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-header bg-white fw-bold">Recent Analyses</div>
+    <div class="card-body">
+        {% if recent_runs %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Input</th>
+                        <th>Source</th>
+                        <th>Risk</th>
+                        <th>Score</th>
+                        <th>Packets</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recent_runs %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.input_name }}</td>
+                        <td>{{ item.source_type }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if item.risk_level == 'Critical' %}bg-danger
+                                {% elif item.risk_level == 'High' %}bg-warning text-dark
+                                {% elif item.risk_level == 'Medium' %}bg-info text-dark
+                                {% else %}bg-success
+                                {% endif %}">
+                                {{ item.risk_level }}
+                            </span>
+                        </td>
+                        <td>{{ item.risk_score }}</td>
+                        <td>{{ item.packets_analyzed }}</td>
+                        <td>{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">No analyses yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const riskChart = new Chart(document.getElementById('riskChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Low', 'Medium', 'High', 'Critical'],
+        datasets: [{
+            label: 'Analyses',
+            data: [
+                {{ risk_distribution['Low'] }},
+                {{ risk_distribution['Medium'] }},
+                {{ risk_distribution['High'] }},
+                {{ risk_distribution['Critical'] }}
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+
+const sourceChart = new Chart(document.getElementById('sourceChart'), {
+    type: 'pie',
+    data: {
+        labels: ['Text Input', 'File Upload'],
+        datasets: [{
+            data: [
+                {{ source_distribution['text'] }},
+                {{ source_distribution['file'] }}
+            ]
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
+</script>
+{% endblock %}
