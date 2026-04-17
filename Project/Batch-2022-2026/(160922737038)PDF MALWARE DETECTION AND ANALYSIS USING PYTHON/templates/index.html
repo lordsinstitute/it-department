@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Login - PDF Malware Scanner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h1 class="card-title text-center mb-4">
+                        <i class="bi bi-shield-lock"></i> PDF Malware Scanner
+                    </h1>
+                    <p class="text-center text-muted mb-4">Enterprise-Grade Security Analysis</p>
+
+                    {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle"></i> {{ error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" action="{{ url_for('login') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control form-control-lg" id="username" name="username" required autofocus>
+                            <small class="form-text text-muted">Default: admin</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control form-control-lg" id="password" name="password" required>
+                            <small class="form-text text-muted">Default: admin123</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-box-arrow-in-right"></i> Sign In
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-info alert-sm">
+                        <small>
+                            <i class="bi bi-info-circle"></i> <strong>Demo Credentials:</strong><br>
+                            Username: <code>admin</code><br>
+                            Password: <code>admin123</code>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3 bg-light">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-gear"></i> Features</h6>
+                    <ul class="small mb-0">
+                        <li>Signature-based malware detection</li>
+                        <li>Blockchain-inspired evidence integrity</li>
+                        <li>Real-time threat analysis</li>
+                        <li>PDF report generation</li>
+                        <li>Comprehensive dashboard</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
