@@ -1,0 +1,83 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fb;
+}
+
+/* Sidebar */
+.sidebar {
+    height: 100vh;
+    background: linear-gradient(180deg, #1e3c72, #2a5298);
+    color: white;
+    position: fixed;
+    width: 240px;
+}
+
+.sidebar h4 {
+    font-weight: 600;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar a {
+    color: #e0e0e0;
+    text-decoration: none;
+    padding: 14px 20px;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: rgba(255,255,255,0.15);
+    color: #fff;
+    padding-left: 25px;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 240px;
+    padding: 30px;
+}
+
+/* Header */
+.header {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+/* Cards */
+.card-custom {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+/* Buttons */
+.btn-custom {
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 8px;
+}
+
+.btn-custom:hover {
+    opacity: 0.9;
+}
+
+/* Prediction Badge */
+.badge-success {
+    background-color: #28a745;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+}
