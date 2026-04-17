@@ -1,5 +1,10 @@
 # DDoS Detection using Packet Flow Analysis (Flask + SQLite)
 
+## TEAM MEMBERS
+   MOHD SOHAIL(160922737134)
+   SALAM BIN SALEH BASHAR(160922737143)
+   SYED OMER MOHIUDDIN(160922737173)
+
 ## What this does
 - Secure login (password hashing via Werkzeug)
 - Analyze "packet flow logs" from text input or file upload
