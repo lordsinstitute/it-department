@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>LSTM Model Performance</h3>
+
+{% if metrics %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card bg-secondary p-3">
+            <h5>R² Score</h5>
+            <p>Train: {{ metrics.r2_score.train }}</p>
+            <p>Test: {{ metrics.r2_score.test }}</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-secondary p-3">
+            <h5>Explained Variance</h5>
+            <p>Train: {{ metrics.explained_variance.train }}</p>
+            <p>Test: {{ metrics.explained_variance.test }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+{% for img in images %}
+    {% if img.endswith('.png') %}
+    <div class="col-md-4 mb-4">
+        <img src="{{ url_for('static', filename='lstm/' + img) }}"
+             class="img-fluid rounded shadow">
+    </div>
+    {% endif %}
+{% endfor %}
+</div>
+
+{% endblock %}

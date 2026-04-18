@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Predict Bitcoin Price</h3>
+
+<form method="POST">
+    <div class="mb-3">
+        <label>Starting Date</label>
+        <input type="date" name="start_date" class="form-control" required>
+    </div>
+
+    <!--<div class="mb-3">
+        <label>Number of Days</label>
+        <input type="number" name="days" class="form-control" required>
+    </div>-->
+
+    <button class="btn btn-warning">Predict</button>
+</form>
+
+{% if error %}
+<div class="alert alert-danger mt-3">{{ error }}</div>
+{% endif %}
+
+{% if graph_filename %}
+<hr>
+<h4>Prediction Graph</h4>
+<img src="{{ url_for('static', filename='lstm/' + graph_filename) }}"
+     class="img-fluid rounded shadow">
+{% endif %}
+
+{% endblock %}
