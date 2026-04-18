@@ -1,0 +1,30 @@
+{% include "header_user.html" %}
+
+<div class="content">
+    <br><br><br>
+    <form action="{{ url_for('user_bp.predict')}}" method="POST">
+        <h2>Predict Accident Severity</h2>
+
+    {% for col, le in encoders.items() %}
+    <label>{{ col }}</label>
+    <select name="{{ col }}" required>
+        {% for val in le.classes_ %}
+            <option value="{{ val }}">{{ val }}</option>
+        {% endfor %}
+    </select><br>
+{% endfor %}
+
+
+    <button type="submit">Predict</button>
+</form>
+
+{% if prediction %}
+    <h3 style="text-align:center; color:green;">
+        Predicted Accident Severity: {{ prediction }}<br>
+        Prediction Probability: {{ prob }}%<br>
+
+    </h3>
+{% endif %}
+
+</div>
+
