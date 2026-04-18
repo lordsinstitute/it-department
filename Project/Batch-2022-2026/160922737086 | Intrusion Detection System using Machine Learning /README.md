@@ -4,13 +4,6 @@
 
 ---
 
-## 🔗 Project Repository
-
-Full Project (Frontend + Backend):  
-https://github.com/muakhhir/IDS_B16_160922737066_160922737086_160922737096
-
----
-
 ## 📌 Overview
 
 This project presents an Intrusion Detection System (IDS) using Machine Learning to detect cyber threats in real time. The system is implemented as IDS Shield, an AI-powered platform that uses multiple machine learning models and intelligent pattern analysis to improve detection accuracy and reliability.
