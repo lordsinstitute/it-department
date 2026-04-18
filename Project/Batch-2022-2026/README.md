@@ -1,4 +1,4 @@
-# Project Reposrt of 2026 Batch
+# Project Report of 2026 Batch
 **Project Title:** AI-Powered Resume Screening System  
 
 **Team Members:**
