@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <div>
+    <h3 class="fw-bold mb-0">Checksum Verification</h3>
+    <div class="text-muted">Compute SHA256 and compare to stored run checksums.</div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h6 class="fw-bold">Option A — Upload Any File</h6>
+        <form method="post" enctype="multipart/form-data" class="mt-3">
+          <input type="hidden" name="mode" value="upload" />
+          <div class="mb-3">
+            <label class="form-label">File</label>
+            <input class="form-control" type="file" name="file" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Expected SHA256 (optional)</label>
+            <input class="form-control" name="expected" placeholder="paste expected checksum to compare">
+          </div>
+          <button class="btn btn-dark w-100">Verify SHA256</button>
+        </form>
+
+        {% if upload_result %}
+          <hr>
+          <div class="small">
+            <div class="text-muted">Computed SHA256</div>
+            <code class="d-block text-break">{{ upload_result.sha256 }}</code>
+            <div class="text-muted mt-2">Size</div>
+            <div>{{ upload_result.size_bytes }} bytes</div>
+            {% if upload_result.expected %}
+              <div class="text-muted mt-2">Expected</div>
+              <code class="d-block text-break">{{ upload_result.expected }}</code>
+              {% if upload_result.match %}
+                <div class="alert alert-success border-0 mt-3 mb-0"><b>Match:</b> Integrity verified.</div>
+              {% else %}
+                <div class="alert alert-danger border-0 mt-3 mb-0"><b>Mismatch:</b> Integrity check failed.</div>
+              {% endif %}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h6 class="fw-bold">Option B — Verify Stored Run (Input / Output)</h6>
+        <form method="post" class="mt-3">
+          <input type="hidden" name="mode" value="run" />
+          <div class="mb-3">
+            <label class="form-label">Select Run</label>
+            <select class="form-select" name="run_id" required>
+              {% for r in runs %}
+                <option value="{{ r.id }}">#{{ r.id }} • {{ r.media_type }} • {{ r.output_filename }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Verify Which File</label>
+            <select class="form-select" name="which" required>
+              <option value="input">Input file</option>
+              <option value="output">Output file</option>
+            </select>
+          </div>
+
+          <button class="btn btn-dark w-100">Verify Run Checksum</button>
+        </form>
+
+        {% if run_result %}
+          <hr>
+          <div class="small">
+            <div class="text-muted">Selected</div>
+            <div>#{{ run_result.run_id }} • {{ run_result.which }} • {{ run_result.filename }}</div>
+
+            <div class="text-muted mt-2">Computed SHA256</div>
+            <code class="d-block text-break">{{ run_result.sha256_current }}</code>
+
+            <div class="text-muted mt-2">Recorded SHA256</div>
+            <code class="d-block text-break">{{ run_result.sha256_recorded or '-' }}</code>
+
+            {% if run_result.sha256_recorded %}
+              {% if run_result.match %}
+                <div class="alert alert-success border-0 mt-3 mb-0"><b>Match:</b> Artifact unchanged.</div>
+              {% else %}
+                <div class="alert alert-danger border-0 mt-3 mb-0"><b>Mismatch:</b> Artifact may be altered.</div>
+              {% endif %}
+            {% else %}
+              <div class="alert alert-warning border-0 mt-3 mb-0">No recorded checksum found for this selection.</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
