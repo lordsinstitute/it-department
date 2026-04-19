@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4 shadow-sm">
+  <h4>Upload Video</h4>
+  <form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="video" class="form-label">Select video (mp4, avi, mov, mkv)</label>
+      <input class="form-control" type="file" id="video" name="video" accept="video/*" required>
+    </div>
+    <button class="btn btn-success" type="submit">Upload & Process</button>
+  </form>
+  <hr>
+  <p class="text-muted small">Processing runs synchronously on the server — it may take several minutes for longer videos.</p>
+</div>
+{% endblock %}
