@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <div>
+    <h3 class="fw-bold mb-0">Dashboard</h3>
+    <div class="text-muted">Encoding operations overview.</div>
+  </div>
+  <a class="btn btn-dark" href="{{ url_for('encode') }}">+ New Encoding</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0"><div class="card-body">
+      <div class="text-muted">Total Encodes</div>
+      <div class="display-6 fw-bold">{{ total_runs }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0"><div class="card-body">
+      <div class="text-muted">Encodes (Last 24h)</div>
+      <div class="display-6 fw-bold">{{ last_24h }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0"><div class="card-body">
+      <div class="text-muted">User</div>
+      <div class="h4 fw-bold mb-0">{{ current_user.username }}</div>
+      <div class="text-muted small">Role: {{ current_user.role }}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0"><div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0">Risk Distribution</h6>
+        <span class="badge bg-secondary">Chart.js</span>
+      </div>
+      <canvas id="riskChart" height="120"></canvas>
+    </div></div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0"><div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0">Media Types</h6>
+        <span class="badge bg-secondary">Chart.js</span>
+      </div>
+      <canvas id="mediaChart" height="120"></canvas>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0"><div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0">Last 7 Days Activity</h6>
+        <span class="badge bg-secondary">Chart.js</span>
+      </div>
+      <canvas id="trendChart" height="120"></canvas>
+    </div></div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-sm border-0"><div class="card-body">
+      <h6 class="fw-bold">Recent Encodes</h6>
+      {% if recent %}
+        <div class="list-group list-group-flush">
+          {% for r in recent %}
+            <a class="list-group-item list-group-item-action" href="{{ url_for('run_detail', run_id=r.id) }}">
+              <div class="d-flex justify-content-between">
+                <div class="fw-semibold">#{{ r.id }} • {{ r.media_type|upper }}</div>
+                <span class="badge
+                  {% if r.risk_level=='Critical' %}bg-danger
+                  {% elif r.risk_level=='High' %}bg-warning text-dark
+                  {% elif r.risk_level=='Medium' %}bg-info text-dark
+                  {% else %}bg-success{% endif %}">
+                  {{ r.risk_level }}
+                </span>
+              </div>
+              <div class="text-muted small">{{ r.output_filename }}</div>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-muted">No encodes yet.</div>
+      {% endif %}
+    </div></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+  const chartRisk = {{ chart_risk|tojson }};
+  const chartMedia = {{ chart_media|tojson }};
+  const chartTrend = {{ chart_trend|tojson }};
+
+  new Chart(document.getElementById('riskChart'), {
+    type: 'doughnut',
+    data: { labels: chartRisk.labels, datasets: [{ data: chartRisk.data }] },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  new Chart(document.getElementById('mediaChart'), {
+    type: 'bar',
+    data: { labels: chartMedia.labels, datasets: [{ data: chartMedia.data }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: { labels: chartTrend.labels, datasets: [{ data: chartTrend.data, tension: 0.25 }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+</script>
+{% endblock %}
