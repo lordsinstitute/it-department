@@ -1,0 +1,116 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Final Model{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- PAGE HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">
+            Final Model Selection & Evaluation
+        </h2>
+        <p class="text-muted">
+            Best performing model selected using F1-score
+        </p>
+        <hr>
+    </div>
+
+    <!-- BEST MODEL CARD -->
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-start border-5 border-success">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold text-success">
+                        🏆 Best Model Selected
+                    </h4>
+                    <h2 class="mt-2">
+                        {{ metrics["Model"] }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- METRICS -->
+    <div class="row g-4 mb-5">
+
+        {% set metric_icons = {
+            "Accuracy": "bi-check-circle-fill",
+            "Precision": "bi-bullseye",
+            "Recall": "bi-arrow-repeat",
+            "F1 Score": "bi-graph-up-arrow",
+            "ROC AUC": "bi-speedometer2"
+        } %}
+
+        {% for key, value in metrics.items() %}
+        {% if key != "Model" %}
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <i class="bi {{ metric_icons[key] }} text-primary fs-2"></i>
+                    <h6 class="mt-2 fw-semibold">{{ key }}</h6>
+                    <h4 class="fw-bold">
+                        {{ "%.3f"|format(value) if value is not none else "N/A" }}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+    </div>
+
+    <!-- CONFUSION MATRIX -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header fw-semibold bg-light">
+            Confusion Matrix
+        </div>
+        <div class="card-body text-center">
+            <img
+            src="{{ url_for('static', filename='final_model/confusion_matrix.png') }}"
+            class="img-fluid rounded"
+            style="max-height: 450px;"
+            alt="Confusion Matrix"
+>
+        </div>
+    </div>
+
+    <!-- CLASSIFICATION REPORT -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header fw-semibold bg-light">
+            Classification Report
+        </div>
+        <div class="card-body">
+            <pre class="bg-dark text-light p-3 rounded"
+                 style="font-size: 0.9rem;">
+{{ report_text }}
+            </pre>
+        </div>
+    </div>
+
+    <!-- SAVED ARTIFACTS -->
+    <div class="card shadow-sm">
+        <div class="card-header fw-semibold bg-light">
+            Saved Model Artifacts
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    ✅ best_model.pkl
+                </li>
+                <li class="list-group-item">
+                    ✅ scaler.pkl
+                </li>
+                <li class="list-group-item">
+                    ✅ feature_order.pkl
+                </li>
+                <li class="list-group-item">
+                    ✅ metrics.csv / metrics.txt
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

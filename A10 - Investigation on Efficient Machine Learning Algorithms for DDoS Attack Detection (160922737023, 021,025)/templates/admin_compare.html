@@ -1,0 +1,92 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Model Comparison{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- PAGE HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">
+            Model Performance Comparison
+        </h2>
+        <p class="text-muted">
+            Evaluation of multiple ML models for DDoS attack detection
+        </p>
+        <hr>
+    </div>
+
+    <!-- MODEL COMPARISON PLOT -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header fw-semibold bg-light">
+            Overall Model Comparison (F1 Score)
+        </div>
+        <div class="card-body text-center">
+            <img
+                src="{{ url_for('static', filename='evaluation/model_comparison_plot.png') }}"
+                class="img-fluid rounded"
+                style="max-height: 450px;"
+            >
+        </div>
+    </div>
+
+    <!-- CONFUSION MATRICES -->
+    <h4 class="fw-bold mb-3 text-secondary">
+        Confusion Matrices
+    </h4>
+
+    <div class="row g-4 mb-5">
+        {% for img in cm_images %}
+        <div class="col-lg-6 col-12">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center fw-semibold">
+                    {{ img.replace("_cm.png", "").replace("_", " ") }}
+                </div>
+                <div class="card-body text-center">
+                    <img
+                        src="{{ url_for('static', filename='evaluation/confusion_matrices/' + img) }}"
+                        class="img-fluid rounded"
+                        style="max-height: 420px;"
+                    >
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- CLASSIFICATION REPORTS -->
+    <h4 class="fw-bold mb-3 text-secondary">
+        Classification Reports
+    </h4>
+
+    {% for model, df in reports.items() %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light fw-semibold">
+            {{ model.replace("_", " ") }} – Classification Report
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-primary">
+                    <tr>
+                        {% for col in df.columns %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for _, row in df.iterrows() %}
+                    <tr>
+                        {% for value in row %}
+                        <td>{{ "%.3f"|format(value) if value is number else value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}
