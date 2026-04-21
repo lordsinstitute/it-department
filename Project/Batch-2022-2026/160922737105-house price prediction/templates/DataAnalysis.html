@@ -1,0 +1,80 @@
+{% include "header_admin.html" %}
+<div class="container">
+    <table> <tr><td style="vertical-align: top">
+   <div id="menu">
+  <ul>
+    <li onclick="hide_mcc()">Houses with Ocean Proximity</li>
+    <li onclick="hide_mcd()">Ocean Proximity vs Median House Value</li>
+    <li onclick="hide_mcr()">Feature Correlation</li>
+
+
+  </ul>
+</div></td>
+        <td>
+
+<div class="lds-ripple" id="loader" style="display: none; margin: 150px"><div></div><div></div></div>
+<div id="AccDisplay"></div>
+     </td>
+</tr>
+</table>
+<div id="mcc" style="display: none">
+     <img src="../static/vis/op.jpg"  width="600px" height="300px">
+</div>
+
+<div id="mcd" style="display: none">
+     <img src="../static/vis/oc_mhv.jpg"  width="600px" height="300px">
+</div>
+
+<div id="mcr" style="display: none">
+     <img src="../static/vis/cor.jpg"  width="600px" height="300px">
+</div>
+
+
+</div>
+
+	</div>
+
+<script>
+var myVar;
+
+function hide_mcc() {
+  document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_mcc, 1500);
+}
+
+function show_mcc() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('mcc').innerHTML;
+}
+
+function hide_mcd() {
+    document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_mcd, 1500);
+}
+
+function show_mcd() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('mcd').innerHTML;
+}
+
+function hide_mcr() {
+    document.getElementById("AccDisplay").style.display = "none";
+  document.getElementById("loader").style.display = "block";
+  myVar = setTimeout(show_mcr, 1500);
+}
+
+function show_mcr() {
+document.getElementById("loader").style.display = "none";
+document.getElementById("AccDisplay").style.display = "block";
+document.getElementById('AccDisplay').innerHTML=document.getElementById('mcr').innerHTML;
+}
+
+
+</script>
+</body>
+
+</html>
