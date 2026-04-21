@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Performance</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; }
+    .topbar {
+      background: linear-gradient(90deg, #1a1a2e, #0f3460);
+      padding: 18px 30px; display: flex; align-items: center; gap: 14px;
+      border-bottom: 2px solid #ffb74d;
+    }
+    .topbar h1 { font-size: 20px; font-weight: 700; color: #fff; }
+    .topbar span { color: #ffb74d; }
+    .navbar-custom {
+      background: #1a1a2e; padding: 10px 30px;
+      display: flex; justify-content: flex-end; gap: 12px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .navbar-custom a {
+      color: #a0a0c0; text-decoration: none; font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; padding: 6px 16px; border-radius: 20px;
+      border: 1px solid #2a2a4a; transition: all 0.2s;
+    }
+    .navbar-custom a:hover { background: #e63946; color: white; border-color: #e63946; }
+
+    .main { padding: 30px; max-width: 1100px; margin: 0 auto; }
+    .page-title { font-size: 13px; font-weight: 700; color: #ffb74d; letter-spacing: 2px; margin-bottom: 24px; }
+
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .metric-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 18px 16px; text-align: center; }
+    .metric-card .val { font-size: 26px; font-weight: 800; color: #ffb74d; }
+    .metric-card .lbl { font-size: 11px; color: #6666aa; margin-top: 4px; letter-spacing: 0.5px; }
+    .metric-card .sub { font-size: 10px; color: #4444aa; margin-top: 3px; }
+
+    .algo-badge {
+      display: inline-block; background: #2a1a3a; color: #ce93d8; border: 1px solid #ce93d8;
+      border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 16px;
+    }
+
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px; }
+    .chart-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 14px; overflow: hidden; }
+    .chart-card .card-header {
+      padding: 14px 20px; background: #12122a; border-bottom: 1px solid #2a2a4a;
+      font-size: 12px; font-weight: 700; color: #8888aa; letter-spacing: 1.5px;
+    }
+    .chart-card .card-body { padding: 20px; }
+    .chart-card img { width: 100%; border-radius: 8px; }
+
+    /* How to read */
+    .read-guide {
+      background: #1a1a2e; border: 1px solid #2a2a4a; border-left: 4px solid #ffb74d;
+      border-radius: 12px; padding: 22px 26px; margin-bottom: 26px;
+    }
+    .read-guide h5 { color: #ffb74d; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 14px; }
+    .rg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .rg-item { background: #12122a; border-radius: 8px; padding: 14px 16px; }
+    .rg-item h6 { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .rg-item p { font-size: 11px; color: #8888aa; line-height: 1.6; }
+    .rg-item .formula { margin-top: 8px; background: #0f0f1a; border-radius: 6px; padding: 6px 10px; font-size: 11px; color: #4caf50; font-family: monospace; }
+
+    /* Class label legend */
+    .label-legend {
+      background: #1a1a2e; border: 1px solid #2a2a4a; border-left: 4px solid #64b5f6;
+      border-radius: 12px; padding: 20px 24px; margin-bottom: 26px;
+    }
+    .label-legend h5 { color: #64b5f6; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 14px; }
+    .ll-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .ll-item { background: #12122a; border-radius: 8px; padding: 10px 8px; text-align: center; }
+    .ll-item .ll-num { font-size: 20px; font-weight: 800; color: #fff; }
+    .ll-item .ll-name { font-size: 10px; color: #8888aa; margin-top: 2px; }
+    .ll-item .ll-dot { width: 8px; height: 8px; border-radius: 50%; margin: 5px auto 0; }
+
+    /* Hyperparameter table */
+    .hyper-section {
+      background: #1a1a2e; border: 1px solid #2a2a4a; border-left: 4px solid #ce93d8;
+      border-radius: 12px; padding: 22px 26px; margin-bottom: 26px;
+    }
+    .hyper-section h5 { color: #ce93d8; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
+    .hp-table { width: 100%; border-collapse: collapse; }
+    .hp-table th { background: #12122a; color: #8888aa; font-size: 11px; letter-spacing: 1px; text-align: left; padding: 10px 14px; border-bottom: 1px solid #2a2a4a; }
+    .hp-table td { padding: 10px 14px; font-size: 12px; border-bottom: 1px solid #1e1e3a; }
+    .hp-table td:first-child { color: #ce93d8; font-family: monospace; font-weight: 700; }
+    .hp-table td:nth-child(2) { color: #ffb74d; font-weight: 700; }
+    .hp-table td:last-child { color: #8888aa; line-height: 1.5; }
+
+    /* Viva Q&A */
+    .viva-section { margin-bottom: 26px; }
+    .viva-section h5 { color: #e63946; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 14px; }
+    .viva-item { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+    .viva-q {
+      background: #12122a; padding: 12px 16px; cursor: pointer;
+      font-size: 13px; color: #fff; font-weight: 600;
+      display: flex; align-items: center; gap: 10px; user-select: none;
+    }
+    .viva-q::before { content: "Q"; background: #e63946; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
+    .viva-q .arrow { margin-left: auto; transition: transform 0.2s; }
+    .viva-q.open .arrow { transform: rotate(90deg); }
+    .viva-a {
+      padding: 0 16px; max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      font-size: 12px; color: #a0a0c0; line-height: 1.7;
+    }
+    .viva-a.open { max-height: 300px; padding: 14px 16px; }
+
+    @media (max-width: 700px) {
+      .metrics-row { grid-template-columns: 1fr 1fr; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .rg-grid { grid-template-columns: 1fr; }
+      .ll-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <svg viewBox="0 0 36 36" fill="none" style="width:32px;height:32px">
+      <rect width="36" height="36" rx="8" fill="#e63946"/>
+      <polygon points="14,11 27,18 14,25" fill="white"/>
+    </svg>
+    <h1>YouTube Sentiment &nbsp;|&nbsp; <span>Admin Dashboard</span></h1>
+  </div>
+  <div class="navbar-custom">
+    <a href="{{ url_for('admin_bp.logout') }}">LOGOUT</a>
+  </div>
+
+  <div class="main">
+    <div class="page-title">MODEL PERFORMANCE DASHBOARD</div>
+
+    <!-- TOP METRICS -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="val">80</div>
+        <div class="lbl">N_ESTIMATORS</div>
+        <div class="sub">Number of decision trees</div>
+      </div>
+      <div class="metric-card">
+        <div class="val">1500</div>
+        <div class="lbl">TF-IDF FEATURES</div>
+        <div class="sub">Max vocabulary size</div>
+      </div>
+      <div class="metric-card">
+        <div class="val">50K</div>
+        <div class="lbl">TRAINING ROWS</div>
+        <div class="sub">80% train / 20% test split</div>
+      </div>
+      <div class="metric-card">
+        <div class="val">7</div>
+        <div class="lbl">OUTPUT CLASSES</div>
+        <div class="sub">0=Pos 1=Neg 2=Neu 3=Spam 4=Intr 5=Corr 6=Imp</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <span class="algo-badge">RANDOM FOREST CLASSIFIER</span>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="card-header">CLASSIFICATION REPORT</div>
+        <div class="card-body">
+          <img src="/static/vis/rf_clf.jpg" alt="Classification Report" />
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header">CONFUSION MATRIX</div>
+        <div class="card-body">
+          <img src="/static/vis/rf_cnf.jpg" alt="Confusion Matrix" />
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW TO READ THE RESULTS -->
+    <div class="read-guide">
+      <h5>HOW TO READ THE RESULTS — GUIDE FOR PRESENTATION</h5>
+      <div class="rg-grid">
+        <div class="rg-item">
+          <h6>📋 Classification Report</h6>
+          <p>Shows per-class breakdown for each of the 7 categories. Key columns to quote in your viva:</p>
+          <div class="formula">precision = TP / (TP + FP)</div>
+          <div class="formula">recall    = TP / (TP + FN)</div>
+          <div class="formula">f1-score  = 2 × (P × R) / (P + R)</div>
+        </div>
+        <div class="rg-item">
+          <h6>📊 Confusion Matrix</h6>
+          <p>A 7×7 grid where rows = actual labels, columns = predicted labels. Strong diagonal means high accuracy. Off-diagonal numbers are misclassifications.</p>
+          <div class="formula">accuracy = correct predictions / total samples</div>
+        </div>
+        <div class="rg-item">
+          <h6>🎯 Precision vs Recall</h6>
+          <p><strong style="color:#fff">High Precision</strong> — when model says "Positive", it is usually right.<br>
+          <strong style="color:#fff">High Recall</strong> — the model finds most of the actual Positive comments.<br>
+          F1-Score balances both — use this as your accuracy number in presentation.</p>
+        </div>
+        <div class="rg-item">
+          <h6>✅ Macro vs Weighted Average</h6>
+          <p><strong style="color:#fff">Macro avg</strong> — simple mean across all 7 classes. Good when classes are balanced (ours are: 7143 per class).<br>
+          <strong style="color:#fff">Weighted avg</strong> — weighted by class size. Both values should be similar for our balanced dataset.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLASS LABEL MAP -->
+    <div class="label-legend">
+      <h5>CLASS LABEL MAP — WHAT EACH NUMBER MEANS IN THE CONFUSION MATRIX</h5>
+      <div class="ll-grid">
+        <div class="ll-item"><div class="ll-num">0</div><div class="ll-dot" style="background:#4caf50"></div><div class="ll-name">Positive</div></div>
+        <div class="ll-item"><div class="ll-num">1</div><div class="ll-dot" style="background:#e63946"></div><div class="ll-name">Negative</div></div>
+        <div class="ll-item"><div class="ll-num">2</div><div class="ll-dot" style="background:#64b5f6"></div><div class="ll-name">Neutral</div></div>
+        <div class="ll-item"><div class="ll-num">3</div><div class="ll-dot" style="background:#ffb74d"></div><div class="ll-name">Spam</div></div>
+        <div class="ll-item"><div class="ll-num">4</div><div class="ll-dot" style="background:#ffeb3b"></div><div class="ll-name">Interrogative</div></div>
+        <div class="ll-item"><div class="ll-num">5</div><div class="ll-dot" style="background:#ce93d8"></div><div class="ll-name">Corrective</div></div>
+        <div class="ll-item"><div class="ll-num">6</div><div class="ll-dot" style="background:#80cbc4"></div><div class="ll-name">Imperative</div></div>
+      </div>
+    </div>
+
+    <!-- HYPERPARAMETER TABLE -->
+    <div class="hyper-section">
+      <h5>HYPERPARAMETERS — WHAT THEY MEAN &amp; WHY WE CHOSE THESE VALUES</h5>
+      <table class="hp-table">
+        <tr>
+          <th>Parameter</th><th>Value Used</th><th>What it does &amp; why we chose it</th>
+        </tr>
+        <tr>
+          <td>n_estimators</td><td>80</td>
+          <td>Number of decision trees in the forest. More trees = more stable predictions. 80 gives good accuracy without excessive training time (1–3 min).</td>
+        </tr>
+        <tr>
+          <td>max_features (TF-IDF)</td><td>1500</td>
+          <td>Maximum number of unique words kept by the vectorizer. Limiting to 1500 reduces memory and overfitting while keeping the most informative tokens.</td>
+        </tr>
+        <tr>
+          <td>stop_words</td><td>English (NLTK)</td>
+          <td>Common words like "the", "is", "and" are removed before vectorizing since they appear in all categories and carry no sentiment information.</td>
+        </tr>
+        <tr>
+          <td>test_size</td><td>0.20</td>
+          <td>20% of 50K = 10,000 samples are held out for testing. The model never sees these during training — ensures unbiased evaluation.</td>
+        </tr>
+        <tr>
+          <td>random_state</td><td>0</td>
+          <td>Fixes the random seed so results are fully reproducible. Running the training script twice gives the exact same model and accuracy.</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- VIVA Q&A -->
+    <div class="viva-section">
+      <h5>⚡ LIKELY VIVA QUESTIONS — CLICK TO EXPAND ANSWERS</h5>
+
+      <div class="viva-item">
+        <div class="viva-q" onclick="toggleViva(this)">Why did you choose Random Forest over other algorithms? <span class="arrow">▶</span></div>
+        <div class="viva-a">Random Forest is an ensemble method combining 80 decision trees. Individual trees overfit to noise, but when we aggregate their votes, noise cancels out and the model generalises well. For our 7-class text classification problem, Random Forest gave the best trade-off between training speed and accuracy. It also handles the high-dimensional TF-IDF feature space (1500 features) well without requiring feature scaling like SVM does.</div>
+      </div>
+
+      <div class="viva-item">
+        <div class="viva-q" onclick="toggleViva(this)">What is TF-IDF and why not use Word2Vec or BERT? <span class="arrow">▶</span></div>
+        <div class="viva-a">TF-IDF (Term Frequency–Inverse Document Frequency) converts text to numerical vectors by weighting words based on how unique they are to a document. It is fast, interpretable, and works well with tree-based models. Word2Vec and BERT are more powerful but require significantly more compute and training data. For our synthetic 50K dataset with template-based comments, TF-IDF is sufficient and appropriate. BERT is listed as a Future Scope improvement in our report.</div>
+      </div>
+
+      <div class="viva-item">
+        <div class="viva-q" onclick="toggleViva(this)">Why did you use a synthetic dataset instead of real YouTube comments? <span class="arrow">▶</span></div>
+        <div class="viva-a">Using real YouTube comments requires a YouTube Data API key subject to quota limits of 10,000 units per day. Manually labelling real comments across 7 categories is extremely time-consuming and subjective. Our synthetic dataset generated by generate_dataset.py provides perfectly balanced labels at 7,143 per class, is free from API limitations, and gives full control over category definitions. The trade-off is reduced vocabulary diversity — acknowledged in our report's Future Scope.</div>
+      </div>
+
+      <div class="viva-item">
+        <div class="viva-q" onclick="toggleViva(this)">What does the confusion matrix diagonal tell you? <span class="arrow">▶</span></div>
+        <div class="viva-a">The main diagonal shows correct predictions — where the actual class equals the predicted class. A strong bright diagonal means the model is correctly classifying each of the 7 categories. Off-diagonal cells are misclassifications — for example if cell row 0, column 2 is bright, it means Positive comments are sometimes predicted as Neutral. We want the diagonal as bright as possible and all other cells as dark as possible.</div>
+      </div>
+
+      <div class="viva-item">
+        <div class="viva-q" onclick="toggleViva(this)">How does your app fetch comments without a YouTube API key? <span class="arrow">▶</span></div>
+        <div class="viva-a">We use the open-source python library youtube-comment-downloader which scrapes YouTube's public comment section directly without requiring a Google API key. In classifier.py we call get_comments_from_url() sorted by SORT_BY_POPULAR and fetch up to 1,500 top comments per video using Python's islice. This avoids API quotas entirely and works on any public YouTube video URL.</div>
+      </div>
+
+      <div class="viva-item">
+        <div class="viva-q" onclick="toggleViva(this)">What is the Singleton design pattern used in classifier.py? <span class="arrow">▶</span></div>
+        <div class="viva-a">A Singleton ensures only one instance of a class exists in memory at a time. In our app, ClassiferSingleton uses a thread-safe lock so the Random Forest model and TF-IDF vectorizer are loaded from disk only once when the Flask server starts. Every request after that reuses the same in-memory object — saving 2 to 3 seconds per request that would otherwise be spent reloading the model files.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function toggleViva(el) {
+      el.classList.toggle('open');
+      el.nextElementSibling.classList.toggle('open');
+    }
+  </script>
+
+</body>
+</html>
