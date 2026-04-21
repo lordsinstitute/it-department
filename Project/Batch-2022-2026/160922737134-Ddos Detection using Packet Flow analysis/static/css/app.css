@@ -1,0 +1,10 @@
+:root {
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.rounded-4 { border-radius: 1rem !important; }
+.font-mono { font-family: var(--mono); }
+.alert-dot {
+  width: 10px; height: 10px; border-radius: 999px;
+  background: currentColor; opacity: 0.45;
+}

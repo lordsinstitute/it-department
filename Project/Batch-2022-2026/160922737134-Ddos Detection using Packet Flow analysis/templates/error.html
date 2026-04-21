@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% set title = "Error - PacketFlow Guard" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-body p-4">
+        <h4 class="fw-bold">Something went wrong</h4>
+        <div class="text-muted">{{ message }}</div>
+        <div class="mt-3 d-flex gap-2">
+          <a class="btn btn-dark" href="{{ url_for('dashboard') }}">Go to Dashboard</a>
+          <a class="btn btn-outline-dark" href="{{ url_for('analyze') }}">Analyze</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

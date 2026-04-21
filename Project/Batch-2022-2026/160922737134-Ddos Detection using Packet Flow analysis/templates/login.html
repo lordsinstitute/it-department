@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% set title = "Login - PacketFlow Guard" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h4 class="mb-0 fw-bold">Login</h4>
+          <span class="badge text-bg-dark">Secure</span>
+        </div>
+
+        <form method="post" autocomplete="off">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input name="username" class="form-control" placeholder="e.g. analyst01" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input name="password" type="password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <button class="btn btn-dark w-100">Sign in</button>
+        </form>
+
+        <div class="mt-3 text-center small">
+          No account? <a href="{{ url_for('register') }}">Create one</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-3 text-muted small">
+      Tip: Use the Analyze page with CSV packet flow logs for best detection accuracy.
+    </div>
+  </div>
+</div>
+{% endblock %}
