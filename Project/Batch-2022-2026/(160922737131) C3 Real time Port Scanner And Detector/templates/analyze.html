@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <div>
+            <h5 class="mb-1">Analyze</h5>
+            <div class="text-muted small">Run a real-time TCP connect scan (demo-safe) and get risk scoring + evidence hash chain.</div>
+          </div>
+          <span class="badge bg-primary-subtle text-primary">No external accounts</span>
+        </div>
+
+        <form method="post" action="{{ url_for('main.analyze_post') }}" enctype="multipart/form-data">
+          <div class="row g-3 mt-1">
+            <div class="col-12">
+              <label class="form-label">Target (IP/Hostname)</label>
+              <input class="form-control" name="target" placeholder="e.g., 192.168.1.10 or scanme.nmap.org">
+              <div class="form-text">Either enter one target here OR upload a file of targets (one per line).</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Target File Upload (.txt)</label>
+              <input class="form-control" type="file" name="target_file" accept=".txt">
+              <div class="form-text">Each line: target. Lines starting with # are ignored.</div>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label">Port Mode</label>
+              <select class="form-select" name="port_mode">
+                <option value="common" selected>Common</option>
+                <option value="top100">Top (Lite)</option>
+                <option value="range">Range</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-8">
+              <label class="form-label">Ports (for Range/Custom)</label>
+              <input class="form-control" name="ports" placeholder="Range: 1-1024  |  Custom: 22,80,443">
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">Timeout (ms)</label>
+              <input class="form-control" name="timeout_ms" value="600">
+              <div class="form-text">Lower is faster but may miss slow services.</div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">Max Threads</label>
+              <input class="form-control" name="max_threads" value="200">
+              <div class="form-text">High values scan faster but stress network/CPU.</div>
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+              <button class="btn btn-primary">Start Scan</button>
+              <a class="btn btn-outline-secondary" href="{{ url_for('main.history') }}">View History</a>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h6 class="mb-2">What you’ll get</h6>
+        <ul class="small text-muted mb-0">
+          <li>Real-time progress (live updates)</li>
+          <li>Risk scoring (Low/Medium/High/Critical)</li>
+          <li>Alert Simulation (UI toast + terminal logs)</li>
+          <li>Evidence integrity hash chain (SHA256 ledger)</li>
+          <li>PDF export (ReportLab)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

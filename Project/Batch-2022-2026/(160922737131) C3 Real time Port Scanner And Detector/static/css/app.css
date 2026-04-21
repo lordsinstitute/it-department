@@ -1,0 +1,16 @@
+.bg-soft {
+  background: radial-gradient(1200px 600px at 20% 0%, #f3f7ff 0%, #ffffff 55%, #f7f7fb 100%);
+}
+
+.card {
+  border-radius: 16px;
+}
+
+.table thead th {
+  font-size: 0.85rem;
+  letter-spacing: .02em;
+}
+
+.font-monospace {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}

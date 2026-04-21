@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h4 class="mb-1">History</h4>
+    <div class="text-muted small">All scans are stored locally in SQLite (data.db) with evidence hash chain.</div>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('main.analyze') }}">New Scan</a>
+</div>
+
+<div class="card shadow-sm border-0">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th style="width:90px;">Run</th>
+            <th>Target(s)</th>
+            <th style="width:120px;">Risk</th>
+            <th style="width:120px;">Score</th>
+            <th style="width:220px;">Created</th>
+            <th style="width:140px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if runs|length == 0 %}
+            <tr><td colspan="6" class="text-muted p-4">No scans yet.</td></tr>
+          {% else %}
+            {% for r in runs %}
+              <tr>
+                <td class="fw-semibold">#{{ r.id }}</td>
+                <td class="text-truncate" style="max-width: 420px;">{{ r.target }}</td>
+                <td>
+                  {% if r.risk_level == "Critical" %}
+                    <span class="badge bg-danger">Critical</span>
+                  {% elif r.risk_level == "High" %}
+                    <span class="badge bg-warning text-dark">High</span>
+                  {% elif r.risk_level == "Medium" %}
+                    <span class="badge bg-info text-dark">Medium</span>
+                  {% else %}
+                    <span class="badge bg-success">Low</span>
+                  {% endif %}
+                </td>
+                <td class="font-monospace">{{ r.risk_score }}</td>
+                <td class="text-muted small">{{ r.created_at.strftime("%Y-%m-%d %H:%M:%S") }} UTC</td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.results_saved', run_id=r.id) }}">View</a>
+                  <a class="btn btn-sm btn-primary" href="{{ url_for('main.report', run_id=r.id) }}">PDF</a>
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

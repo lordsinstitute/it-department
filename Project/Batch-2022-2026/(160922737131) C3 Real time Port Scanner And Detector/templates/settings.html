@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-7">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h5 class="mb-1">Settings</h5>
+        <div class="text-muted small mb-3">Change your password (secure hashing via Werkzeug).</div>
+
+        <form method="post" action="{{ url_for('auth.change_password') }}">
+          <div class="mb-3">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-control" name="current_password" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-control" name="new_password" required>
+            <div class="form-text">Minimum 8 characters.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" name="confirm_password" required>
+          </div>
+          <button class="btn btn-primary">Update Password</button>
+        </form>
+
+        <hr class="my-4">
+        <div class="small text-muted">
+          Logged in as <span class="fw-semibold">{{ current_user.username }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

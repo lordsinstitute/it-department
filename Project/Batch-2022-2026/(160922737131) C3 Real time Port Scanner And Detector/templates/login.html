@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="badge bg-primary-subtle text-primary me-2">SECURE</div>
+          <h5 class="mb-0">Sign in</h5>
+        </div>
+
+        <form method="post" action="{{ url_for('auth.login_post') }}">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input class="form-control" name="username" placeholder="admin" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input class="form-control" type="password" name="password" placeholder="admin123" required>
+          </div>
+          <button class="btn btn-dark w-100">Login</button>
+        </form>
+
+        <hr class="my-4">
+        <div class="small text-muted">
+          Default demo user (change in Settings):<br>
+          <span class="fw-semibold">admin / admin123</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
