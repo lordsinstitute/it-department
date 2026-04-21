@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="text-primary mb-4">Prediction Results</h2>
+
+    {% if image_url %}
+    <div class="card mx-auto shadow-lg p-4" style="max-width: 600px;">
+        <img src="{{ image_url }}" alt="Uploaded Face" class="img-fluid rounded mb-4 shadow">
+        <h5 class="text-secondary">Uploaded Image</h5>
+    </div>
+    {% endif %}
+
+    <div class="mt-4 text-start mx-auto" style="max-width: 500px;">
+        {% for face, details in predictions.items() %}
+        <div class="alert alert-info mt-3 shadow-sm">
+            <h5 class="text-dark"><b>{{ face }}</b></h5>
+            <p><strong>Ethnicity:</strong> {{ details.ethnicity }}</p>
+            <p><strong>Gender:</strong> {{ details.gender }}</p>
+            <p><strong>Age Range:</strong> {{ details.age }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ url_for('predict') }}" class="btn btn-primary mt-4">Analyze Another Image</a>
+</div>
+{% endblock %}

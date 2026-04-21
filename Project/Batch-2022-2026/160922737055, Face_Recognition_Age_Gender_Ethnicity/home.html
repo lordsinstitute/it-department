@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center">
+  <h3 class="mb-3">Welcome to the Ethnicity, Age & Gender Prediction Portal</h3>
+  <p>Upload a face image to predict ethnicity, gender, and age using AI.</p>
+  <a href="{{ url_for('predict') }}" class="btn btn-primary btn-lg mt-3">Get Started</a>
+</div>
+{% endblock %}
