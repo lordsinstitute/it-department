@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Analyze Network Artifact</div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Paste Packet / Log Text</label>
+                        <textarea name="text_input" class="form-control" rows="10" placeholder="Paste packet summaries, log lines, or protocol observations here..."></textarea>
+                        <div class="form-text">Use this for manual packet text, logs, protocol output, or suspicious observations.</div>
+                    </div>
+
+                    <div class="text-center my-3 fw-bold text-muted">OR</div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Upload File</label>
+                        <input type="file" name="file_input" class="form-control">
+                        <div class="form-text">Supported: .pcap, .pcapng, .txt, .log, .csv, .json</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Run Analysis</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">How It Works</div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>Accepts text or uploaded network artifacts.</li>
+                    <li>Uses PyShark for PCAP parsing when available.</li>
+                    <li>Falls back to Scapy when needed.</li>
+                    <li>Scores risk as Low / Medium / High / Critical.</li>
+                    <li>Stores results in local SQLite history.</li>
+                    <li>Writes SHA256 evidence hash to local chain ledger.</li>
+                    <li>Supports local PDF report export.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mt-3">
+            <div class="card-header bg-white fw-bold">Alert Simulation</div>
+            <div class="card-body">
+                <p class="mb-0">All alerts stay local inside the application using on-screen notifications. No external email, SMS, or cloud dependency is used.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
