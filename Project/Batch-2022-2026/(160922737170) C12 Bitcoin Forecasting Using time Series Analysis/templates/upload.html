@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Upload Dataset</h3>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" class="form-control mb-3" required>
+    <button class="btn btn-warning">Upload</button>
+</form>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <div class="alert alert-success mt-3">{{ message }}</div>
+  {% endfor %}
+{% endwith %}
+
+{% endblock %}

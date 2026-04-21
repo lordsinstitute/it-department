@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bitcoin Prediction System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="bg-dark text-light">
+
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <div class="bg-black p-3" style="width:250px; min-height:100vh;">
+        <h4 class="text-warning">Bitcoin AI</h4>
+        <hr>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a href="/" class="nav-link text-light">Home</a></li>
+            <li class="nav-item"><a href="/upload" class="nav-link text-light">Upload Dataset</a></li>
+            <li class="nav-item"><a href="/eda" class="nav-link text-light">EDA</a></li>
+            <li class="nav-item"><a href="/lstm" class="nav-link text-light">LSTM Performance</a></li>
+            <li class="nav-item"><a href="/predict" class="nav-link text-light">Predict</a></li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="container-fluid p-4">
+        {% block content %}{% endblock %}
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Exploratory Data Analysis</h3>
+
+<div class="row">
+{% for img in images %}
+    <div class="col-md-4 mb-4">
+        <img src="{{ url_for('static', filename='eda/' + img) }}"
+             class="img-fluid rounded shadow"
+             data-bs-toggle="modal"
+             data-bs-target="#modal{{ loop.index }}">
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal{{ loop.index }}">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark">
+                <div class="modal-body">
+                    <img src="{{ url_for('static', filename='eda/' + img) }}"
+                         class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock %}
