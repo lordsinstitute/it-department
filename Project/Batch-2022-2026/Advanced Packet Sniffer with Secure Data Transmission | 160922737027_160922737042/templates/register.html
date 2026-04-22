@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card p-4">
+      <h4 class="mb-2">Create Account</h4>
+      <p class="small-muted mb-3">First user becomes admin (demo-friendly).</p>
+
+      <form method="post">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input class="form-control" name="username" autofocus required minlength="3">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input class="form-control" type="password" name="password" required minlength="8">
+          <div class="form-text">Minimum 8 characters.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Confirm Password</label>
+          <input class="form-control" type="password" name="confirm" required minlength="8">
+        </div>
+        <button class="btn btn-dark w-100">Create</button>
+      </form>
+
+      <div class="mt-3 small-muted">
+        Already have an account? <a href="{{ url_for('login') }}">Login</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
