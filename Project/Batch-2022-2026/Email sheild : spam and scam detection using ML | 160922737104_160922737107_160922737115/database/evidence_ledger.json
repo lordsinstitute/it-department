@@ -1,0 +1,23 @@
+[
+  {
+    "entry_index": 1,
+    "scan_id": 1,
+    "timestamp": "2026-03-06T11:31:18.662898",
+    "previous_hash": "GENESIS",
+    "current_hash": "b438ee9f4382d1730361a4fcb49ef37590dc5eb95dc19c09b59983a15ec5e58a"
+  },
+  {
+    "entry_index": 2,
+    "scan_id": 2,
+    "timestamp": "2026-03-06T11:31:39.877301",
+    "previous_hash": "b438ee9f4382d1730361a4fcb49ef37590dc5eb95dc19c09b59983a15ec5e58a",
+    "current_hash": "b80bb997f19471fbab16f06e60ff8cd303174a1ad4924431008bdda99a969b2e"
+  },
+  {
+    "entry_index": 3,
+    "scan_id": 3,
+    "timestamp": "2026-03-24T04:06:20.840501",
+    "previous_hash": "b80bb997f19471fbab16f06e60ff8cd303174a1ad4924431008bdda99a969b2e",
+    "current_hash": "88c31bde720eaae243ce2fe6492a18ef51a99848e55dc65e0d702661bdc1ffaa"
+  }
+]

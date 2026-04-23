@@ -1,0 +1,57 @@
+body.app-body {
+    background: linear-gradient(135deg, #eef4ff 0%, #f8fbff 100%);
+    min-height: 100vh;
+}
+
+.app-navbar {
+    background: linear-gradient(90deg, #0f172a 0%, #1d4ed8 100%);
+}
+
+.metric-card {
+    background: #ffffff;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.metric-mini {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+}
+
+.metric-mini span {
+    display: block;
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.metric-mini strong {
+    font-size: 1.1rem;
+    color: #0f172a;
+}
+
+.sample-box {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <h2 class="fw-bold mb-1">Analyze Email</h2>
+                    <p class="text-muted mb-0">Paste email content or upload a .txt/.eml file for ML-based spam and scam detection.</p>
+                </div>
+
+                {% if not model_ready %}
+                <div class="alert alert-warning">
+                    Model not trained. Run <strong>python train_model.py</strong> first.
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Input Mode</label>
+                        <select name="input_mode" id="input_mode" class="form-select">
+                            <option value="text">Text Input</option>
+                            <option value="file">File Upload</option>
+                        </select>
+                    </div>
+
+                    <div id="textSection" class="mb-3">
+                        <label class="form-label fw-semibold">Email Text</label>
+                        <textarea name="email_text" rows="12" class="form-control" placeholder="Paste the email body here..."></textarea>
+                    </div>
+
+                    <div id="fileSection" class="mb-3 d-none">
+                        <label class="form-label fw-semibold">Upload File</label>
+                        <input type="file" name="email_file" class="form-control" accept=".txt,.eml">
+                        <div class="form-text">Only .txt and .eml files are supported.</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary" {% if not model_ready %}disabled{% endif %}>Run Analysis</button>
+                        <a href="{{ url_for('main.history') }}" class="btn btn-outline-secondary">View History</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 mt-4">
+            <div class="card-body">
+                <h5 class="fw-bold">Demo Sample</h5>
+                <pre class="sample-box mb-0">Urgent! Your salary account will be suspended today.
+Click http://verify-payroll-alert.example now and confirm your password and OTP to avoid payroll disruption.</pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const inputMode = document.getElementById('input_mode');
+const textSection = document.getElementById('textSection');
+const fileSection = document.getElementById('fileSection');
+
+function toggleInputMode() {
+    if (inputMode.value === 'file') {
+        fileSection.classList.remove('d-none');
+        textSection.classList.add('d-none');
+    } else {
+        textSection.classList.remove('d-none');
+        fileSection.classList.add('d-none');
+    }
+}
+inputMode.addEventListener('change', toggleInputMode);
+toggleInputMode();
+</script>
+{% endblock %}

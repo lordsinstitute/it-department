@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Dashboard</h2>
+        <p class="text-muted mb-0">Overview of detections, risks, and model health.</p>
+    </div>
+    <a href="{{ url_for('main.analyze') }}" class="btn btn-primary">New Analysis</a>
+</div>
+
+{% if not model_ready %}
+<div class="alert alert-warning shadow-sm">
+    Model files are missing. Run <strong>python train_model.py</strong> before using Analyze.
+</div>
+{% endif %}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <div class="metric-label">Total Scans</div>
+                <div class="metric-value">{{ total_scans }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <div class="metric-label">Threat Detections</div>
+                <div class="metric-value">{{ threat_count }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <div class="metric-label">Critical Alerts</div>
+                <div class="metric-value">{{ critical_count }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <div class="metric-label">Average Risk</div>
+                <div class="metric-value">{{ avg_risk }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Risk Distribution</h5>
+                <canvas id="riskChart" height="180"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Classification Breakdown</h5>
+                <canvas id="labelChart" height="180"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Recent Risk Trend</h5>
+                <canvas id="trendChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mt-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">Model Metrics</h5>
+        <div class="row g-3">
+            <div class="col-md-2"><div class="metric-mini"><span>Dataset</span><strong>{{ metrics.dataset_size }}</strong></div></div>
+            <div class="col-md-2"><div class="metric-mini"><span>Train</span><strong>{{ metrics.train_size }}</strong></div></div>
+            <div class="col-md-2"><div class="metric-mini"><span>Test</span><strong>{{ metrics.test_size }}</strong></div></div>
+            <div class="col-md-2"><div class="metric-mini"><span>Accuracy</span><strong>{{ metrics.accuracy }}</strong></div></div>
+            <div class="col-md-2"><div class="metric-mini"><span>Precision</span><strong>{{ metrics.precision_macro }}</strong></div></div>
+            <div class="col-md-2"><div class="metric-mini"><span>Recall</span><strong>{{ metrics.recall_macro }}</strong></div></div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mt-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">Recent Scans</h5>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Prediction</th>
+                        <th>Risk</th>
+                        <th>Confidence</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recent %}
+                    <tr>
+                        <td>#{{ item.id }}</td>
+                        <td>{{ item.prediction_label }}</td>
+                        <td><span class="badge text-bg-dark">{{ item.risk_level }}</span></td>
+                        <td>{{ item.confidence_score }}%</td>
+                        <td>{{ item.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                        <td><a href="{{ url_for('main.result', scan_id=item.id) }}" class="btn btn-sm btn-outline-primary">View</a></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No scans yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+new Chart(document.getElementById('riskChart'), {
+    type: 'bar',
+    data: {
+        labels: {{ risk_labels|tojson }},
+        datasets: [{ label: 'Count', data: {{ risk_counts|tojson }}, borderWidth: 1 }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('labelChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Safe', 'Spam', 'Scam'],
+        datasets: [{
+            data: [{{ label_counts['Safe'] }}, {{ label_counts['Spam'] }}, {{ label_counts['Scam'] }}]
+        }]
+    },
+    options: { responsive: true }
+});
+
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: {{ trend_labels|tojson }},
+        datasets: [{
+            label: 'Risk Score',
+            data: {{ trend_scores|tojson }},
+            tension: 0.3,
+            fill: false
+        }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+});
+</script>
+{% endblock %}

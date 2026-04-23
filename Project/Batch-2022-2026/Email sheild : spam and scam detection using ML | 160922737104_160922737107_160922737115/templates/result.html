@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Analysis Result</h2>
+        <p class="text-muted mb-0">Detailed output for scan #{{ scan.id }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('main.download_report', scan_id=scan.id) }}" class="btn btn-primary">Download Report</a>
+        <a href="{{ url_for('main.analyze') }}" class="btn btn-outline-secondary">Analyze Another</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Outcome</h5>
+                <p><strong>ML Label:</strong> {{ scan.ml_label }}</p>
+                <p><strong>Final Prediction:</strong> {{ scan.prediction_label }}</p>
+                <p><strong>Confidence:</strong> {{ scan.confidence_score }}%</p>
+                <p><strong>Risk Score:</strong> {{ scan.risk_score }}/100</p>
+                <p><strong>Risk Level:</strong> <span class="badge text-bg-dark">{{ scan.risk_level }}</span></p>
+                <p class="mb-0"><strong>Evidence Hash:</strong><br><code class="small">{{ scan.evidence_hash }}</code></p>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 mt-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Indicators</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between"><span>Suspicious Links</span><strong>{{ scan.suspicious_links }}</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Urgency Indicators</span><strong>{{ scan.urgent_words }}</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Financial Keywords</span><strong>{{ scan.financial_words }}</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Attachment Keywords</span><strong>{{ scan.attachment_words }}</strong></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Impersonation Indicators</span><strong>{{ scan.impersonation_words }}</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Summary</h5>
+                <p>{{ scan.summary }}</p>
+
+                <h6 class="fw-bold mt-4">Finding Details</h6>
+                <p>{{ scan.finding_details }}</p>
+
+                <h6 class="fw-bold mt-4">Input Preview</h6>
+                <div class="sample-box">{{ scan.cleaned_text[:2500] }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center min-vh-75">
+    <div class="col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg rounded-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Email Shield</h2>
+                    <p class="text-muted mb-0">Spam and Scam Detection Using ML</p>
+                </div>
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input type="text" name="username" class="form-control form-control-lg" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input type="password" name="password" class="form-control form-control-lg" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Login</button>
+                </form>
+
+                <div class="mt-4 small text-muted text-center">
+                    Default Admin: <strong>admin</strong> / <strong>admin123!</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
