@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>EDA Visualizations</h3>
+<div class="row">
+{% for image in images %}
+  <div class="col-md-4 mb-3">
+      <img src="{{ url_for('static', filename='eda/' + image) }}" 
+           class="img-fluid rounded shadow"
+           data-bs-toggle="modal" data-bs-target="#imgModal{{ loop.index }}">
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="imgModal{{ loop.index }}">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <img src="{{ url_for('static', filename='eda/' + image) }}" class="img-fluid">
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

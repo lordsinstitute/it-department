@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card p-4">
+<h3>🔍 Ransomware Prediction</h3>
+
+<form method="POST">
+<div class="row">
+{% for feature in features %}
+<div class="col-md-4 mb-3">
+<label>{{ feature }}</label>
+<input type="number" step="any" name="{{ feature }}" class="form-control" required>
+</div>
+{% endfor %}
+</div>
+<button class="btn btn-primary">Predict</button>
+</form>
+
+{% if prediction %}
+<hr>
+<h4>Prediction Result</h4>
+
+<div class="alert {% if 'Benign' in prediction %}alert-success{% else %}alert-danger{% endif %}">
+    <strong>{{ prediction }}</strong>
+</div>
+
+<p><strong>Confidence Score:</strong> {{ confidence }}%</p>
+
+<div class="progress" style="height: 25px;">
+  <div class="progress-bar
+    {% if 'Benign' in prediction %}bg-success{% else %}bg-danger{% endif %}"
+    role="progressbar"
+    style="width: {{ confidence }}%;">
+    {{ confidence }}%
+  </div>
+</div>
+
+{% endif %}
+</div>
+
+{% endblock %}

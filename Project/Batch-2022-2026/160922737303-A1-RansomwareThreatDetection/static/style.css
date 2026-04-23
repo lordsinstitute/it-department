@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: #f3f6fb;
+    color: #333;
+}
+
+header {
+    background-color: #0d47a1;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 70px);
+}
+
+nav {
+    width: 230px;
+    background-color: #1565c0;
+    color: white;
+    padding-top: 25px;
+    flex-shrink: 0;
+}
+
+nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+nav a:hover {
+    background-color: #1e88e5;
+}
+
+main {
+    flex: 1;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 25px;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+h2 {
+    color: #0d47a1;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0d47a1;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.metrics-table {
+    border-collapse: collapse;
+    width: 60%;
+    margin-top: 20px;
+}
+
+.metrics-table th, .metrics-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.metrics-table th {
+    background-color: #1565c0;
+    color: white;
+}
