@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Batch Analysis</h3>
+
+<form method="post" class="card p-3">
+  <input name="folder" class="form-control" placeholder="Folder path">
+  <button class="btn btn-warning mt-2">Scan</button>
+</form>
+
+{% if results %}
+<table class="table mt-3">
+<tr><th>File</th><th>Risk</th></tr>
+{% for r in results %}
+<tr>
+<td>{{ r.file }}</td>
+<td>{{ r.result.risk_score }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}
