@@ -1,0 +1,43 @@
+{% extends "base_layout.html" %}
+{% block content %}
+
+<div class="card-modern text-center">
+
+    <h3 class="mb-4">Upload Image for Prediction</h3>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image"
+               class="form-control mb-4"
+               accept=".jpg,.jpeg,.png,.tif,.tiff" required>
+
+        <button type="submit" class="btn btn-primary">
+            Predict
+        </button>
+    </form>
+
+    {% if filename %}
+    <hr class="my-4">
+
+    <img src="{{ url_for('static', filename='uploads/' + filename) }}"
+         class="uploaded-image mb-4">
+
+    <div class="prediction-text">
+        Prediction:
+        <span class="{{ prediction|lower }}">
+            {{ prediction }}
+        </span>
+    </div>
+
+    <div class="mt-4">
+        <div class="progress">
+            <div class="progress-bar {% if prediction == 'Fake' %}bg-danger{% else %}bg-success{% endif %}"
+                 style="width: {{ confidence }}%;">
+                {{ "%.2f"|format(confidence) }}%
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
