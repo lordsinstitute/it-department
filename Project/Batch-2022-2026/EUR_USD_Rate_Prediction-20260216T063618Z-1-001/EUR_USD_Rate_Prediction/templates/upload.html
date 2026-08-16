@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+    <h2 class="mb-4">Upload Dataset</h2>
+
+    {% if message %}
+        <div class="alert alert-{{ 'success' if status == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Select CSV Dataset</label>
+                    <input type="file" class="form-control" name="dataset" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Upload Dataset
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

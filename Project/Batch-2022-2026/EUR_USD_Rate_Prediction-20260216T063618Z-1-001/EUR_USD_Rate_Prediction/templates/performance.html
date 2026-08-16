@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Model Performance Comparison</h3>
+
+<!-- ============================= -->
+<!-- Performance Metrics Table -->
+<!-- ============================= -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        Performance Metrics (MAE, RMSE, R²)
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Model</th>
+                        <th>MAE</th>
+                        <th>RMSE</th>
+                        <th>R² Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in metrics %}
+                    <tr>
+                        <td><strong>{{ row.Model }}</strong></td>
+                        <td>{{ "%.5f"|format(row.MAE) }}</td>
+                        <td>{{ "%.5f"|format(row.RMSE) }}</td>
+                        <td>{{ "%.4f"|format(row.R2_Score) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= -->
+<!-- Performance Graph -->
+<!-- ============================= -->
+<div class="card shadow-sm">
+    <div class="card-header bg-secondary text-white">
+        Prediction Comparison Graph
+    </div>
+
+    <div class="card-body text-center">
+        <img
+            src="{{ url_for('static', filename='performance/prediction_comparison.png') }}"
+            class="img-fluid rounded shadow"
+            style="max-height: 500px; cursor:pointer"
+            data-bs-toggle="modal"
+            data-bs-target="#graphModal"
+        >
+        <p class="text-muted mt-2">Click image to enlarge</p>
+    </div>
+</div>
+
+<!-- ============================= -->
+<!-- Modal -->
+<!-- ============================= -->
+<div class="modal fade" id="graphModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Prediction Comparison</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img
+                    src="{{ url_for('static', filename='performance/prediction_comparison.png') }}"
+                    class="img-fluid rounded"
+                >
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,4 @@
+  Metric    Value
+    RMSE 0.002221
+     MAE 0.001578
+R2 Score 0.590303
