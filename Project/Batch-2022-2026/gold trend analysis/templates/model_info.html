@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Architecture & Mathematics - Gold Price Prediction</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/static/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .section {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border-left: 5px solid #7e22ce;
+        }
+        h2 {
+            color: #7e22ce;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #1e3c72;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        ul {
+            margin-left: 25px;
+            line-height: 2;
+        }
+        li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #856404;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+        .formula {
+            background: #e7f3ff;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th {
+            background: #7e22ce;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover { background: #f8f9fa; }
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1e3c72;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .back-btn:hover { transform: translateY(-3px); }
+        .layer-box {
+            background: white;
+            border: 2px solid #7e22ce;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .layer-box h4 {
+            color: #7e22ce;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dataset_info.html" class="back-btn">← Back to Dataset Info</a>
+        
+        <h1>🧠 Model Architecture & Mathematics</h1>
+        <p class="subtitle">Deep dive into LSTM model, algorithms, and mathematical formulas</p>
+        
+        <div class="section">
+            <h2>🏗️ Model Architecture Overview</h2>
+            <ul>
+                <li><strong>Model Type:</strong> <span class="highlight">LSTM (Long Short-Term Memory)</span></li>
+                <li><strong>Framework:</strong> <span class="highlight">TensorFlow/Keras 2.8.0</span></li>
+                <li><strong>Model Class:</strong> Sequential Neural Network</li>
+                <li><strong>Total Layers:</strong> 6 layers (2 LSTM + 2 Dropout + 2 Dense)</li>
+                <li><strong>Input Shape:</strong> (60, 6) - 60 time steps × 6 features</li>
+                <li><strong>Output:</strong> Single value (next day's closing price)</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>📐 Layer-by-Layer Architecture</h2>
+            
+            <div class="layer-box">
+                <h4>Layer 1: LSTM Layer (First)</h4>
+                <ul>
+                    <li><strong>Units:</strong> 50 neurons</li>
+                    <li><strong>Return Sequences:</strong> True (passes sequences to next LSTM)</li>
+                    <li><strong>Input Shape:</strong> (60, 6)</li>
+                    <li><strong>Output Shape:</strong> (60, 50)</li>
+                    <li><strong>Parameters:</strong> ~11,400</li>
+                </ul>
+            </div>
+            
+            <div class="layer-box">
+                <h4>Layer 2: Dropout Layer (First)</h4>
+                <ul>
+                    <li><strong>Dropout Rate:</strong> 0.2 (20%)</li>
+                    <li><strong>Purpose:</strong> Prevent overfitting</li>
+                    <li><strong>Randomly drops:</strong> 10 out of 50 neurons during training</li>
+                </ul>
+            </div>
+            
+            <div class="layer-box">
+                <h4>Layer 3: LSTM Layer (Second)</h4>
+                <ul>
+                    <li><strong>Units:</strong> 50 neurons</li>
+                    <li><strong>Return Sequences:</strong> False (outputs single vector)</li>
+                    <li><strong>Input Shape:</strong> (60, 50)</li>
+                    <li><strong>Output Shape:</strong> (50,)</li>
+                    <li><strong>Parameters:</strong> ~20,200</li>
+                </ul>
+            </div>
+            
+            <div class="layer-box">
+                <h4>Layer 4: Dropout Layer (Second)</h4>
+                <ul>
+                    <li><strong>Dropout Rate:</strong> 0.2 (20%)</li>
+                    <li><strong>Purpose:</strong> Additional regularization</li>
+                </ul>
+            </div>
+            
+            <div class="layer-box">
+                <h4>Layer 5: Dense Layer (Hidden)</h4>
+                <ul>
+                    <li><strong>Units:</strong> 25 neurons</li>
+                    <li><strong>Activation:</strong> Linear (default)</li>
+                    <li><strong>Input Shape:</strong> (50,)</li>
+                    <li><strong>Output Shape:</strong> (25,)</li>
+                    <li><strong>Parameters:</strong> 1,275</li>
+                </ul>
+            </div>
+            
+            <div class="layer-box">
+                <h4>Layer 6: Dense Layer (Output)</h4>
+                <ul>
+                    <li><strong>Units:</strong> 1 neuron</li>
+                    <li><strong>Activation:</strong> Linear</li>
+                    <li><strong>Input Shape:</strong> (25,)</li>
+                    <li><strong>Output Shape:</strong> (1,)</li>
+                    <li><strong>Parameters:</strong> 26</li>
+                    <li><strong>Output:</strong> Predicted closing price (normalized)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>⚙️ Training Configuration</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Epochs</strong></td>
+                        <td><span class="highlight">30-50</span></td>
+                        <td>Number of complete passes through dataset</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Batch Size</strong></td>
+                        <td><span class="highlight">32</span></td>
+                        <td>Samples processed before updating weights</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Optimizer</strong></td>
+                        <td><span class="highlight">Adam</span></td>
+                        <td>Adaptive Moment Estimation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loss Function</strong></td>
+                        <td><span class="highlight">MSE</span></td>
+                        <td>Mean Squared Error</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Train/Test Split</strong></td>
+                        <td><span class="highlight">80/20</span></td>
+                        <td>584 train, 146 test samples</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Validation</strong></td>
+                        <td><span class="highlight">Yes</span></td>
+                        <td>Validated on test set during training</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>🔢 Mathematical Formulas</h2>
+            
+            <h3>1. LSTM Cell Equations</h3>
+            <div class="formula">
+<strong>Forget Gate:</strong>
+f<sub>t</sub> = σ(W<sub>f</sub> · [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>f</sub>)
+
+<strong>Input Gate:</strong>
+i<sub>t</sub> = σ(W<sub>i</sub> · [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>i</sub>)
+
+<strong>Candidate Cell State:</strong>
+C̃<sub>t</sub> = tanh(W<sub>C</sub> · [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>C</sub>)
+
+<strong>Cell State Update:</strong>
+C<sub>t</sub> = f<sub>t</sub> * C<sub>t-1</sub> + i<sub>t</sub> * C̃<sub>t</sub>
+
+<strong>Output Gate:</strong>
+o<sub>t</sub> = σ(W<sub>o</sub> · [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>o</sub>)
+
+<strong>Hidden State:</strong>
+h<sub>t</sub> = o<sub>t</sub> * tanh(C<sub>t</sub>)
+
+Where:
+- σ = Sigmoid activation (0 to 1)
+- tanh = Hyperbolic tangent (-1 to 1)
+- W = Weight matrices
+- b = Bias vectors
+- * = Element-wise multiplication
+            </div>
+            
+            <h3>2. Loss Function (Mean Squared Error)</h3>
+            <div class="formula">
+MSE = (1/n) × Σ(y<sub>actual</sub> - y<sub>predicted</sub>)²
+
+Where:
+- n = Number of samples
+- y<sub>actual</sub> = True closing price
+- y<sub>predicted</sub> = Model's predicted price
+            </div>
+            
+            <h3>3. Adam Optimizer Update Rule</h3>
+            <div class="formula">
+m<sub>t</sub> = β₁ × m<sub>t-1</sub> + (1 - β₁) × g<sub>t</sub>
+v<sub>t</sub> = β₂ × v<sub>t-1</sub> + (1 - β₂) × g<sub>t</sub>²
+
+m̂<sub>t</sub> = m<sub>t</sub> / (1 - β₁<sup>t</sup>)
+v̂<sub>t</sub> = v<sub>t</sub> / (1 - β₂<sup>t</sup>)
+
+θ<sub>t</sub> = θ<sub>t-1</sub> - α × m̂<sub>t</sub> / (√v̂<sub>t</sub> + ε)
+
+Where:
+- β₁ = 0.9 (first moment decay)
+- β₂ = 0.999 (second moment decay)
+- α = Learning rate
+- ε = 1e-8 (small constant)
+- g<sub>t</sub> = Gradient at time t
+            </div>
+            
+            <h3>4. MinMax Normalization</h3>
+            <div class="formula">
+X<sub>scaled</sub> = (X - X<sub>min</sub>) / (X<sub>max</sub> - X<sub>min</sub>)
+
+Inverse Transform:
+X<sub>original</sub> = X<sub>scaled</sub> × (X<sub>max</sub> - X<sub>min</sub>) + X<sub>min</sub>
+            </div>
+            
+            <h3>5. Technical Indicators Formulas</h3>
+            <div class="formula">
+<strong>Moving Average (MA):</strong>
+MA<sub>n</sub> = (P₁ + P₂ + ... + P<sub>n</sub>) / n
+
+<strong>RSI (Relative Strength Index):</strong>
+RS = Average Gain / Average Loss
+RSI = 100 - (100 / (1 + RS))
+
+<strong>MACD:</strong>
+MACD = EMA<sub>12</sub> - EMA<sub>26</sub>
+
+<strong>EMA (Exponential Moving Average):</strong>
+EMA<sub>t</sub> = (P<sub>t</sub> × k) + (EMA<sub>t-1</sub> × (1 - k))
+where k = 2 / (n + 1)
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🎯 Model Training Process</h2>
+            <ul>
+                <li><strong>Step 1:</strong> Load 730 days of gold price data</li>
+                <li><strong>Step 2:</strong> Calculate 4 technical indicators (MA10, MA30, RSI, MACD)</li>
+                <li><strong>Step 3:</strong> Normalize all 6 features to 0-1 range</li>
+                <li><strong>Step 4:</strong> Create sequences of 60 consecutive days</li>
+                <li><strong>Step 5:</strong> Split into 584 training + 146 test samples</li>
+                <li><strong>Step 6:</strong> Build LSTM model with 6 layers</li>
+                <li><strong>Step 7:</strong> Train for 30-50 epochs with batch size 32</li>
+                <li><strong>Step 8:</strong> Validate on test set after each epoch</li>
+                <li><strong>Step 9:</strong> Save trained model as gold_model.h5</li>
+                <li><strong>Step 10:</strong> Save scaler as scaler.pkl for predictions</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🔮 Prediction Process</h2>
+            <ul>
+                <li><strong>Step 1:</strong> Load trained model (gold_model.h5)</li>
+                <li><strong>Step 2:</strong> Fetch last 60 days of data</li>
+                <li><strong>Step 3:</strong> Calculate technical indicators</li>
+                <li><strong>Step 4:</strong> Normalize using saved scaler</li>
+                <li><strong>Step 5:</strong> Reshape to (1, 60, 6) for LSTM input</li>
+                <li><strong>Step 6:</strong> Model predicts normalized value</li>
+                <li><strong>Step 7:</strong> Inverse transform to get actual price</li>
+                <li><strong>Step 8:</strong> Calculate direction (UP/DOWN) and change %</li>
+                <li><strong>Step 9:</strong> Return prediction with confidence score</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>📊 Model Performance Metrics</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Description</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Training Loss</strong></td>
+                        <td>MSE on training data</td>
+                        <td>Monitored during training</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Validation Loss</strong></td>
+                        <td>MSE on test data</td>
+                        <td>Prevents overfitting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Confidence Score</strong></td>
+                        <td>min(|change%| × 10, 95)</td>
+                        <td>Prediction reliability</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>💡 Key Algorithms Used</h2>
+            <ul>
+                <li><strong>LSTM (Long Short-Term Memory):</strong> Handles sequential time-series data with memory cells</li>
+                <li><strong>Adam Optimizer:</strong> Adaptive learning rate optimization algorithm</li>
+                <li><strong>Dropout Regularization:</strong> Randomly drops neurons to prevent overfitting</li>
+                <li><strong>MinMax Scaling:</strong> Normalizes features to 0-1 range</li>
+                <li><strong>Backpropagation Through Time (BPTT):</strong> Trains recurrent networks</li>
+                <li><strong>Gradient Descent:</strong> Minimizes loss function iteratively</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+            <a href="dataset_info.html" class="back-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                ← View Dataset Info
+            </a>
+        </div>
+    </div>
+</body>
+</html>
