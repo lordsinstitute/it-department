@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Dashboard Overview</h3>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card card-shadow p-3">
+            <h6>Total Scans</h6>
+            <h2>{{ scans|length }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-shadow p-3 text-danger">
+            <h6>High / Critical</h6>
+            <h2>
+                {{ scans|selectattr("risk","in",["High","Critical"])|list|length }}
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-shadow p-3 text-success">
+            <h6>Clean Files</h6>
+            <h2>
+                {{ scans|selectattr("risk","equalto","Low")|list|length }}
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-shadow p-3">
+            <h6>Last Scan</h6>
+            <small>
+                {% if scans %}
+                    {{ scans[0].timestamp }}
+                {% else %}
+                    No scans yet
+                {% endif %}
+            </small>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card card-shadow p-3">
+            <h5>Risk Distribution</h5>
+            <canvas id="riskChart"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-shadow p-3">
+            <h5>Quick Actions</h5>
+            <a href="/analyze" class="btn btn-primary w-100 mb-2">Analyze File</a>
+            <a href="/batch" class="btn btn-warning w-100 mb-2">Batch Scan</a>
+            <a href="/history" class="btn btn-secondary w-100">View History</a>
+        </div>
+    </div>
+</div>
+
+<script>
+const ctx = document.getElementById('riskChart');
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Low', 'Medium', 'High', 'Critical'],
+        datasets: [{
+            data: [
+                {{ scans|selectattr("risk","equalto","Low")|list|length }},
+                {{ scans|selectattr("risk","equalto","Medium")|list|length }},
+                {{ scans|selectattr("risk","equalto","High")|list|length }},
+                {{ scans|selectattr("risk","equalto","Critical")|list|length }}
+            ]
+        }]
+    }
+});
+</script>
+
+{% endblock %}

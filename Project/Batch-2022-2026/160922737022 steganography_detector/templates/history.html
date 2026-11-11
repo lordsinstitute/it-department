@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Scan History</h3>
+
+<div class="card card-shadow p-3">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>File</th>
+            <th>Risk</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in scans %}
+        <tr>
+            <td>{{ s.filename }}</td>
+            <td>{{ s.risk }}</td>
+            <td>{{ s.timestamp }}</td>
+            <td>
+                <a href="/report/{{ s.id }}" class="btn btn-sm btn-primary">PDF</a>
+                <a href="/custody/{{ s.id }}" class="btn btn-sm btn-secondary">Custody</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}
