@@ -1,0 +1,26 @@
+pip install Django==4.2.7  --upgrade pip
+pip install mysqlclient==2.2.0  --upgrade pip
+pip install Pillow==10.1.0  --upgrade pip
+pip install pandas==2.1.3  --upgrade pip
+pip install numpy==1.26.2  --upgrade pip
+pip install scikit-learn==1.3.2  --upgrade pip
+pip install xgboost==2.0.2  --upgrade pip
+pip install catboost==1.2.2  --upgrade pip
+pip install shap==0.43.0  --upgrade pip
+pip install matplotlib==3.8.2  --upgrade pip
+pip install seaborn==0.13.0  --upgrade pip
+
+for database creation frst open MySQL shell and give these commands-
+
+1. \sql
+2. \connect root@localhost
+3. SHOW DATABASES (If any database is created previously)
+4. DROP DATABASE database_name (if created any)
+		(or else) 
+5. copy and paste the content from the mental_health_db.sql file (if no database is created previously)
+
+Then after creating db go to cmd-->project path and give the following two commands:
+
+1. python manage.py makemigrations
+2. python manage.py migrate
+
